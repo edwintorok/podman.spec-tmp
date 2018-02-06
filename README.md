@@ -1,3 +1,0 @@
-# podman
-
-The podman package
