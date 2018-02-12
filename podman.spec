@@ -40,12 +40,12 @@
 # https://github.com/projectatomic/libpod
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path     %{provider_prefix}
-%global commit          367213a3943961126c6f7c1dce45c7fafea9e6b2
+%global commit          3d0100bb44834d079ad0e2c7b9c264a3c5ec131e
 %global shortcommit     %(c=%{commit}; echo ${c:0:7})
 
 Name:           podman
 Version:        0
-Release:        0.3.git%{shortcommit}%{?dist}
+Release:        2.1.git%{shortcommit}%{?dist}
 Summary:        Manage Pods, Containers and Container Images
 License:        ASL 2.0
 URL:            https://%{provider_prefix}
@@ -74,6 +74,7 @@ BuildRequires:  skopeo-containers
 Requires:       runc
 Requires:       skopeo-containers
 Requires:       conmon
+Requires:       buildah
 
 # vendored libraries
 # awk '{print "Provides: bundled(golang("$1")) = "$2}' containerd-*/vendor.conf | sort
@@ -453,6 +454,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Mon Feb 12 2018 baude <bbaude@redhat.com> - 0-2.1.git3d0100
+- Release 0.2
+
 * Tue Feb 06 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 0-0.3.git367213a
 - Resolves: #1541554 - first official build
 - built commit 367213a
