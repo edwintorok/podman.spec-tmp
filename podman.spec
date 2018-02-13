@@ -45,7 +45,7 @@
 
 Name:           podman
 Version:        0.2
-Release:        1.git%{shortcommit}%{?dist}
+Release:        2.git%{shortcommit}%{?dist}
 Summary:        Manage Pods, Containers and Container Images
 License:        ASL 2.0
 URL:            https://%{provider_prefix}
@@ -53,7 +53,7 @@ Source0:        https://%{provider_prefix}/archive/%{commit}/%{repo}-%{shortcomm
 
 # e.g. el6 has ppc64 arch without gcc-go, so EA tag is required
 #ExclusiveArch:  %%{?go_arches:%%{go_arches}}%%{!?go_arches:%%{ix86} x86_64 aarch64 %%{arm}}
-ExclusiveArch: x86_64
+ExclusiveArch: aarch64 ppc64le s390x x86_64
 # If go_compiler is not set to 1, there is no virtual provide. Use golang instead.
 BuildRequires:  %{?go_compiler:compiler(go-compiler)}%{!?go_compiler:golang}
 BuildRequires:  btrfs-progs-devel
@@ -75,6 +75,8 @@ Requires:       runc
 Requires:       skopeo-containers
 Requires:       conmon
 Requires:       buildah
+Requires:       containernetworking-cni > 0.6
+Requires:       iptables
 
 # vendored libraries
 # awk '{print "Provides: bundled(golang("$1")) = "$2}' containerd-*/vendor.conf | sort
@@ -454,6 +456,11 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Tue Feb 13 2018 baude <bbaude@redhat.com> - 0.2-2.git3d0100b
+- Add more 64bit arches
+- Add containernetworking-cni dependancy
+- Add iptables dependancy
+
 * Mon Feb 12 2018 baude <bbaude@redhat.com> - 0-2.1.git3d0100
 - Release 0.2
 
