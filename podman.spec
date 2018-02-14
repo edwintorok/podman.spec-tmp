@@ -45,7 +45,7 @@
 
 Name:           podman
 Version:        0.2
-Release:        2.git%{shortcommit}%{?dist}
+Release:        3.git%{shortcommit}%{?dist}
 Summary:        Manage Pods, Containers and Container Images
 License:        ASL 2.0
 URL:            https://%{provider_prefix}
@@ -77,6 +77,7 @@ Requires:       conmon
 Requires:       buildah
 Requires:       containernetworking-cni > 0.6
 Requires:       iptables
+Requires:       atomic-registries
 
 # vendored libraries
 # awk '{print "Provides: bundled(golang("$1")) = "$2}' containerd-*/vendor.conf | sort
@@ -456,6 +457,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Wed Feb 14 2018 baude <bbaude@redhat.com> - 0.2-3.git3d0100b
+- Add dep for atomic-registries
+
 * Tue Feb 13 2018 baude <bbaude@redhat.com> - 0.2-2.git3d0100b
 - Add more 64bit arches
 - Add containernetworking-cni dependancy
