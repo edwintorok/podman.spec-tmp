@@ -40,12 +40,12 @@
 # https://github.com/projectatomic/libpod
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path     %{provider_prefix}
-%global commit          3d0100bb44834d079ad0e2c7b9c264a3c5ec131e
+%global commit          3723cecc33399629408770e44eb363e9ca36fdce
 %global shortcommit     %(c=%{commit}; echo ${c:0:7})
 
 Name:           podman
-Version:        0.2
-Release:        3.git%{shortcommit}%{?dist}
+Version:        0.2.1
+Release:        1.git%{shortcommit}%{?dist}
 Summary:        Manage Pods, Containers and Container Images
 License:        ASL 2.0
 URL:            https://%{provider_prefix}
@@ -457,6 +457,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Fri Feb 16 2018 baude <bbaude@redhat.com> - 0.2.1-1.git3d0100b
+- Release 0.2.1
+
 * Wed Feb 14 2018 baude <bbaude@redhat.com> - 0.2-3.git3d0100b
 - Add dep for atomic-registries
 
