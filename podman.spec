@@ -458,7 +458,7 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 
 %changelog
 * Fri Mar 02 2018 baude <bbaude@redhat.com> - 0.3.1-1-gitc187538
-- Release 0.2.2
+- Release 0.3.1-1
 
 * Sun Feb 25 2018 Peter Robinson <pbrobinson@fedoraproject.org> 0.2.2-2.git525e3b1
 - Build on ARMv7 too (Fedora supports containers on that arch too)
