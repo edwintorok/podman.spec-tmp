@@ -40,12 +40,12 @@
 # https://github.com/projectatomic/libpod
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path     %{provider_prefix}
-%global commit          525e3b17e4723afeebf45a1a24f00b2af17ddedf
+%global commit          c187538b9e7fa9af75a4123ff3dc128ce6f4ba1b
 %global shortcommit     %(c=%{commit}; echo ${c:0:7})
 
 Name:           podman
-Version:        0.2.2
-Release:        2.git%{shortcommit}%{?dist}
+Version:        0.3.1
+Release:        1.git%{shortcommit}%{?dist}
 Summary:        Manage Pods, Containers and Container Images
 License:        ASL 2.0
 URL:            https://%{provider_prefix}
@@ -457,6 +457,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Fri Mar 02 2018 baude <bbaude@redhat.com> - 0.3.1-1-gitc187538
+- Release 0.2.2
+
 * Sun Feb 25 2018 Peter Robinson <pbrobinson@fedoraproject.org> 0.2.2-2.git525e3b1
 - Build on ARMv7 too (Fedora supports containers on that arch too)
 
