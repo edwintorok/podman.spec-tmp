@@ -40,12 +40,12 @@
 # https://github.com/projectatomic/libpod
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path     %{provider_prefix}
-%global commit          c187538b9e7fa9af75a4123ff3dc128ce6f4ba1b
+%global commit          98b95ff47f8387f47687fb2d1377b722bd6a2915
 %global shortcommit     %(c=%{commit}; echo ${c:0:7})
 
 Name:           podman
 Version:        0.3.1
-Release:        1.git%{shortcommit}%{?dist}
+Release:        2.git%{shortcommit}%{?dist}
 Summary:        Manage Pods, Containers and Container Images
 License:        ASL 2.0
 URL:            https://%{provider_prefix}
@@ -457,6 +457,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Sun Mar 04 2018 baude <bbaude@redhat.com> - 0.3.1-2.git98b95ff
+- Correct RPM version
+
 * Fri Mar 02 2018 baude <bbaude@redhat.com> - 0.3.1-1-gitc187538
 - Release 0.3.1-1
 
