@@ -40,16 +40,23 @@
 # https://github.com/projectatomic/libpod
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path     %{provider_prefix}
-%global commit          f79a39abb7725109cd3469f74fd6789d9a62a308
+%global git_podman      https://%{provider}.%{provider_tld}/%{project}/%{repo}
+%global commit          bc358eb396aa87f3122f0449945efc03ed64bfd2
 %global shortcommit     %(c=%{commit}; echo ${c:0:7})
 
+%global import_path_conmon      github.com/kubernetes-incubator/cri-o
+%global git_conmon      https://%{import_path_conmon}
+%global commit_conmon   712f3b8cf14cbbac298f3ccc020677ac2a65fa75
+%global shortcommit_conmon %(c=%{commit_conmon}; echo ${c:0:7})
+
 Name:           podman
-Version:        0.3.2
-Release:        1.git%{shortcommit}%{?dist}
+Version:        0.3.3
+Release:        1.dev.git%{shortcommit}%{?dist}
 Summary:        Manage Pods, Containers and Container Images
 License:        ASL 2.0
-URL:            https://%{provider_prefix}
-Source0:        https://%{provider_prefix}/archive/%{commit}/%{repo}-%{shortcommit}.tar.gz
+URL:            %{git_podman}
+Source0:        %{git_podman}/archive/%{commit}/%{repo}-%{shortcommit}.tar.gz
+Source1:        %{git_conmon}/archive/%{commit_conmon}/cri-o-%{shortcommit_conmon}.tar.gz
 
 # e.g. el6 has ppc64 arch without gcc-go, so EA tag is required
 #ExclusiveArch:  %%{?go_arches:%%{go_arches}}%%{!?go_arches:%%{ix86} x86_64 aarch64 %%{arm}}
@@ -69,18 +76,17 @@ BuildRequires:  libgpg-error-devel
 BuildRequires:  libseccomp-devel
 BuildRequires:  libselinux-devel
 BuildRequires:  pkgconfig
-BuildRequires:  runc
-BuildRequires:  skopeo-containers
 Requires:       runc
 Requires:       skopeo-containers
-Requires:       conmon
+# can't use default conmon right now, so we ship our own
+#Requires:       conmon
 Requires:       buildah
 Requires:       containernetworking-cni > 0.6
 Requires:       iptables
 Requires:       atomic-registries
 
 # vendored libraries
-# awk '{print "Provides: bundled(golang("$1")) = "$2}' containerd-*/vendor.conf | sort
+# awk '{print "Provides: bundled(golang("$1")) = "$2}' vendor.conf | sort
 # [thanks to Carl George <carl@george.computer> for containerd.spec]
 Provides: bundled(golang(github.com/asaskevich/govalidator)) = v6
 Provides: bundled(golang(github.com/Azure/go-ansiterm)) = 19f72df4d05d31cbe1c56bfc8045c96babff6c7e
@@ -91,10 +97,10 @@ Provides: bundled(golang(github.com/BurntSushi/toml)) = v0.2.0
 Provides: bundled(golang(github.com/containerd/cgroups)) = 7a5fdd8330119dc70d850260db8f3594d89d6943
 Provides: bundled(golang(github.com/containerd/continuity)) = master
 Provides: bundled(golang(github.com/containernetworking/cni)) = v0.4.0
-Provides: bundled(golang(github.com/containers/image)) = 9b4510f6d1627c8e53c3303a8fe48ca7842c2ace
-Provides: bundled(golang(github.com/containers/storage)) = 1824cf917a6b42d8c41179e807bb20a5fd6c0f0a
+Provides: bundled(golang(github.com/containers/image)) = b129a8413fd1e8c53379acbbacfc7b667070ae50
+Provides: bundled(golang(github.com/containers/storage)) = 1e5ce40cdb84ab66e26186435b1273e04b879fef
 Provides: bundled(golang(github.com/coreos/go-systemd)) = v14
-Provides: bundled(golang(github.com/coreos/pkg)) = v3
+Provides: bundled(golang(github.com/cyphar/filepath-securejoin)) = v0.2.1
 Provides: bundled(golang(github.com/davecgh/go-spew)) = v1.1.0
 Provides: bundled(golang(github.com/dgrijalva/jwt-go)) = v3.0.0
 Provides: bundled(golang(github.com/docker/distribution)) = 7a8efe719e55bbfaff7bc5718cdf0ed51ca821df
@@ -128,7 +134,6 @@ Provides: bundled(golang(github.com/gorilla/mux)) = v1.3.0
 Provides: bundled(golang(github.com/hashicorp/errwrap)) = 7554cd9344cec97297fa6649b055a8c98c2a1e55
 Provides: bundled(golang(github.com/hashicorp/golang-lru)) = 0a025b7e63adc15a622f29b0b2c4c3848243bbf6
 Provides: bundled(golang(github.com/hashicorp/go-multierror)) = 83588e72410abfbe4df460eeb6f30841ae47d4c4
-Provides: bundled(golang(github.com/hpcloud/tail)) = v1.0.0
 Provides: bundled(golang(github.com/imdario/mergo)) = 0.2.2
 Provides: bundled(golang(github.com/juju/ratelimit)) = 5b9ff866471762aa2ab2dced63c9fb6f53921342
 Provides: bundled(golang(github.com/kr/pty)) = v1.0.0
@@ -139,11 +144,10 @@ Provides: bundled(golang(github.com/Microsoft/go-winio)) = 78439966b38d69bf38227
 Provides: bundled(golang(github.com/Microsoft/hcsshim)) = 43f9725307998e09f2e3816c2c0c36dc98f0c982
 Provides: bundled(golang(github.com/mistifyio/go-zfs)) = v2.1.1
 Provides: bundled(golang(github.com/mitchellh/mapstructure)) = d0303fe809921458f417bcf828397a65db30a7e4
-Provides: bundled(golang(github.com/mrunalp/fileutils)) = master
 Provides: bundled(golang(github.com/mtrmac/gpgme)) = b2432428689ca58c2b8e8dea9449d3295cf96fc9
 Provides: bundled(golang(github.com/opencontainers/go-digest)) = v1.0.0-rc0
 Provides: bundled(golang(github.com/opencontainers/image-spec)) = v1.0.0
-Provides: bundled(golang(github.com/opencontainers/runc)) = 45bde006ca8c90e089894508708bcf0e2cdf9e13
+Provides: bundled(golang(github.com/opencontainers/runc)) = 6e15bc3f92fd4c58b3285e8f27eaeb6b22d62920
 Provides: bundled(golang(github.com/opencontainers/runtime-spec)) = v1.0.0
 Provides: bundled(golang(github.com/opencontainers/runtime-tools)) = 625e2322645b151a7cbb93a8b42920933e72167f
 Provides: bundled(golang(github.com/opencontainers/selinux)) = b29023b86e4a69d1b46b7e7b4e2b6fda03f0b9cd
@@ -178,10 +182,8 @@ Provides: bundled(golang(golang.org/x/sys)) = 9aade4d3a3b7e6d876cd3823ad20ec45fc
 Provides: bundled(golang(golang.org/x/text)) = f72d8390a633d5dfb0cc84043294db9f6c935756
 Provides: bundled(golang(google.golang.org/grpc)) = v1.0.4
 Provides: bundled(golang(gopkg.in/cheggaaa/pb.v1)) = v1.0.7
-Provides: bundled(golang(gopkg.in/fsnotify.v1)) = v1.4.2
 Provides: bundled(golang(gopkg.in/inf.v0)) = v0.9.0
 Provides: bundled(golang(gopkg.in/mgo.v2)) = v2
-Provides: bundled(golang(gopkg.in/tomb.v1)) = v1
 Provides: bundled(golang(gopkg.in/yaml.v2)) = v2
 
 %description
@@ -352,6 +354,9 @@ providing packages with %{import_path} prefix.
 %autosetup -Sgit -n %{repo}-%{commit}
 sed -i '/\/bin\/bash/d' completions/bash/%{name}
 
+# untar cri-o
+tar zxf %{SOURCE1}
+
 %build
 mkdir _build
 pushd _build
@@ -365,8 +370,31 @@ export BUILDTAGS="selinux seccomp $(hack/btrfs_installed_tag.sh) $(hack/btrfs_ta
 GOPATH=$GOPATH BUILDTAGS=$BUILDTAGS %gobuild -o bin/%{name} %{import_path}/cmd/%{name}
 BUILDTAGS=$BUILDTAGS make docs
 
+# build conmon
+pushd cri-o-%{commit_conmon}
+
+mkdir _output
+pushd _output
+mkdir -p src/%{provider}.%{provider_tld}/{kubernetes-incubator,opencontainers}
+ln -s $(dirs +1 -l) src/%{import_path_conmon}
+popd
+
+ln -s vendor src
+export GOPATH=$(pwd)/_output:$(pwd):%{gopath}
+export BUILDTAGS="selinux seccomp $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) containers_image_ostree_stub"
+BUILDTAGS=$BUILDTAGS make conmon
+popd
+
 %install
 %make_install PREFIX=%{buildroot}%{_prefix} install install.completions
+
+# install libpod.conf
+install -dp %{buildroot}%{_datadir}/containers
+install -p -m 644 %{repo}.conf %{buildroot}%{_datadir}/containers
+
+# install conmon
+install -dp %{buildroot}%{_libexecdir}/%{name}
+install -p -m 755 cri-o-%{commit_conmon}/bin/conmon %{buildroot}%{_libexecdir}/%{name}
 
 # source codes for building projects
 %if 0%{?with_devel}
@@ -441,7 +469,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %{_bindir}/%{name}
 %{_mandir}/man1/*.1*
 %{_datadir}/bash-completion/completions/*
+%{_libexecdir}/%{name}/conmon
 %config(noreplace) %{_sysconfdir}/cni/net.d/87-%{name}-bridge.conflist
+%{_datadir}/containers/%{repo}.conf
 
 %if 0%{?with_devel}
 %files -n libpod-devel -f devel.file-list
@@ -457,7 +487,11 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
-* Fri Mar 09 2018 baude <bbaude@redhat.com> - 0.3.1-3.gitf79a39a
+* Wed Mar 14 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 0.3.3-1.dev.gitbc358eb
+- built podman commit bc358eb
+- built conmon from cri-o commit 712f3b8
+
+* Fri Mar 09 2018 baude <bbaude@redhat.com> - 0.3.2-1.gitf79a39a
 - Release 0.3.2-1
 
 * Sun Mar 04 2018 baude <bbaude@redhat.com> - 0.3.1-2.git98b95ff
