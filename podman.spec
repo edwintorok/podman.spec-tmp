@@ -41,7 +41,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path     %{provider_prefix}
 %global git_podman      https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit          bc358eb396aa87f3122f0449945efc03ed64bfd2
+%global commit          b47fc0dda522008ef4ed6abf72b764fb5b445f3a
 %global shortcommit     %(c=%{commit}; echo ${c:0:7})
 
 %global import_path_conmon      github.com/kubernetes-incubator/cri-o
@@ -51,7 +51,7 @@
 
 Name:           podman
 Version:        0.3.3
-Release:        1.dev.git%{shortcommit}%{?dist}
+Release:        2.git%{shortcommit}%{?dist}
 Summary:        Manage Pods, Containers and Container Images
 License:        ASL 2.0
 URL:            %{git_podman}
@@ -487,6 +487,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Fri Mar 16 2018 baude <bbaude@redhat.com> - 0.3.3-2.dev.gitbc358eb
+- Upstream release 0.3.3
+
 * Wed Mar 14 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 0.3.3-1.dev.gitbc358eb
 - built podman commit bc358eb
 - built conmon from cri-o commit 712f3b8
