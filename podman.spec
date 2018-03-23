@@ -41,7 +41,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path     %{provider_prefix}
 %global git_podman      https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit          b47fc0dda522008ef4ed6abf72b764fb5b445f3a
+%global commit          57b403eda155d321d8aa29cfa0085aac8ce28a57
 %global shortcommit     %(c=%{commit}; echo ${c:0:7})
 
 %global import_path_conmon      github.com/kubernetes-incubator/cri-o
@@ -50,8 +50,8 @@
 %global shortcommit_conmon %(c=%{commit_conmon}; echo ${c:0:7})
 
 Name:           podman
-Version:        0.3.3
-Release:        2.git%{shortcommit}%{?dist}
+Version:        0.3.4
+Release:        1.git%{shortcommit}%{?dist}
 Summary:        Manage Pods, Containers and Container Images
 License:        ASL 2.0
 URL:            %{git_podman}
@@ -487,6 +487,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Fri Mar 23 2018 baude <bbaude@redhat.com> - 0.3.4-1.git57b403eda155d321d8aa29cfa0085aac8ce28a57
+- Upstream release 0.3.4
+
 * Fri Mar 16 2018 baude <bbaude@redhat.com> - 0.3.3-2.dev.gitbc358eb
 - Upstream release 0.3.3
 
