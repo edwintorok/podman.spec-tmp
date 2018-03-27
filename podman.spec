@@ -33,30 +33,24 @@
 %define gobuild(o:) go build -tags="$BUILDTAGS selinux seccomp" -ldflags "${LDFLAGS:-} -B 0x$(head -c20 /dev/urandom|od -An -tx1|tr -d ' \\n')" -a -v -x %{?**};
 #% endif
 
-%global provider        github
-%global provider_tld    com
-%global project         projectatomic
-%global repo            libpod
+%global provider github
+%global provider_tld com
+%global project projectatomic
+%global repo libpod
 # https://github.com/projectatomic/libpod
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
-%global import_path     %{provider_prefix}
-%global git_podman      https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit          57b403eda155d321d8aa29cfa0085aac8ce28a57
-%global shortcommit     %(c=%{commit}; echo ${c:0:7})
+%global import_path %{provider_prefix}
+%global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
+%global commit0 57b403eda155d321d8aa29cfa0085aac8ce28a57
+%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
-%global import_path_conmon      github.com/kubernetes-incubator/cri-o
-%global git_conmon      https://%{import_path_conmon}
-%global commit_conmon   712f3b8cf14cbbac298f3ccc020677ac2a65fa75
-%global shortcommit_conmon %(c=%{commit_conmon}; echo ${c:0:7})
-
-Name:           podman
-Version:        0.3.4
-Release:        1.git%{shortcommit}%{?dist}
-Summary:        Manage Pods, Containers and Container Images
-License:        ASL 2.0
-URL:            %{git_podman}
-Source0:        %{git_podman}/archive/%{commit}/%{repo}-%{shortcommit}.tar.gz
-Source1:        %{git_conmon}/archive/%{commit_conmon}/cri-o-%{shortcommit_conmon}.tar.gz
+Name: podman
+Version: 0.3.4
+Release: 1.git%{shortcommit0}%{?dist}
+Summary: Manage Pods, Containers and Container Images
+License: ASL 2.0
+URL: %{git_podman}
+Source0: %{git0}/archive/%{commit0}/%{repo}-%{shortcommit0}.tar.gz
 
 # e.g. el6 has ppc64 arch without gcc-go, so EA tag is required
 #ExclusiveArch:  %%{?go_arches:%%{go_arches}}%%{!?go_arches:%%{ix86} x86_64 aarch64 %%{arm}}
@@ -78,10 +72,9 @@ BuildRequires:  libselinux-devel
 BuildRequires:  pkgconfig
 Requires:       runc
 Requires:       skopeo-containers
-# can't use default conmon right now, so we ship our own
-#Requires:       conmon
+Requires:       conmon >= 2:1.10.0-3.gitb0f6d98
 Requires:       buildah
-Requires:       containernetworking-cni > 0.6
+Requires:       containernetworking-cni >= 0.6.0-3
 Requires:       iptables
 Requires:       atomic-registries
 
@@ -188,13 +181,14 @@ Provides: bundled(golang(gopkg.in/yaml.v2)) = v2
 
 %description
 %{summary}
-libpod provides a library for applications looking to use
+%{repo} provides a library for applications looking to use
 the Container Pod concept popularized by Kubernetes.
 
 %if 0%{?with_devel}
-%package -n libpod-devel
+%package devel
 Summary:       Library for applications looking to use Container Pods
 BuildArch:     noarch
+Provides: %{repo}-devel = %{version}-%{release}
 
 %if 0%{?with_check} && ! 0%{?with_bundled}
 BuildRequires: golang(github.com/BurntSushi/toml)
@@ -351,11 +345,8 @@ providing packages with %{import_path} prefix.
 %endif
 
 %prep
-%autosetup -Sgit -n %{repo}-%{commit}
+%autosetup -Sgit -n %{repo}-%{commit0}
 sed -i '/\/bin\/bash/d' completions/bash/%{name}
-
-# untar cri-o
-tar zxf %{SOURCE1}
 
 %build
 mkdir _build
@@ -370,31 +361,12 @@ export BUILDTAGS="selinux seccomp $(hack/btrfs_installed_tag.sh) $(hack/btrfs_ta
 GOPATH=$GOPATH BUILDTAGS=$BUILDTAGS %gobuild -o bin/%{name} %{import_path}/cmd/%{name}
 BUILDTAGS=$BUILDTAGS make docs
 
-# build conmon
-pushd cri-o-%{commit_conmon}
-
-mkdir _output
-pushd _output
-mkdir -p src/%{provider}.%{provider_tld}/{kubernetes-incubator,opencontainers}
-ln -s $(dirs +1 -l) src/%{import_path_conmon}
-popd
-
-ln -s vendor src
-export GOPATH=$(pwd)/_output:$(pwd):%{gopath}
-export BUILDTAGS="selinux seccomp $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) containers_image_ostree_stub"
-BUILDTAGS=$BUILDTAGS make conmon
-popd
-
 %install
 %make_install PREFIX=%{buildroot}%{_prefix} install install.completions
 
 # install libpod.conf
 install -dp %{buildroot}%{_datadir}/containers
 install -p -m 644 %{repo}.conf %{buildroot}%{_datadir}/containers
-
-# install conmon
-install -dp %{buildroot}%{_libexecdir}/%{name}
-install -p -m 755 cri-o-%{commit_conmon}/bin/conmon %{buildroot}%{_libexecdir}/%{name}
 
 # source codes for building projects
 %if 0%{?with_devel}
@@ -453,7 +425,7 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %if ! 0%{?gotest:1}
 %global gotest go test
 %endif
-
+        
 %gotest %{import_path}/cmd/%{name}
 %gotest %{import_path}/libkpod
 %gotest %{import_path}/libpod
@@ -469,7 +441,6 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %{_bindir}/%{name}
 %{_mandir}/man1/*.1*
 %{_datadir}/bash-completion/completions/*
-%{_libexecdir}/%{name}/conmon
 %config(noreplace) %{_sysconfdir}/cni/net.d/87-%{name}-bridge.conflist
 %{_datadir}/containers/%{repo}.conf
 
@@ -487,7 +458,7 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
-* Fri Mar 23 2018 baude <bbaude@redhat.com> - 0.3.4-1.git57b403eda155d321d8aa29cfa0085aac8ce28a57
+* Fri Mar 23 2018 baude <bbaude@redhat.com> - 0.3.4-1.git57b403e
 - Upstream release 0.3.4
 
 * Fri Mar 16 2018 baude <bbaude@redhat.com> - 0.3.3-2.dev.gitbc358eb
