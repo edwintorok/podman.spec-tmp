@@ -41,12 +41,12 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 fa8442e4a063b9a074cd2d17effdf5de138f90cb
+%global commit0 6c5ebb0315fc6527c0d75ca53fb6b027d20802a5
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: podman
 Version: 0.4.2
-Release: 13.git%{shortcommit0}%{?dist}
+Release: 14.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: %{git_podman}
@@ -460,6 +460,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Mon Apr 16 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 0.4.2-14.git6c5ebb0
+- autobuilt commit 6c5ebb0
+
 * Mon Apr 16 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 0.4.2-13.gitfa8442e
 - autobuilt commit fa8442e
 
