@@ -56,27 +56,28 @@ Source0: %{git0}/archive/%{commit0}/%{repo}-%{shortcommit0}.tar.gz
 #ExclusiveArch:  %%{?go_arches:%%{go_arches}}%%{!?go_arches:%%{ix86} x86_64 aarch64 %%{arm}}
 ExclusiveArch: aarch64 %{arm} ppc64le s390x x86_64
 # If go_compiler is not set to 1, there is no virtual provide. Use golang instead.
-BuildRequires:  %{?go_compiler:compiler(go-compiler)}%{!?go_compiler:golang}
-BuildRequires:  btrfs-progs-devel
-BuildRequires:  device-mapper-devel
-BuildRequires:  glib2-devel
-BuildRequires:  glibc-devel
-BuildRequires:  glibc-static
-BuildRequires:  git
-BuildRequires:  go-md2man
-BuildRequires:  gpgme-devel
-BuildRequires:  libassuan-devel
-BuildRequires:  libgpg-error-devel
-BuildRequires:  libseccomp-devel
-BuildRequires:  libselinux-devel
-BuildRequires:  pkgconfig
-Requires:       runc
-Requires:       skopeo-containers
-Requires:       conmon >= 2:1.10.0-3.gitb0f6d98
-Requires:       buildah
-Requires:       containernetworking-cni >= 0.6.0-3
-Requires:       iptables
-Requires:       atomic-registries
+BuildRequires: %{?go_compiler:compiler(go-compiler)}%{!?go_compiler:golang}
+BuildRequires: btrfs-progs-devel
+BuildRequires: device-mapper-devel
+BuildRequires: glib2-devel
+BuildRequires: glibc-devel
+BuildRequires: glibc-static
+BuildRequires: git
+BuildRequires: go-md2man
+BuildRequires: gpgme-devel
+BuildRequires: libassuan-devel
+BuildRequires: libgpg-error-devel
+BuildRequires: libseccomp-devel
+BuildRequires: libselinux-devel
+BuildRequires: pkgconfig
+BuildRequires: make
+Requires: runc
+Requires: skopeo-containers
+Requires: conmon >= 2:1.10.0-3.gitb0f6d98
+Requires: buildah
+Requires: containernetworking-cni >= 0.6.0-3
+Requires: iptables
+Requires: atomic-registries
 
 # vendored libraries
 # awk '{print "Provides: bundled(golang("$1")) = "$2}' vendor.conf | sort
