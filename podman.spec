@@ -46,7 +46,7 @@
 
 Name: podman
 Version: 0.4.2
-Release: 12.git%{shortcommit0}%{?dist}
+Release: 13.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: %{git_podman}
@@ -459,6 +459,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Mon Apr 16 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 0.4.2-13.gitfa8442e
+- autobuilt commit fa8442e
+
 * Mon Apr 16 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 0.4.2-12.gitfa8442e
 - autobuilt commit fa8442e
 
