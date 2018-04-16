@@ -78,6 +78,7 @@ Requires: buildah
 Requires: containernetworking-cni >= 0.6.0-3
 Requires: iptables
 Requires: atomic-registries
+Requires: oci-systemd-hook
 
 # vendored libraries
 # awk '{print "Provides: bundled(golang("$1")) = "$2}' vendor.conf | sort
