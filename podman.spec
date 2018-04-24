@@ -364,6 +364,7 @@ GOPATH=$GOPATH BUILDTAGS=$BUILDTAGS %gobuild -o bin/%{name} %{import_path}/cmd/%
 BUILDTAGS=$BUILDTAGS make docs
 
 %install
+install -dp %{buildroot}%{_unitdir}
 %make_install PREFIX=%{buildroot}%{_prefix} install install.completions
 
 # install libpod.conf
@@ -445,6 +446,8 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %{_datadir}/bash-completion/completions/*
 %config(noreplace) %{_sysconfdir}/cni/net.d/87-%{name}-bridge.conflist
 %{_datadir}/containers/%{repo}.conf
+%{_unitdir}/io.%{project}.%{name}.service
+%{_unitdir}/io.%{project}.%{name}.socket
 
 %if 0%{?with_devel}
 %files -n libpod-devel -f devel.file-list
