@@ -41,12 +41,12 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 cc1bad85fe7a26cf616a6e8a53988f759d1a24c0
+%global commit0 07253fc8af77a5f19f5661aaee2c1008da79611c
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: podman
-Version: 0.5.2
-Release: 5.git%{shortcommit0}%{?dist}
+Version: 0.5.3
+Release: 1.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: %{git_podman}
@@ -349,6 +349,7 @@ providing packages with %{import_path} prefix.
 %prep
 %autosetup -Sgit -n %{repo}-%{commit0}
 sed -i '/\/bin\/bash/d' completions/bash/%{name}
+mv pkg/hooks/README.md pkg/hooks/README-hooks.md
 
 %build
 mkdir _build
@@ -440,7 +441,7 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 
 %files
 %license LICENSE
-%doc README.md CONTRIBUTING.md hooks.md install.md code-of-conduct.md transfer.md
+%doc README.md CONTRIBUTING.md pkg/hooks/README-hooks.md install.md code-of-conduct.md transfer.md
 %{_bindir}/%{name}
 %{_mandir}/man1/*.1*
 %{_mandir}/man5/*.5*
@@ -453,17 +454,21 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %if 0%{?with_devel}
 %files -n libpod-devel -f devel.file-list
 %license LICENSE
-%doc README.md CONTRIBUTING.md hooks.md install.md code-of-conduct.md transfer.md
+%doc README.md CONTRIBUTING.md pkg/hooks/README-hooks.md install.md code-of-conduct.md transfer.md
 %dir %{gopath}/src/%{provider}.%{provider_tld}/%{project}
 %endif
 
 %if 0%{?with_unit_test} && 0%{?with_devel}
 %files unit-test-devel -f unit-test-devel.file-list
 %license LICENSE
-%doc README.md CONTRIBUTING.md hooks.md install.md code-of-conduct.md transfer.md
+%doc README.md CONTRIBUTING.md pkg/hooks/README-hooks.md install.md code-of-conduct.md transfer.md
 %endif
 
 %changelog
+* Fri May 11 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 0.5.3-1.git07253fc
+- bump to v0.5.3
+- built commit 07253fc
+
 * Fri May 11 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 0.5.2-5.gitcc1bad8
 - autobuilt cc1bad8
 
