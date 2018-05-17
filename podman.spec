@@ -24,6 +24,7 @@
 %global with_unit_test 0
 
 %if 0%{?with_debug}
+%global _find_debuginfo_dwz_opts %{nil}
 %global _dwz_low_mem_die_limit 0
 %else
 %global debug_package   %{nil}
@@ -41,17 +42,16 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 9fcc475d033d7f1718e9490e8944de7f31a2bbab
+%global commit0 624660c1b3869bdd6b3342f5924e813f32a81b4a
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: podman
 Version: 0.5.3
-Release: 4.git%{shortcommit0}%{?dist}
+Release: 5.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: %{git_podman}
 Source0: %{git0}/archive/%{commit0}/%{repo}-%{shortcommit0}.tar.gz
-
 # e.g. el6 has ppc64 arch without gcc-go, so EA tag is required
 #ExclusiveArch:  %%{?go_arches:%%{go_arches}}%%{!?go_arches:%%{ix86} x86_64 aarch64 %%{arm}}
 ExclusiveArch: aarch64 %{arm} ppc64le s390x x86_64
@@ -185,6 +185,19 @@ Provides: bundled(golang(gopkg.in/yaml.v2)) = v2
 %{summary}
 %{repo} provides a library for applications looking to use
 the Container Pod concept popularized by Kubernetes.
+
+%package -n python3-%{name}
+Version: 0.1.0
+BuildArch: noarch
+BuildRequires: python3-devel
+BuildRequires: python3-setuptools
+BuildRequires: python3-varlink
+Requires: python3-varlink
+Provides: python3-%{name} = %{version}-%{release}
+Summary: Python 3 bindings for %{name}
+
+%description -n python3-%{name}
+This package contains Python 3 bindings for %{name}.
 
 %if 0%{?with_devel}
 %package devel
@@ -348,7 +361,7 @@ providing packages with %{import_path} prefix.
 
 %prep
 %autosetup -Sgit -n %{repo}-%{commit0}
-sed -i '/\/bin\/bash/d' completions/bash/%{name}
+sed -i '/\/bin\/env/d' completions/bash/%{name}
 mv pkg/hooks/README.md pkg/hooks/README-hooks.md
 
 %build
@@ -362,11 +375,21 @@ export GOPATH=$(pwd)/_build:$(pwd):$(pwd):%{gopath}
 export BUILDTAGS="selinux seccomp $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) containers_image_ostree_stub"
 
 GOPATH=$GOPATH BUILDTAGS=$BUILDTAGS %gobuild -o bin/%{name} %{import_path}/cmd/%{name}
-BUILDTAGS=$BUILDTAGS make docs
+BUILDTAGS=$BUILDTAGS make binaries docs
+
+#untar contents for python-podman
+pushd contrib/python/dist
+tar zxf %{name}*.tar.gz
+popd
 
 %install
 install -dp %{buildroot}%{_unitdir}
 %make_install PREFIX=%{buildroot}%{_prefix} install install.completions
+
+#install python-podman
+pushd contrib/python
+%{__python3} setup.py install --root %{buildroot}
+popd
 
 # install libpod.conf
 install -dp %{buildroot}%{_datadir}/containers
@@ -451,6 +474,12 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %{_unitdir}/io.%{project}.%{name}.service
 %{_unitdir}/io.%{project}.%{name}.socket
 
+%files -n python3-%{name}
+%license LICENSE
+%doc README.md CONTRIBUTING.md pkg/hooks/README-hooks.md install.md code-of-conduct.md transfer.md
+%dir %{python3_sitelib}
+%{python3_sitelib}/*
+
 %if 0%{?with_devel}
 %files -n libpod-devel -f devel.file-list
 %license LICENSE
@@ -465,6 +494,10 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Wed May 16 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 0.5.3-5.git624660c
+- built commit 624660c
+- New subapackage: python3-podman
+
 * Wed May 16 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 0.5.3-4.git9fcc475
 - autobuilt 9fcc475
 
