@@ -23,6 +23,12 @@
 # Generate unit-test rpm
 %global with_unit_test 0
 
+%if 0%{?fedora} >= 28
+%bcond_without varlink
+%else
+%bcond_with varlink
+%endif
+
 %if 0%{?with_debug}
 %global _find_debuginfo_dwz_opts %{nil}
 %global _dwz_low_mem_die_limit 0
@@ -47,7 +53,7 @@
 
 Name: podman
 Version: 0.5.3
-Release: 6.git%{shortcommit0}%{?dist}
+Release: 7.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: %{git_podman}
@@ -186,8 +192,8 @@ Provides: bundled(golang(gopkg.in/yaml.v2)) = v2
 %{repo} provides a library for applications looking to use
 the Container Pod concept popularized by Kubernetes.
 
+%if %{with varlink}
 %package -n python3-%{name}
-Version: 0.1.0
 BuildArch: noarch
 BuildRequires: python3-devel
 BuildRequires: python3-setuptools
@@ -198,6 +204,7 @@ Summary: Python 3 bindings for %{name}
 
 %description -n python3-%{name}
 This package contains Python 3 bindings for %{name}.
+%endif # varlink
 
 %if 0%{?with_devel}
 %package devel
@@ -377,19 +384,23 @@ export BUILDTAGS="selinux seccomp $(hack/btrfs_installed_tag.sh) $(hack/btrfs_ta
 GOPATH=$GOPATH BUILDTAGS=$BUILDTAGS %gobuild -o bin/%{name} %{import_path}/cmd/%{name}
 BUILDTAGS=$BUILDTAGS make binaries docs
 
+%if %{with varlink}
 #untar contents for python-podman
 pushd contrib/python/dist
 tar zxf %{name}*.tar.gz
 popd
+%endif # varlink
 
 %install
 install -dp %{buildroot}%{_unitdir}
 %make_install PREFIX=%{buildroot}%{_prefix} install install.completions
 
+%if %{with varlink}
 #install python-podman
 pushd contrib/python
 %{__python3} setup.py install --root %{buildroot}
 popd
+%endif # varlink
 
 # install libpod.conf
 install -dp %{buildroot}%{_datadir}/containers
@@ -474,11 +485,13 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %{_unitdir}/io.%{project}.%{name}.service
 %{_unitdir}/io.%{project}.%{name}.socket
 
+%if %{with varlink}
 %files -n python3-%{name}
 %license LICENSE
 %doc README.md CONTRIBUTING.md pkg/hooks/README-hooks.md install.md code-of-conduct.md transfer.md
 %dir %{python3_sitelib}
 %{python3_sitelib}/*
+%endif # varlink
 
 %if 0%{?with_devel}
 %files -n libpod-devel -f devel.file-list
@@ -494,6 +507,10 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Fri May 18 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 0.5.3-7.gitc54b423
+- make python3-podman the same version as the main package
+- build python3-podman only for fedora >= 28
+
 * Fri May 18 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 0.5.3-6.gitc54b423
 - autobuilt c54b423
 
