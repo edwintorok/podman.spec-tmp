@@ -382,9 +382,11 @@ export GOPATH=$(pwd)/_build:$(pwd):$(pwd):%{gopath}
 export BUILDTAGS="selinux seccomp $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) containers_image_ostree_stub"
 
 GOPATH=$GOPATH BUILDTAGS=$BUILDTAGS %gobuild -o bin/%{name} %{import_path}/cmd/%{name}
-BUILDTAGS=$BUILDTAGS make binaries docs
+BUILDTAGS=$BUILDTAGS make %{name} docs
 
 %if %{with varlink}
+BUILDTAGS=$BUILDTAGS make varlink_generate python-%{name}
+
 #untar contents for python-podman
 pushd contrib/python/dist
 tar zxf %{name}*.tar.gz
