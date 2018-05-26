@@ -486,7 +486,7 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %{_datadir}/containers/%{repo}.conf
 %{_unitdir}/io.%{project}.%{name}.service
 %{_unitdir}/io.%{project}.%{name}.socket
-%{_prefix}/libdir/tmpfiles.d/%{name}.conf
+%{_prefix}/lib/tmpfiles.d/%{name}.conf
 
 %if %{with varlink}
 %files -n python3-%{name}
