@@ -48,12 +48,12 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 c54b423cb3d12154255a81054d54f98536393f54
+%global commit0 44d1c1c631db0707a677260244492189a33d9784
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: podman
-Version: 0.5.3
-Release: 7.git%{shortcommit0}%{?dist}
+Version: 0.6.1
+Release: 1.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: %{git_podman}
@@ -510,6 +510,10 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Sat May 26 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 0.6.1-1.git44d1c1c
+- bump to 0.6.1
+- autobuilt 44d1c1c
+
 * Fri May 18 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 0.5.3-7.gitc54b423
 - make python3-podman the same version as the main package
 - build python3-podman only for fedora >= 28
