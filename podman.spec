@@ -78,7 +78,7 @@ BuildRequires: libselinux-devel
 BuildRequires: pkgconfig
 BuildRequires: make
 Requires: runc
-Requires: skopeo-containers
+Requires: containers-common
 Requires: conmon >= 2:1.10.0-3.gitb0f6d98
 Requires: buildah
 Requires: containernetworking-cni >= 0.6.0-3
