@@ -53,7 +53,7 @@
 
 Name: podman
 Version: 0.7.2
-Release: 5.git%{shortcommit0}%{?dist}
+Release: 5.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: %{git_podman}
