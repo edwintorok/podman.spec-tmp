@@ -53,7 +53,7 @@
 
 Name: podman
 Version: 0.7.2
-Release: 3.git%{shortcommit0}%{?dist}
+Release: 4.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: %{git_podman}
@@ -75,6 +75,7 @@ BuildRequires: libassuan-devel
 BuildRequires: libgpg-error-devel
 BuildRequires: libseccomp-devel
 BuildRequires: libselinux-devel
+BuildRequires: ostree-devel
 BuildRequires: pkgconfig
 BuildRequires: make
 Requires: runc
@@ -379,7 +380,7 @@ ln -s ../../../../ src/%{import_path}
 popd
 ln -s vendor src
 export GOPATH=$(pwd)/_build:$(pwd):$(pwd):%{gopath}
-export BUILDTAGS="selinux seccomp $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) containers_image_ostree_stub"
+export BUILDTAGS="selinux seccomp $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh)"
 
 GOPATH=$GOPATH go generate ./cmd/podman/varlink/...
 GOPATH=$GOPATH BUILDTAGS=$BUILDTAGS %gobuild -o bin/%{name} %{import_path}/cmd/%{name}
@@ -511,6 +512,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Mon Jul 09 2018 Dan Walsh <dwalsh@redhat.com> - 0.7.2-4.gitf661e1d
+- Add ostree support
+
 * Mon Jul 09 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 0.7.2-3.gitf661e1d
 - autobuilt f661e1d
 
