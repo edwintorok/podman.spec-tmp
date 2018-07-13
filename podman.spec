@@ -37,7 +37,7 @@
 %endif
 
 # %if ! 0% {?gobuild:1}
-%define gobuild(o:) go build -tags="$BUILDTAGS selinux seccomp" -ldflags "${LDFLAGS:-} -B 0x$(head -c20 /dev/urandom|od -An -tx1|tr -d ' \\n')" -a -v -x %{?**};
+%define gobuild(o:) go build -tags="$BUILDTAGS varlink selinux seccomp" -ldflags "${LDFLAGS:-} -B 0x$(head -c20 /dev/urandom|od -An -tx1|tr -d ' \\n')" -a -v -x %{?**};
 #% endif
 
 %global provider github
@@ -380,7 +380,7 @@ ln -s ../../../../ src/%{import_path}
 popd
 ln -s vendor src
 export GOPATH=$(pwd)/_build:$(pwd):$(pwd):%{gopath}
-export BUILDTAGS="selinux seccomp $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh)"
+export BUILDTAGS="varlink selinux seccomp $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh)"
 
 GOPATH=$GOPATH go generate ./cmd/podman/varlink/...
 GOPATH=$GOPATH BUILDTAGS=$BUILDTAGS %gobuild -o bin/%{name} %{import_path}/cmd/%{name}
