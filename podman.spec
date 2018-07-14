@@ -53,7 +53,7 @@
 
 Name: podman
 Version: 0.7.2
-Release: 9.dev.git%{shortcommit0}%{?dist}
+Release: 10.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: %{git_podman}
@@ -80,8 +80,6 @@ BuildRequires: pkgconfig
 BuildRequires: make
 Requires: runc
 Requires: containers-common
-Requires: conmon >= 2:1.10.0-3.gitb0f6d98
-Requires: buildah
 Requires: containernetworking-cni >= 0.6.0-3
 Requires: iptables
 Requires: atomic-registries
@@ -199,12 +197,15 @@ BuildArch: noarch
 BuildRequires: python3-devel
 BuildRequires: python3-setuptools
 BuildRequires: python3-varlink
+Requires: python3-setuptools
 Requires: python3-varlink
+Requires: python3-dateutil
+Requires: python3-humanize
 Provides: python3-%{name} = %{version}-%{release}
-Summary: Python 3 bindings for %{name}
+Summary: Python 3 tool and bindings for %{name}
 
 %description -n python3-%{name}
-This package contains Python 3 bindings for %{name}.
+This package contains Python 3 tool and bindings for %{name}.
 %endif # varlink
 
 %if 0%{?with_devel}
@@ -390,8 +391,13 @@ BUILDTAGS=$BUILDTAGS make %{name} docs
 BUILDTAGS=$BUILDTAGS make varlink_generate python-%{name}
 
 #untar contents for python-podman
-pushd contrib/python/dist
+pushd contrib/python/podman/dist
 tar zxf %{name}*.tar.gz
+popd
+
+#untar contents for python-pypodman
+pushd contrib/python/pypodman/dist
+tar zxf py%{name}*.tar.gz
 popd
 %endif # varlink
 
@@ -402,6 +408,10 @@ install -dp %{buildroot}%{_unitdir}
 %if %{with varlink}
 #install python-podman
 pushd contrib/python
+%{__python3} setup.py install --root %{buildroot}
+popd
+#install python-pypodman
+pushd contrib/python/pypodman
 %{__python3} setup.py install --root %{buildroot}
 popd
 %endif # varlink
@@ -496,6 +506,7 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %doc README.md CONTRIBUTING.md pkg/hooks/README-hooks.md install.md code-of-conduct.md transfer.md
 %dir %{python3_sitelib}
 %{python3_sitelib}/*
+%{_bindir}/pypodman
 %endif # varlink
 
 %if 0%{?with_devel}
@@ -512,6 +523,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Sat Jul 14 2018 Dan Walsh <dwalsh@redhat.com> - 0.7.2-10.dev.git86154b6
+- Add install of pypodman
+
 * Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 0.7.2-9.dev.git86154b6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
