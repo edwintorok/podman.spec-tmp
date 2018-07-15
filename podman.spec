@@ -1,26 +1,7 @@
-# If any of the following macros should be set otherwise,
-# you can wrap any of them with the following conditions:
-# - %%if 0%%{centos} == 7
-# - %%if 0%%{?rhel} == 7
-# - %%if 0%%{?fedora} == 23
-# Or just test for particular distribution:
-# - %%if 0%%{centos}
-# - %%if 0%%{?rhel}
-# - %%if 0%%{?fedora}
-#
-# Be aware, on centos, both %%rhel and %%centos are set. If you want to test
-# rhel specific macros, you can use %%if 0%%{?rhel} && 0%%{?centos} == 0 condition.
-# (Don't forget to replace double percentage symbol with single one in order to apply a condition)
-
-# Generate devel rpm
 %global with_devel 0
-# Build project from bundled dependencies
 %global with_bundled 1
-# Build with debug info rpm
 %global with_debug 1
-# Run tests in check section
 %global with_check 0
-# Generate unit-test rpm
 %global with_unit_test 0
 
 %if 0%{?fedora} >= 28
@@ -37,7 +18,7 @@
 %endif
 
 # %if ! 0% {?gobuild:1}
-%define gobuild(o:) go build -tags="$BUILDTAGS varlink selinux seccomp" -ldflags "${LDFLAGS:-} -B 0x$(head -c20 /dev/urandom|od -An -tx1|tr -d ' \\n')" -a -v -x %{?**};
+%define gobuild(o:) go build -tags="$BUILDTAGS" -ldflags "${LDFLAGS:-} -B 0x$(head -c20 /dev/urandom|od -An -tx1|tr -d ' \\n')" -a -v -x %{?**};
 #% endif
 
 %global provider github
@@ -48,12 +29,12 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 86154b6538c1fec69fde14f2d4b35c31dcc10b35
+%global commit0 06c546e88d67fe7186d3da9dc245e2122511927a
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: podman
-Version: 0.7.2
-Release: 10.dev.git%{shortcommit0}%{?dist}
+Version: 0.7.3
+Release: 1.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: %{git_podman}
@@ -202,11 +183,24 @@ Requires: python3-varlink
 Requires: python3-dateutil
 Requires: python3-humanize
 Provides: python3-%{name} = %{version}-%{release}
-Summary: Python 3 tool and bindings for %{name}
+Summary: Python 3 bindings for %{name}
 
 %description -n python3-%{name}
-This package contains Python 3 tool and bindings for %{name}.
+This package contains Python 3 bindings for %{name}.
 %endif # varlink
+
+%package -n python3-py%{name}
+BuildArch: noarch
+BuildRequires: python3-devel
+BuildRequires: python3-setuptools
+BuildRequires: python3-varlink
+Requires: python3-setuptools
+Requires: python3-varlink
+Requires: python3-dateutil
+Summary: Python 3 tool for %{name}
+
+%description -n python3-py%{name}
+This package contains Python 3 tool for %{name}.
 
 %if 0%{?with_devel}
 %package devel
@@ -384,35 +378,24 @@ export GOPATH=$(pwd)/_build:$(pwd):$(pwd):%{gopath}
 export BUILDTAGS="varlink selinux seccomp $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh)"
 
 GOPATH=$GOPATH go generate ./cmd/podman/varlink/...
-GOPATH=$GOPATH BUILDTAGS=$BUILDTAGS %gobuild -o bin/%{name} %{import_path}/cmd/%{name}
-BUILDTAGS=$BUILDTAGS make %{name} docs
-
-%if %{with varlink}
-BUILDTAGS=$BUILDTAGS make varlink_generate python-%{name}
-
-#untar contents for python-podman
-pushd contrib/python/podman/dist
-tar zxf %{name}*.tar.gz
-popd
-
-#untar contents for python-pypodman
-pushd contrib/python/pypodman/dist
-tar zxf py%{name}*.tar.gz
-popd
-%endif # varlink
+BUILDTAGS=$BUILDTAGS make binaries docs
 
 %install
 install -dp %{buildroot}%{_unitdir}
+install -dp %{buildroot}
 %make_install PREFIX=%{buildroot}%{_prefix} install install.completions
 
 %if %{with varlink}
 #install python-podman
-pushd contrib/python
-%{__python3} setup.py install --root %{buildroot}
+pushd contrib/python/podman
+#%%{__python3} setup.py install --root %{buildroot}
+%py3_install
 popd
+
 #install python-pypodman
 pushd contrib/python/pypodman
-%{__python3} setup.py install --root %{buildroot}
+#%%{__python3} setup.py install --root %{buildroot}
+%py3_install
 popd
 %endif # varlink
 
@@ -504,9 +487,15 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %files -n python3-%{name}
 %license LICENSE
 %doc README.md CONTRIBUTING.md pkg/hooks/README-hooks.md install.md code-of-conduct.md transfer.md
-%dir %{python3_sitelib}
-%{python3_sitelib}/*
-%{_bindir}/pypodman
+%dir %{python3_sitelib}/%{name}
+%{python3_sitelib}/%{name}*.egg-info
+%{python3_sitelib}/%{name}/*
+
+%files -n python3-py%{name}
+%license LICENSE
+%doc README.md CONTRIBUTING.md pkg/hooks/README-hooks.md install.md code-of-conduct.md transfer.md
+%{python3_sitelib}/py%{name}*.egg-info
+%{_bindir}/py%{name}
 %endif # varlink
 
 %if 0%{?with_devel}
@@ -523,6 +512,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Sun Jul 15 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 0.7.3-1.dev.git06c546e
+- built commit 06c546e
+
 * Sat Jul 14 2018 Dan Walsh <dwalsh@redhat.com> - 0.7.2-10.dev.git86154b6
 - Add install of pypodman
 
