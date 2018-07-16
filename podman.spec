@@ -382,7 +382,6 @@ BUILDTAGS=$BUILDTAGS make binaries docs
 
 %install
 install -dp %{buildroot}%{_unitdir}
-install -dp %{buildroot}
 %make_install PREFIX=%{buildroot}%{_prefix} install install.completions
 
 %if %{with varlink}
