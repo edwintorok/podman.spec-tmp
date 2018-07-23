@@ -34,7 +34,7 @@
 
 Name: podman
 Version: 0.7.3
-Release: 1.dev.git%{shortcommit0}%{?dist}
+Release: 2.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: %{git_podman}
@@ -65,6 +65,7 @@ Requires: containernetworking-cni >= 0.6.0-3
 Requires: iptables
 Requires: atomic-registries
 Requires: oci-systemd-hook
+Recommends: container-selinux
 
 # vendored libraries
 # awk '{print "Provides: bundled(golang("$1")) = "$2}' vendor.conf | sort
@@ -511,6 +512,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Mon Jul 23 2018 Dan Walsh <dwalsh@redhat.com> - 0.7.3-2.dev.git06c546e
+- Add Reccommeds container-selinux
+
 * Sun Jul 15 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 0.7.3-1.dev.git06c546e
 - built commit 06c546e
 
