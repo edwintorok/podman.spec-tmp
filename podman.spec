@@ -34,7 +34,7 @@
 
 Name: podman
 Version: 0.7.4
-Release: 1.dev.git%{shortcommit0}%{?dist}
+Release: 2.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: %{git_podman}
@@ -188,7 +188,6 @@ Summary: Python 3 bindings for %{name}
 
 %description -n python3-%{name}
 This package contains Python 3 bindings for %{name}.
-%endif # varlink
 
 %package -n python3-py%{name}
 BuildArch: noarch
@@ -202,6 +201,7 @@ Summary: Python 3 tool for %{name}
 
 %description -n python3-py%{name}
 This package contains Python 3 tool for %{name}.
+%endif # varlink
 
 %if 0%{?with_devel}
 %package devel
@@ -529,6 +529,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Tue Jul 24 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 0.7.4-2.dev.git9a18681
+- pypodman package exists only if varlink
+
 * Mon Jul 23 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 0.7.4-1.dev.git9a18681
 - bump to v0.7.4-dev
 - built commit 9a18681
