@@ -34,7 +34,7 @@
 
 Name: podman
 Version: 0.7.4
-Release: 6.dev.git%{shortcommit0}%{?dist}
+Release: 7.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: %{git_podman}
@@ -366,6 +366,8 @@ providing packages with %{import_path} prefix.
 %prep
 %autosetup -Sgit -n %{repo}-%{commit0}
 sed -i '/\/bin\/env/d' completions/bash/%{name}
+sed -i 's/0.0.0/%{version}/' contrib/python/%{name}/setup.py
+sed -i 's/0.0.0/%{version}/' contrib/python/py%{name}/setup.py
 mv pkg/hooks/README.md pkg/hooks/README-hooks.md
 
 %build
@@ -384,12 +386,12 @@ BUILDTAGS=$BUILDTAGS make binaries docs
 %if %{with varlink}
 #install python-podman
 pushd contrib/python/podman
-PODMAN_VERSION=%{version} %py3_build
+%py3_build
 popd
 
 #install python-pypodman
 pushd contrib/python/pypodman
-PODMAN_VERSION=%{version} %py3_build
+%py3_build
 popd
 
 %endif # varlink
@@ -529,6 +531,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Fri Jul 27 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 0.7.4-7.dev.git3dd577e
+- fix python package version
+
 * Fri Jul 27 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.7.4-6.dev.git3dd577e
 - Rebuild for new binutils
 
