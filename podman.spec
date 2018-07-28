@@ -29,12 +29,12 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 3dd577e93c200e1af48cb8c08ac67962299c5d1f
+%global commit0 87d8edb4c10e53e6e9833ff8b64c3c0041f1823b
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: podman
-Version: 0.7.4
-Release: 7.dev.git%{shortcommit0}%{?dist}
+Version: 0.8.10.8.1
+Release: 1.dev.git%{shortcommit0}%{?dist}1%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: %{git_podman}
@@ -531,6 +531,10 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Sat Jul 28 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 0.8.10.8.1-1.dev.git87d8edb1
+- bump to 0.8.1
+- autobuilt 87d8edb
+
 * Fri Jul 27 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 0.7.4-7.dev.git3dd577e
 - fix python package version
 
