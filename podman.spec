@@ -29,7 +29,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 433cbd52543dccdad9806b8d44fd5d054ed559f1
+%global commit0 5a4e5902a00fe593afc560e8ef9af1b246821f62
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: podman
@@ -531,11 +531,15 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
-* Sun Jul 29 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 0.8.10.8.1-1.dev.git433cbd51
+* Tue Jul 31 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 0.8.10.8.1-1.dev.git5a4e5901
+- bump to 0.8.1
+- autobuilt 5a4e590
+
+* Sun Jul 29 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 0.8.10.8.1-1.dev.git5a4e590.dev.git433cbd51
 - bump to 0.8.1
 - autobuilt 433cbd5
 
-* Sat Jul 28 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 0.8.10.8.1-1.dev.git433cbd5.dev.git87d8edb1
+* Sat Jul 28 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 0.8.10.8.1-1.dev.git5a4e590.dev.git433cbd5.dev.git87d8edb1
 - bump to 0.8.1
 - autobuilt 87d8edb
 
