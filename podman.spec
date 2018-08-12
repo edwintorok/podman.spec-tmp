@@ -36,11 +36,12 @@ Name: podman
 Epoch: 1
 %endif
 Version: 0.8.3
-Release: 2.dev.git%{shortcommit0}%{?dist}
+Release: 3.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: %{git_podman}
 Source0: %{git0}/archive/%{commit0}/%{repo}-%{shortcommit0}.tar.gz
+Patch: rootless.patch
 # e.g. el6 has ppc64 arch without gcc-go, so EA tag is required
 #ExclusiveArch:  %%{?go_arches:%%{go_arches}}%%{!?go_arches:%%{ix86} x86_64 aarch64 %%{arm}}
 ExclusiveArch: aarch64 %{arm} ppc64le s390x x86_64
@@ -205,6 +206,24 @@ Summary: Python 3 tool for %{name}
 %description -n python3-py%{name}
 This package contains Python 3 tool for %{name}.
 %endif # varlink
+
+%package docker
+Summary:       "package to Emulate Docker CLI using podman."
+BuildArch:     noarch
+Requires:      %{name} = %{version}-%{release}
+Conflicts:     docker
+Conflicts:     docker-latest
+Conflicts:     docker-ce
+Conflicts:     docker-ee
+
+%description docker
+This package installs a script named docker that emulates the Docker CLI by
+executes podman commands, it also creates links between all Docker CLI man
+pages and podman.
+
+%files docker
+%{_bindir}/docker
+%{_mandir}/man1/docker*.1*
 
 %if 0%{?with_devel}
 %package devel
@@ -404,18 +423,11 @@ install -dp %{buildroot}%{_unitdir}
         install.man \
         install.cni \
         install.systemd \
-        install.completions
+        install.completions \
+        install.docker
 
 %if %{with varlink}
-#install python-podman
-pushd contrib/python/podman
-%py3_install
-popd
-
-#install python-pypodman
-pushd contrib/python/pypodman
-%py3_install
-popd
+%{__make} DESTDIR=%{buildroot} install.python
 %endif # varlink
 
 # install libpod.conf
@@ -493,7 +505,7 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %license LICENSE
 %doc README.md CONTRIBUTING.md pkg/hooks/README-hooks.md install.md code-of-conduct.md transfer.md
 %{_bindir}/%{name}
-%{_mandir}/man1/*.1*
+%{_mandir}/man1/podman*.1*
 %{_mandir}/man5/*.5*
 %{_datadir}/bash-completion/completions/*
 %config(noreplace) %{_sysconfdir}/cni/net.d/87-%{name}-bridge.conflist
@@ -533,6 +545,10 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Sun Aug 12 2018 Dan Walsh <dwalsh@redhat.com> - 1:0.8.3-3.dev.git3d55721f
+- Add podman-docker support
+- Force cgroupfs for non root podman
+
 * Sun Aug 12 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:0.8.3-2.dev.git3d55721f
 - Requires: conmon
 - use default %gobuild
