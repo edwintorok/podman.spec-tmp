@@ -6,6 +6,7 @@
 
 %if 0%{?fedora} >= 28
 %bcond_without varlink
+%define gogenerate go generate
 %else
 %bcond_with varlink
 %endif
@@ -14,7 +15,7 @@
 %global _find_debuginfo_dwz_opts %{nil}
 %global _dwz_low_mem_die_limit 0
 %else
-%global debug_package   %{nil}
+%global debug_package %{nil}
 %endif
 
 # %if ! 0% {?gobuild:1}
@@ -29,12 +30,17 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 1a439f9fcbbc6a2b509c1ca7e23207a07a652399
+%global commit0 3d55721fc4879cba166a9afb5acfeb8e1cdd6272
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: podman
-Version: 0.8.10.8.1
-Release: 1.dev.git%{shortcommit0}%{?dist}1%{?dist}
+# Version string is wrong but only written as such to avoid epoch bumps
+# Will be fixed once upstream moves to 0.8.11-dev
+%if 0%{?fedora} > 28
+Epoch: 1
+%endif
+Version: 0.8.3
+Release: 1.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: %{git_podman}
@@ -78,10 +84,10 @@ Provides: bundled(golang(github.com/BurntSushi/toml)) = v0.2.0
 Provides: bundled(golang(github.com/containerd/cgroups)) = 77e628511d924b13a77cebdc73b757a47f6d751b
 Provides: bundled(golang(github.com/containerd/continuity)) = master
 Provides: bundled(golang(github.com/containernetworking/cni)) = v0.7.0-alpha1
-Provides: bundled(golang(github.com/containernetworking/plugins)) = 1fb94a4222eafc6f948eacdca9c9f2158b427e53
-Provides: bundled(golang(github.com/containers/image)) = c6e0eee0f8eb38e78ae2e44a9aeea0576f451617
-Provides: bundled(golang(github.com/containers/psgo)) = dd34e7e448e5d4f3c7ce87b5da7738b00778dbfd
-Provides: bundled(golang(github.com/containers/storage)) = 8b1a0f8d6863cf05709af333b8997a437652ec4c
+Provides: bundled(golang(github.com/containernetworking/plugins)) = 1562a1e60ed101aacc5e08ed9dbeba8e9f3d4ec1
+Provides: bundled(golang(github.com/containers/image)) = 134f99bed228d6297dc01d152804f6f09f185418
+Provides: bundled(golang(github.com/containers/psgo)) = 382fc951fe0a8aba62043862ce1a56f77524db87
+Provides: bundled(golang(github.com/containers/storage)) = 17c7d1fee5603ccf6dd97edc14162fc1510e7e23
 Provides: bundled(golang(github.com/coreos/go-systemd)) = v14
 Provides: bundled(golang(github.com/cri-o/ocicni)) = master
 Provides: bundled(golang(github.com/cyphar/filepath-securejoin)) = v0.2.1
@@ -121,7 +127,7 @@ Provides: bundled(golang(github.com/mtrmac/gpgme)) = b2432428689ca58c2b8e8dea944
 Provides: bundled(golang(github.com/Nvveen/Gotty)) = master
 Provides: bundled(golang(github.com/opencontainers/go-digest)) = v1.0.0-rc0
 Provides: bundled(golang(github.com/opencontainers/image-spec)) = v1.0.0
-Provides: bundled(golang(github.com/opencontainers/runc)) = 6e15bc3f92fd4c58b3285e8f27eaeb6b22d62920
+Provides: bundled(golang(github.com/opencontainers/runc)) = b4e2ecb452d9ee4381137cc0a7e6715b96bed6de
 Provides: bundled(golang(github.com/opencontainers/runtime-spec)) = v1.0.0
 Provides: bundled(golang(github.com/opencontainers/runtime-tools)) = 625e2322645b151a7cbb93a8b42920933e72167f
 Provides: bundled(golang(github.com/opencontainers/selinux)) = b6fa367ed7f534f9ba25391cc2d467085dbb445a
@@ -130,7 +136,7 @@ Provides: bundled(golang(github.com/ostreedev/ostree-go)) = master
 Provides: bundled(golang(github.com/pkg/errors)) = v0.8.0
 Provides: bundled(golang(github.com/pmezard/go-difflib)) = 792786c7400a136282c1664665ae0a8db921c6c2
 Provides: bundled(golang(github.com/pquerna/ffjson)) = d49c2bc1aa135aad0c6f4fc2056623ec78f5d5ac
-Provides: bundled(golang(github.com/projectatomic/buildah)) = a2c8358455f9b6a254c572455af2a0afcfcec544
+Provides: bundled(golang(github.com/projectatomic/buildah)) = 35a37f36d37bf84397d7f79f6bb8649f728c19f1
 Provides: bundled(golang(github.com/seccomp/containers-golang)) = master
 Provides: bundled(golang(github.com/seccomp/libseccomp-golang)) = v0.9.0
 Provides: bundled(golang(github.com/sirupsen/logrus)) = v1.0.0
@@ -140,7 +146,7 @@ Provides: bundled(golang(github.com/syndtr/gocapability)) = e7cb7fa329f456b38551
 Provides: bundled(golang(github.com/tchap/go-patricia)) = v2.2.6
 Provides: bundled(golang(github.com/ulikunitz/xz)) = v0.5.4
 Provides: bundled(golang(github.com/ulule/deepcopier)) = master
-# "-" are not accepted in version strings, so comment out below line
+# no '-' in version
 #Provides: bundled(golang(github.com/urfave/cli)) = fix-short-opts-parsing
 Provides: bundled(golang(github.com/varlink/go)) = master
 Provides: bundled(golang(github.com/vbatts/tar-split)) = v0.10.2
@@ -379,9 +385,8 @@ popd
 ln -s vendor src
 export GOPATH=$(pwd)/_build:$(pwd):$(pwd):%{gopath}
 export BUILDTAGS="varlink selinux seccomp $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh)"
-
-GOPATH=$GOPATH go generate ./cmd/podman/varlink/...
-BUILDTAGS=$BUILDTAGS make binaries docs
+%gogenerate ./cmd/%{name}/varlink/...
+%gobuild -o bin/%{name} %{import_path}/cmd/%{name}
 
 %if %{with varlink}
 #install python-podman
@@ -496,8 +501,8 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %{_datadir}/bash-completion/completions/*
 %config(noreplace) %{_sysconfdir}/cni/net.d/87-%{name}-bridge.conflist
 %{_datadir}/containers/%{repo}.conf
-%{_unitdir}/io.%{project}.%{name}.service
-%{_unitdir}/io.%{project}.%{name}.socket
+%{_unitdir}/io.%{name}.service
+%{_unitdir}/io.%{name}.socket
 %{_usr}/lib/tmpfiles.d/%{name}.conf
 
 %if %{with varlink}
@@ -531,6 +536,11 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Sat Aug 11 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:0.8.3-1.dev.git3d55721f
+- bump to v0.8.3-dev
+- built commit 3d55721f
+- bump Epoch to 1, cause my autobuilder messed up earlier
+
 * Wed Aug 01 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 0.8.10.8.1-1.dev.git1a439f91
 - bump to 0.8.1
 - autobuilt 1a439f9
