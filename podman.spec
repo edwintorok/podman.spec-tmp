@@ -18,10 +18,6 @@
 %global debug_package %{nil}
 %endif
 
-# %if ! 0% {?gobuild:1}
-%define gobuild(o:) go build -tags="$BUILDTAGS" -ldflags "${LDFLAGS:-} -B 0x$(head -c20 /dev/urandom|od -An -tx1|tr -d ' \\n')" -a -v -x %{?**};
-#% endif
-
 %global provider github
 %global provider_tld com
 %global project projectatomic
@@ -40,7 +36,7 @@ Name: podman
 Epoch: 1
 %endif
 Version: 0.8.3
-Release: 1.dev.git%{shortcommit0}%{?dist}
+Release: 2.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: %{git_podman}
@@ -71,6 +67,7 @@ Requires: containernetworking-cni >= 0.6.0-3
 Requires: iptables
 Requires: atomic-registries
 Requires: oci-systemd-hook
+Requires: conmon
 Recommends: container-selinux
 
 # vendored libraries
@@ -269,72 +266,72 @@ BuildRequires: golang(k8s.io/client-go/tools/remotecommand)
 BuildRequires: golang(k8s.io/kubernetes/pkg/kubelet/container)
 %endif
 
-Requires:      golang(github.com/BurntSushi/toml)
-Requires:      golang(github.com/containerd/cgroups)
-Requires:      golang(github.com/containernetworking/plugins/pkg/ns)
-Requires:      golang(github.com/containers/image/copy)
-Requires:      golang(github.com/containers/image/directory)
-Requires:      golang(github.com/containers/image/docker)
-Requires:      golang(github.com/containers/image/docker/archive)
-Requires:      golang(github.com/containers/image/docker/reference)
-Requires:      golang(github.com/containers/image/docker/tarfile)
-Requires:      golang(github.com/containers/image/image)
-Requires:      golang(github.com/containers/image/oci/archive)
-Requires:      golang(github.com/containers/image/pkg/strslice)
-Requires:      golang(github.com/containers/image/pkg/sysregistries)
-Requires:      golang(github.com/containers/image/signature)
-Requires:      golang(github.com/containers/image/storage)
-Requires:      golang(github.com/containers/image/tarball)
-Requires:      golang(github.com/containers/image/transports/alltransports)
-Requires:      golang(github.com/containers/image/types)
-Requires:      golang(github.com/containers/storage)
-Requires:      golang(github.com/containers/storage/pkg/archive)
-Requires:      golang(github.com/containers/storage/pkg/idtools)
-Requires:      golang(github.com/containers/storage/pkg/reexec)
-Requires:      golang(github.com/coreos/go-systemd/dbus)
-Requires:      golang(github.com/cri-o/ocicni/pkg/ocicni)
-Requires:      golang(github.com/docker/distribution/reference)
-Requires:      golang(github.com/docker/docker/daemon/caps)
-Requires:      golang(github.com/docker/docker/pkg/mount)
-Requires:      golang(github.com/docker/docker/pkg/namesgenerator)
-Requires:      golang(github.com/docker/docker/pkg/stringid)
-Requires:      golang(github.com/docker/docker/pkg/system)
-Requires:      golang(github.com/docker/docker/pkg/term)
-Requires:      golang(github.com/docker/docker/pkg/truncindex)
-Requires:      golang(github.com/ghodss/yaml)
-Requires:      golang(github.com/godbus/dbus)
-Requires:      golang(github.com/mattn/go-sqlite3)
-Requires:      golang(github.com/mrunalp/fileutils)
-Requires:      golang(github.com/opencontainers/go-digest)
-Requires:      golang(github.com/opencontainers/image-spec/specs-go/v1)
-Requires:      golang(github.com/opencontainers/runc/libcontainer)
-Requires:      golang(github.com/opencontainers/runtime-spec/specs-go)
-Requires:      golang(github.com/opencontainers/runtime-tools/generate)
-Requires:      golang(github.com/opencontainers/selinux/go-selinux)
-Requires:      golang(github.com/opencontainers/selinux/go-selinux/label)
-Requires:      golang(github.com/pkg/errors)
-Requires:      golang(github.com/sirupsen/logrus)
-Requires:      golang(github.com/ulule/deepcopier)
-Requires:      golang(golang.org/x/crypto/ssh/terminal)
-Requires:      golang(golang.org/x/sys/unix)
-Requires:      golang(k8s.io/apimachinery/pkg/util/wait)
-Requires:      golang(k8s.io/client-go/tools/remotecommand)
-Requires:      golang(k8s.io/kubernetes/pkg/kubelet/container)
+Requires: golang(github.com/BurntSushi/toml)
+Requires: golang(github.com/containerd/cgroups)
+Requires: golang(github.com/containernetworking/plugins/pkg/ns)
+Requires: golang(github.com/containers/image/copy)
+Requires: golang(github.com/containers/image/directory)
+Requires: golang(github.com/containers/image/docker)
+Requires: golang(github.com/containers/image/docker/archive)
+Requires: golang(github.com/containers/image/docker/reference)
+Requires: golang(github.com/containers/image/docker/tarfile)
+Requires: golang(github.com/containers/image/image)
+Requires: golang(github.com/containers/image/oci/archive)
+Requires: golang(github.com/containers/image/pkg/strslice)
+Requires: golang(github.com/containers/image/pkg/sysregistries)
+Requires: golang(github.com/containers/image/signature)
+Requires: golang(github.com/containers/image/storage)
+Requires: golang(github.com/containers/image/tarball)
+Requires: golang(github.com/containers/image/transports/alltransports)
+Requires: golang(github.com/containers/image/types)
+Requires: golang(github.com/containers/storage)
+Requires: golang(github.com/containers/storage/pkg/archive)
+Requires: golang(github.com/containers/storage/pkg/idtools)
+Requires: golang(github.com/containers/storage/pkg/reexec)
+Requires: golang(github.com/coreos/go-systemd/dbus)
+Requires: golang(github.com/cri-o/ocicni/pkg/ocicni)
+Requires: golang(github.com/docker/distribution/reference)
+Requires: golang(github.com/docker/docker/daemon/caps)
+Requires: golang(github.com/docker/docker/pkg/mount)
+Requires: golang(github.com/docker/docker/pkg/namesgenerator)
+Requires: golang(github.com/docker/docker/pkg/stringid)
+Requires: golang(github.com/docker/docker/pkg/system)
+Requires: golang(github.com/docker/docker/pkg/term)
+Requires: golang(github.com/docker/docker/pkg/truncindex)
+Requires: golang(github.com/ghodss/yaml)
+Requires: golang(github.com/godbus/dbus)
+Requires: golang(github.com/mattn/go-sqlite3)
+Requires: golang(github.com/mrunalp/fileutils)
+Requires: golang(github.com/opencontainers/go-digest)
+Requires: golang(github.com/opencontainers/image-spec/specs-go/v1)
+Requires: golang(github.com/opencontainers/runc/libcontainer)
+Requires: golang(github.com/opencontainers/runtime-spec/specs-go)
+Requires: golang(github.com/opencontainers/runtime-tools/generate)
+Requires: golang(github.com/opencontainers/selinux/go-selinux)
+Requires: golang(github.com/opencontainers/selinux/go-selinux/label)
+Requires: golang(github.com/pkg/errors)
+Requires: golang(github.com/sirupsen/logrus)
+Requires: golang(github.com/ulule/deepcopier)
+Requires: golang(golang.org/x/crypto/ssh/terminal)
+Requires: golang(golang.org/x/sys/unix)
+Requires: golang(k8s.io/apimachinery/pkg/util/wait)
+Requires: golang(k8s.io/client-go/tools/remotecommand)
+Requires: golang(k8s.io/kubernetes/pkg/kubelet/container)
 
-Provides:      golang(%{import_path}/cmd/%{name}/docker) = %{version}-%{release}
-Provides:      golang(%{import_path}/cmd/%{name}/formats) = %{version}-%{release}
-Provides:      golang(%{import_path}/libkpod) = %{version}-%{release}
-Provides:      golang(%{import_path}/libpod) = %{version}-%{release}
-Provides:      golang(%{import_path}/libpod/common) = %{version}-%{release}
-Provides:      golang(%{import_path}/libpod/driver) = %{version}-%{release}
-Provides:      golang(%{import_path}/libpod/layers) = %{version}-%{release}
-Provides:      golang(%{import_path}/pkg/annotations) = %{version}-%{release}
-Provides:      golang(%{import_path}/pkg/chrootuser) = %{version}-%{release}
-Provides:      golang(%{import_path}/pkg/registrar) = %{version}-%{release}
-Provides:      golang(%{import_path}/pkg/storage) = %{version}-%{release}
-Provides:      golang(%{import_path}/utils) = %{version}-%{release}
+Provides: golang(%{import_path}/cmd/%{name}/docker) = %{version}-%{release}
+Provides: golang(%{import_path}/cmd/%{name}/formats) = %{version}-%{release}
+Provides: golang(%{import_path}/libkpod) = %{version}-%{release}
+Provides: golang(%{import_path}/libpod) = %{version}-%{release}
+Provides: golang(%{import_path}/libpod/common) = %{version}-%{release}
+Provides: golang(%{import_path}/libpod/driver) = %{version}-%{release}
+Provides: golang(%{import_path}/libpod/layers) = %{version}-%{release}
+Provides: golang(%{import_path}/pkg/annotations) = %{version}-%{release}
+Provides: golang(%{import_path}/pkg/chrootuser) = %{version}-%{release}
+Provides: golang(%{import_path}/pkg/registrar) = %{version}-%{release}
+Provides: golang(%{import_path}/pkg/storage) = %{version}-%{release}
+Provides: golang(%{import_path}/utils) = %{version}-%{release}
 
-%description -n  libpod-devel
+%description -n libpod-devel
 %{summary}
 
 This package contains library source intended for
@@ -351,15 +348,15 @@ Summary:         Unit tests for %{name} package
 %endif
 
 # test subpackage tests code from devel subpackage
-Requires:        %{name}-devel = %{version}-%{release}
+Requires: %{name}-devel = %{version}-%{release}
 
 %if 0%{?with_check} && ! 0%{?with_bundled}
 BuildRequires: golang(github.com/stretchr/testify/assert)
 BuildRequires: golang(github.com/urfave/cli)
 %endif
 
-Requires:      golang(github.com/stretchr/testify/assert)
-Requires:      golang(github.com/urfave/cli)
+Requires: golang(github.com/stretchr/testify/assert)
+Requires: golang(github.com/urfave/cli)
 
 %description unit-test-devel
 %{summary}
@@ -536,6 +533,10 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Sun Aug 12 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:0.8.3-2.dev.git3d55721f
+- Requires: conmon
+- use default %gobuild
+
 * Sat Aug 11 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:0.8.3-1.dev.git3d55721f
 - bump to v0.8.3-dev
 - built commit 3d55721f
