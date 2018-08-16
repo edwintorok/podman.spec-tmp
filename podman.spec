@@ -201,6 +201,7 @@ BuildRequires: python3-varlink
 Requires: python3-setuptools
 Requires: python3-varlink
 Requires: python3-dateutil
+Requires: python3-psutil
 Summary: Python 3 tool for %{name}
 
 %description -n python3-py%{name}
