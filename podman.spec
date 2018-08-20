@@ -36,7 +36,7 @@ Name: podman
 Epoch: 1
 %endif
 Version: 0.8.3
-Release: 3.dev.git%{shortcommit0}%{?dist}
+Release: 4.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: %{git_podman}
@@ -64,12 +64,17 @@ BuildRequires: pkgconfig
 BuildRequires: make
 Requires: runc
 Requires: containers-common
-Requires: containernetworking-cni >= 0.6.0-3
+Requires: containernetworking-plugins >= 0.7.3-1
 Requires: iptables
+Requires: nftables
 Requires: atomic-registries
 Requires: oci-systemd-hook
 Requires: conmon
 Recommends: container-selinux
+Recommends: slirp4netns
+%if 0%{?fedora} > 28
+Recommends: fuse-overlayfs
+%endif
 
 # vendored libraries
 # awk '{print "Provides: bundled(golang("$1")) = "$2}' vendor.conf | sort
@@ -187,6 +192,7 @@ Requires: python3-setuptools
 Requires: python3-varlink
 Requires: python3-dateutil
 Requires: python3-humanize
+Requires: python3-psutil
 Provides: python3-%{name} = %{version}-%{release}
 Summary: Python 3 bindings for %{name}
 
@@ -209,22 +215,19 @@ This package contains Python 3 tool for %{name}.
 %endif # varlink
 
 %package docker
-Summary:       "package to Emulate Docker CLI using podman."
-BuildArch:     noarch
-Requires:      %{name} = %{version}-%{release}
-Conflicts:     docker
-Conflicts:     docker-latest
-Conflicts:     docker-ce
-Conflicts:     docker-ee
+Summary: Emulate Docker CLI using podman
+BuildArch: noarch
+Requires: %{name} = %{version}-%{release}
+Conflicts: docker
+Conflicts: docker-latest
+Conflicts: docker-ce
+Conflicts: docker-ee
+Conflicts: moby-engine 
 
 %description docker
 This package installs a script named docker that emulates the Docker CLI by
 executes podman commands, it also creates links between all Docker CLI man
 pages and podman.
-
-%files docker
-%{_bindir}/docker
-%{_mandir}/man1/docker*.1*
 
 %if 0%{?with_devel}
 %package devel
@@ -532,6 +535,10 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %{_bindir}/py%{name}
 %endif # varlink
 
+%files docker
+%{_bindir}/docker
+%{_mandir}/man1/docker*.1*
+
 %if 0%{?with_devel}
 %files -n libpod-devel -f devel.file-list
 %license LICENSE
@@ -546,13 +553,19 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Mon Aug 20 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:0.8.3-4.dev.git3d55721f
+- Resolves: #1619411 - python3-podman should require python3-psutil
+- podman-docker should conflict with moby-engine
+- require nftables
+- recommend slirp4netns and fuse-overlayfs (latter only for kernel >= 4.18)
+
 * Sun Aug 12 2018 Dan Walsh <dwalsh@redhat.com> - 1:0.8.3-3.dev.git3d55721f
 - Add podman-docker support
 - Force cgroupfs for non root podman
 
 * Sun Aug 12 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:0.8.3-2.dev.git3d55721f
 - Requires: conmon
-- use default %gobuild
+- use default %%gobuild
 
 * Sat Aug 11 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:0.8.3-1.dev.git3d55721f
 - bump to v0.8.3-dev
