@@ -20,13 +20,13 @@
 
 %global provider github
 %global provider_tld com
-%global project projectatomic
+%global project containers
 %global repo libpod
-# https://github.com/projectatomic/libpod
+# https://github.com/containers/libpod
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 3d55721fc4879cba166a9afb5acfeb8e1cdd6272
+%global commit0 65c31d49f967c9b1da0984897be08f6238bc7705
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: podman
@@ -35,13 +35,12 @@ Name: podman
 %if 0%{?fedora} > 28
 Epoch: 1
 %endif
-Version: 0.8.3
-Release: 4.dev.git%{shortcommit0}%{?dist}
+Version: 0.8.5
+Release: 1.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: %{git_podman}
 Source0: %{git0}/archive/%{commit0}/%{repo}-%{shortcommit0}.tar.gz
-Patch: rootless.patch
 # e.g. el6 has ppc64 arch without gcc-go, so EA tag is required
 #ExclusiveArch:  %%{?go_arches:%%{go_arches}}%%{!?go_arches:%%{ix86} x86_64 aarch64 %%{arm}}
 ExclusiveArch: aarch64 %{arm} ppc64le s390x x86_64
@@ -86,10 +85,10 @@ Provides: bundled(golang(github.com/buger/goterm)) = 2f8dfbc7dbbff5dd1d391ed9148
 Provides: bundled(golang(github.com/BurntSushi/toml)) = v0.2.0
 Provides: bundled(golang(github.com/containerd/cgroups)) = 77e628511d924b13a77cebdc73b757a47f6d751b
 Provides: bundled(golang(github.com/containerd/continuity)) = master
-Provides: bundled(golang(github.com/containernetworking/cni)) = v0.7.0-alpha1
+#Provides: bundled(golang(github.com/containernetworking/cni)) = v0.7.0-alpha1
 Provides: bundled(golang(github.com/containernetworking/plugins)) = 1562a1e60ed101aacc5e08ed9dbeba8e9f3d4ec1
 Provides: bundled(golang(github.com/containers/image)) = 134f99bed228d6297dc01d152804f6f09f185418
-Provides: bundled(golang(github.com/containers/psgo)) = 382fc951fe0a8aba62043862ce1a56f77524db87
+Provides: bundled(golang(github.com/containers/psgo)) = 5dde6da0bc8831b35243a847625bcf18183bd1ee
 Provides: bundled(golang(github.com/containers/storage)) = 17c7d1fee5603ccf6dd97edc14162fc1510e7e23
 Provides: bundled(golang(github.com/coreos/go-systemd)) = v14
 Provides: bundled(golang(github.com/cri-o/ocicni)) = master
@@ -121,6 +120,7 @@ Provides: bundled(golang(github.com/hashicorp/go-multierror)) = 83588e72410abfbe
 Provides: bundled(golang(github.com/imdario/mergo)) = 0.2.2
 Provides: bundled(golang(github.com/json-iterator/go)) = 1.0.0
 Provides: bundled(golang(github.com/kr/pty)) = v1.0.0
+Provides: bundled(golang(github.com/mailru/easyjson)) = 03f2033d19d5860aef995fe360ac7d395cd8ce65
 Provides: bundled(golang(github.com/mattn/go-runewidth)) = v0.0.1
 Provides: bundled(golang(github.com/Microsoft/go-winio)) = 78439966b38d69bf38227fbf57ac8a6fee70f69a
 Provides: bundled(golang(github.com/Microsoft/hcsshim)) = 43f9725307998e09f2e3816c2c0c36dc98f0c982
@@ -128,18 +128,18 @@ Provides: bundled(golang(github.com/mistifyio/go-zfs)) = v2.1.1
 Provides: bundled(golang(github.com/mrunalp/fileutils)) = master
 Provides: bundled(golang(github.com/mtrmac/gpgme)) = b2432428689ca58c2b8e8dea9449d3295cf96fc9
 Provides: bundled(golang(github.com/Nvveen/Gotty)) = master
-Provides: bundled(golang(github.com/opencontainers/go-digest)) = v1.0.0-rc0
+#Provides: bundled(golang(github.com/opencontainers/go-digest)) = v1.0.0-rc0
 Provides: bundled(golang(github.com/opencontainers/image-spec)) = v1.0.0
 Provides: bundled(golang(github.com/opencontainers/runc)) = b4e2ecb452d9ee4381137cc0a7e6715b96bed6de
 Provides: bundled(golang(github.com/opencontainers/runtime-spec)) = v1.0.0
-Provides: bundled(golang(github.com/opencontainers/runtime-tools)) = 625e2322645b151a7cbb93a8b42920933e72167f
+Provides: bundled(golang(github.com/opencontainers/runtime-tools)) = master
 Provides: bundled(golang(github.com/opencontainers/selinux)) = b6fa367ed7f534f9ba25391cc2d467085dbb445a
 Provides: bundled(golang(github.com/openshift/imagebuilder)) = master
 Provides: bundled(golang(github.com/ostreedev/ostree-go)) = master
 Provides: bundled(golang(github.com/pkg/errors)) = v0.8.0
 Provides: bundled(golang(github.com/pmezard/go-difflib)) = 792786c7400a136282c1664665ae0a8db921c6c2
 Provides: bundled(golang(github.com/pquerna/ffjson)) = d49c2bc1aa135aad0c6f4fc2056623ec78f5d5ac
-Provides: bundled(golang(github.com/projectatomic/buildah)) = 35a37f36d37bf84397d7f79f6bb8649f728c19f1
+Provides: bundled(golang(github.com/projectatomic/buildah)) = 2423a90e23ced88c72e30664631af18c9af75148
 Provides: bundled(golang(github.com/seccomp/containers-golang)) = master
 Provides: bundled(golang(github.com/seccomp/libseccomp-golang)) = v0.9.0
 Provides: bundled(golang(github.com/sirupsen/logrus)) = v1.0.0
@@ -149,8 +149,7 @@ Provides: bundled(golang(github.com/syndtr/gocapability)) = e7cb7fa329f456b38551
 Provides: bundled(golang(github.com/tchap/go-patricia)) = v2.2.6
 Provides: bundled(golang(github.com/ulikunitz/xz)) = v0.5.4
 Provides: bundled(golang(github.com/ulule/deepcopier)) = master
-# no '-' in version
-#Provides: bundled(golang(github.com/urfave/cli)) = fix-short-opts-parsing
+Provides: bundled(golang(github.com/urfave/cli)) = 934abfb2f102315b5794e15ebc7949e4ca253920
 Provides: bundled(golang(github.com/varlink/go)) = master
 Provides: bundled(golang(github.com/vbatts/tar-split)) = v0.10.2
 Provides: bundled(golang(github.com/vishvananda/netlink)) = master
@@ -176,6 +175,7 @@ Provides: bundled(golang(k8s.io/apiserver)) = 4d1163080139f1f9094baf8a3a6099e85e
 Provides: bundled(golang(k8s.io/client-go)) = 7cd1d3291b7d9b1e2d54d4b69eb65995eaf8888e
 Provides: bundled(golang(k8s.io/kube-openapi)) = 275e2ce91dec4c05a4094a7b1daee5560b555ac9
 Provides: bundled(golang(k8s.io/utils)) = 258e2a2fa64568210fbd6267cf1d8fd87c3cb86e
+
 
 %description
 %{summary}
@@ -403,7 +403,7 @@ mkdir -p src/%{provider}.%{provider_tld}/%{project}
 ln -s ../../../../ src/%{import_path}
 popd
 ln -s vendor src
-export GOPATH=$(pwd)/_build:$(pwd):$(pwd):%{gopath}
+export GOPATH=$(pwd)/_build:$(pwd):%{gopath}
 export BUILDTAGS="varlink selinux seccomp $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh)"
 %gogenerate ./cmd/%{name}/varlink/...
 %gobuild -o bin/%{name} %{import_path}/cmd/%{name}
@@ -553,6 +553,12 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Thu Aug 30 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:0.8.5-1.dev.git65c31d4
+- bump to v0.8.5-dev
+- built commit 65c31d4
+- correct min dep on containernetworking-plugins for upgrade from
+containernetworking-cni
+
 * Mon Aug 20 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:0.8.3-4.dev.git3d55721f
 - Resolves: #1619411 - python3-podman should require python3-psutil
 - podman-docker should conflict with moby-engine
