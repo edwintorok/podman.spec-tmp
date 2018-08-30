@@ -64,7 +64,7 @@ BuildRequires: pkgconfig
 BuildRequires: make
 Requires: runc
 Requires: containers-common
-Requires: containernetworking-plugins >= 0.7.3-1
+Requires: containernetworking-plugins >= 0.7.3-2
 Requires: iptables
 Requires: nftables
 Requires: atomic-registries
