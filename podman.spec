@@ -553,7 +553,7 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
-* Sun Aug 12 2018 Dan Walsh <dwalsh@redhat.com> - 1:0.8.5-1.dev.git65c31d4
+* Mon Sep 3 2018 Dan Walsh <dwalsh@redhat.com> - 1:0.8.5-1.dev.git65c31d4
 - Add a specific version of runc or later to require
 
 * Thu Aug 30 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:0.8.5-1.dev.git65c31d4
