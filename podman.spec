@@ -36,7 +36,7 @@ Name: podman
 Epoch: 1
 %endif
 Version: 0.8.5
-Release: 4.dev.git%{shortcommit0}%{?dist}
+Release: 5.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: %{git0}
@@ -61,7 +61,7 @@ BuildRequires: libselinux-devel
 BuildRequires: ostree-devel
 BuildRequires: pkgconfig
 BuildRequires: make
-Requires: runc >= 1.0.0-51
+Requires: runc >= 2:1.0.0-51
 Requires: containers-common
 Requires: containernetworking-plugins >= 0.7.3-2
 Requires: iptables
@@ -553,6 +553,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Tue Sep 4 2018 Dan Walsh <dwalsh@redhat.com> - 1:0.8.5-5.git65c31d4
+- Fix required version of runc
+
 * Tue Sep 4 2018 Dan Walsh <dwalsh@redhat.com> - 1:0.8.5-4.dev.git65c31d4
 - Fix rpm -qi podman to show the correct URL
 
