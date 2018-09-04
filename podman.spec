@@ -36,7 +36,7 @@ Name: podman
 Epoch: 1
 %endif
 Version: 0.8.5
-Release: 2.dev.git%{shortcommit0}%{?dist}
+Release: 3.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: %{git_podman}
@@ -61,7 +61,7 @@ BuildRequires: libselinux-devel
 BuildRequires: ostree-devel
 BuildRequires: pkgconfig
 BuildRequires: make
-Requires: runc >= 1.0.0-50
+Requires: runc >= 1.0.0-51
 Requires: containers-common
 Requires: containernetworking-plugins >= 0.7.3-2
 Requires: iptables
@@ -553,7 +553,10 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
-* Mon Sep 3 2018 Dan Walsh <dwalsh@redhat.com> - 1:0.8.5-1.dev.git65c31d4
+* Tue Sep 4 2018 Dan Walsh <dwalsh@redhat.com> - 1:0.8.5-3.dev.git65c31d4
+- Fix required version of runc
+
+* Mon Sep 3 2018 Dan Walsh <dwalsh@redhat.com> - 1:0.8.5-2.dev.git65c31d4
 - Add a specific version of runc or later to require
 
 * Thu Aug 30 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:0.8.5-1.dev.git65c31d4
