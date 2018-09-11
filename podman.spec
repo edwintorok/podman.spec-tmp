@@ -552,7 +552,7 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
-* Tue Sep 11 2018 baude <bbaude@redhat.com> - 0.9.1-1.dev.git123de30
+* Tue Sep 11 2018 baude <bbaude@redhat.com> - 1:0.9.1-1.dev.git123de30
 - Upstream release of 0.9.1
 - Do not build with devicemapper
 
