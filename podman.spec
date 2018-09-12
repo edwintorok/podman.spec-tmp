@@ -26,7 +26,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 123de3087e142f3a6c05ad35fc2095953065415b
+%global commit0 95dbcada740b4d7d0d3458cadfda1bf95f722c99
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: podman
@@ -35,7 +35,7 @@ Name: podman
 %if 0%{?fedora} > 28
 Epoch: 1
 %endif
-Version: 0.9.1
+Version: 0.9.1.1
 Release: 1.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
@@ -552,6 +552,10 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Tue Sep 11 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:0.9.1.1-1.dev.git95dbcad
+- bump to v0.9.1.1
+- built commit 95dbcad
+
 * Tue Sep 11 2018 baude <bbaude@redhat.com> - 1:0.9.1-1.dev.git123de30
 - Upstream release of 0.9.1
 - Do not build with devicemapper
