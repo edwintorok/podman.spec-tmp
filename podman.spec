@@ -65,8 +65,6 @@ Requires: containers-common
 Requires: containernetworking-plugins >= 0.7.3-2
 Requires: iptables
 Requires: nftables
-Requires: atomic-registries
-Requires: oci-systemd-hook
 Requires: conmon
 Recommends: container-selinux
 Recommends: slirp4netns
