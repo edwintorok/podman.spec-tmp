@@ -26,7 +26,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 95dbcada740b4d7d0d3458cadfda1bf95f722c99
+%global commit0 28a2bf827ae9f592ddd9e5c11277606d32cf329c
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Name: podman
@@ -35,7 +35,7 @@ Name: podman
 %if 0%{?fedora} > 28
 Epoch: 1
 %endif
-Version: 0.9.1.1
+Version: 0.9.3
 Release: 1.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
@@ -80,13 +80,14 @@ Provides: bundled(golang(github.com/blang/semver)) = v3.5.0
 Provides: bundled(golang(github.com/boltdb/bolt)) = master
 Provides: bundled(golang(github.com/buger/goterm)) = 2f8dfbc7dbbff5dd1d391ed91482c24df243b2d3
 Provides: bundled(golang(github.com/BurntSushi/toml)) = v0.2.0
-Provides: bundled(golang(github.com/containerd/cgroups)) = 77e628511d924b13a77cebdc73b757a47f6d751b
+Provides: bundled(golang(github.com/containerd/cgroups)) = 58556f5ad8448d99a6f7bea69ea4bdb7747cfeb0
 Provides: bundled(golang(github.com/containerd/continuity)) = master
 #Provides: bundled(golang(github.com/containernetworking/cni)) = v0.7.0-alpha1
 Provides: bundled(golang(github.com/containernetworking/plugins)) = 1562a1e60ed101aacc5e08ed9dbeba8e9f3d4ec1
-Provides: bundled(golang(github.com/containers/image)) = 134f99bed228d6297dc01d152804f6f09f185418
+Provides: bundled(golang(github.com/containers/image)) = 85d7559d44fd71f30e46e43d809bfbf88d11d916
 Provides: bundled(golang(github.com/containers/psgo)) = 5dde6da0bc8831b35243a847625bcf18183bd1ee
-Provides: bundled(golang(github.com/containers/storage)) = 17c7d1fee5603ccf6dd97edc14162fc1510e7e23
+Provides: bundled(golang(github.com/containers/storage)) = 243c4cd616afdf06b4a975f18c4db083d26b1641
+Provides: bundled(golang(github.com/coreos/go-iptables)) = 25d087f3cffd9aedc0c2b7eff25f23cbf3c20fe1
 Provides: bundled(golang(github.com/coreos/go-systemd)) = v14
 Provides: bundled(golang(github.com/cri-o/ocicni)) = master
 Provides: bundled(golang(github.com/cyphar/filepath-securejoin)) = v0.2.1
@@ -128,7 +129,7 @@ Provides: bundled(golang(github.com/Nvveen/Gotty)) = master
 #Provides: bundled(golang(github.com/opencontainers/go-digest)) = v1.0.0-rc0
 Provides: bundled(golang(github.com/opencontainers/image-spec)) = v1.0.0
 Provides: bundled(golang(github.com/opencontainers/runc)) = b4e2ecb452d9ee4381137cc0a7e6715b96bed6de
-Provides: bundled(golang(github.com/opencontainers/runtime-spec)) = v1.0.0
+Provides: bundled(golang(github.com/opencontainers/runtime-spec)) = d810dbc60d8c5aeeb3d054bd1132fab2121968ce
 Provides: bundled(golang(github.com/opencontainers/runtime-tools)) = master
 Provides: bundled(golang(github.com/opencontainers/selinux)) = b6fa367ed7f534f9ba25391cc2d467085dbb445a
 Provides: bundled(golang(github.com/openshift/imagebuilder)) = master
@@ -136,7 +137,7 @@ Provides: bundled(golang(github.com/ostreedev/ostree-go)) = master
 Provides: bundled(golang(github.com/pkg/errors)) = v0.8.0
 Provides: bundled(golang(github.com/pmezard/go-difflib)) = 792786c7400a136282c1664665ae0a8db921c6c2
 Provides: bundled(golang(github.com/pquerna/ffjson)) = d49c2bc1aa135aad0c6f4fc2056623ec78f5d5ac
-Provides: bundled(golang(github.com/projectatomic/buildah)) = 2423a90e23ced88c72e30664631af18c9af75148
+Provides: bundled(golang(github.com/projectatomic/buildah)) = af5bbde0180026ae87b7fc81c2dc124aa73ec959
 Provides: bundled(golang(github.com/seccomp/containers-golang)) = master
 Provides: bundled(golang(github.com/seccomp/libseccomp-golang)) = v0.9.0
 Provides: bundled(golang(github.com/sirupsen/logrus)) = v1.0.0
@@ -228,8 +229,8 @@ pages and podman.
 
 %if 0%{?with_devel}
 %package devel
-Summary:       Library for applications looking to use Container Pods
-BuildArch:     noarch
+Summary: Library for applications looking to use Container Pods
+BuildArch: noarch
 Provides: %{repo}-devel = %{version}-%{release}
 
 %if 0%{?with_check} && ! 0%{?with_bundled}
@@ -550,6 +551,10 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Mon Sep 17 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:0.9.3-1.dev.git28a2bf8
+- bump to v0.9.3
+- built commit 28a2bf82
+
 * Tue Sep 11 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:0.9.1.1-1.dev.git95dbcad
 - bump to v0.9.1.1
 - built commit 95dbcad
