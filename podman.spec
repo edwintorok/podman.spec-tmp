@@ -26,8 +26,13 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 af791f340cfc3f8134e1fe0e3b0a6d3597706277
+%global commit0 e7e81e6448dc4ad1d53ef51e8175d717d18a8197
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
+
+%global import_path_conmon github.com/kubernetes-sigs/cri-o
+%global git_conmon https://%{import_path_conmon}
+%global commit_conmon 2cbe48b8907849fc3982615fbadb0f584200c5b5
+%global shortcommit_conmon %(c=%{commit_conmon}; echo ${c:0:7})
 
 Name: podman
 # Version string is wrong but only written as such to avoid epoch bumps
@@ -36,11 +41,12 @@ Name: podman
 Epoch: 1
 %endif
 Version: 0.9.4
-Release: 2.dev.git%{shortcommit0}%{?dist}
+Release: 3.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://podman.io/
 Source0: %{git0}/archive/%{commit0}/%{repo}-%{shortcommit0}.tar.gz
+Source1: %{git_conmon}/archive/%{commit_conmon}/cri-o-%{shortcommit_conmon}.tar.gz
 # e.g. el6 has ppc64 arch without gcc-go, so EA tag is required
 #ExclusiveArch:  %%{?go_arches:%%{go_arches}}%%{!?go_arches:%%{ix86} x86_64 aarch64 %%{arm}}
 ExclusiveArch: aarch64 %{arm} ppc64le s390x x86_64
@@ -60,7 +66,7 @@ BuildRequires: libselinux-devel
 BuildRequires: ostree-devel
 BuildRequires: pkgconfig
 BuildRequires: make
-Requires: runc >= 2:1.0.0-55
+Requires: runc
 Requires: containers-common
 Requires: containernetworking-plugins >= 0.7.3-2
 Requires: iptables
@@ -394,6 +400,9 @@ sed -i 's/0.0.0/%{version}/' contrib/python/%{name}/setup.py
 sed -i 's/0.0.0/%{version}/' contrib/python/py%{name}/setup.py
 mv pkg/hooks/README.md pkg/hooks/README-hooks.md
 
+# untar cri-o
+tar zxf %{SOURCE1}
+
 %build
 mkdir _build
 pushd _build
@@ -405,6 +414,19 @@ export GOPATH=$(pwd)/_build:$(pwd):%{gopath}
 export BUILDTAGS="varlink selinux seccomp $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) exclude_graphdriver_devicemapper"
 %gogenerate ./cmd/%{name}/varlink/...
 %gobuild -o bin/%{name} %{import_path}/cmd/%{name}
+
+# build conmon
+pushd cri-o-%{commit_conmon}
+mkdir _output
+pushd _output
+mkdir -p src/%{provider}.%{provider_tld}/{kubernetes-sigs,opencontainers}
+ln -s $(dirs +1 -l) src/%{import_path_conmon}
+popd
+ln -s vendor src
+export GOPATH=$(pwd)/_output:$(pwd):%{gopath}
+export BUILDTAGS="selinux seccomp $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) containers_image_ostree_stub"
+BUILDTAGS=$BUILDTAGS make -C conmon
+popd
 
 %if %{with varlink}
 #install python-podman
@@ -435,6 +457,10 @@ install -dp %{buildroot}%{_unitdir}
 # install libpod.conf
 install -dp %{buildroot}%{_datadir}/containers
 install -p -m 644 %{repo}.conf %{buildroot}%{_datadir}/containers
+
+# install conmon
+install -dp %{buildroot}%{_libexecdir}/%{name}
+install -p -m 755 cri-o-%{commit_conmon}/bin/conmon %{buildroot}%{_libexecdir}/%{name}
 
 # source codes for building projects
 %if 0%{?with_devel}
@@ -510,6 +536,7 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %{_mandir}/man1/podman*.1*
 %{_mandir}/man5/*.5*
 %{_datadir}/bash-completion/completions/*
+%{_libexecdir}/%{name}/conmon
 %config(noreplace) %{_sysconfdir}/cni/net.d/87-%{name}-bridge.conflist
 %{_datadir}/containers/%{repo}.conf
 %{_unitdir}/io.%{name}.service
@@ -551,6 +578,10 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Fri Sep 28 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:0.9.4-3.dev.gite7e81e6
+- built libpod commit e7e81e6
+- built conmon from cri-o commit 2cbe48b
+
 * Tue Sep 25 2018 Dan Walsh <dwalsh@redhat.com> - 1:0.9.4-2.dev.gitaf791f3
 - Fix required version of runc
 
