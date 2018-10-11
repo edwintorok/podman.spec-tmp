@@ -26,7 +26,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 e7e81e6448dc4ad1d53ef51e8175d717d18a8197
+%global commit0 da5c89497f9d6ee5cb6e826d7db7cca5686ab4f7
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global import_path_conmon github.com/kubernetes-sigs/cri-o
@@ -40,8 +40,8 @@ Name: podman
 %if 0%{?fedora} > 28
 Epoch: 1
 %endif
-Version: 0.9.4
-Release: 3.dev.git%{shortcommit0}%{?dist}
+Version: 0.10.1
+Release: 1.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://podman.io/
@@ -578,6 +578,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Thu Oct 11 2018 baude <bbaude@redhat.com> - 0.10.1-1.gitda5c894
+- Upstream 10.1 release
+
 * Fri Sep 28 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:0.9.4-3.dev.gite7e81e6
 - built libpod commit e7e81e6
 - built conmon from cri-o commit 2cbe48b
