@@ -39,9 +39,11 @@ Name: podman
 # Will be fixed once upstream moves to 0.8.11-dev
 %if 0%{?fedora} > 28
 Epoch: 1
+%else
+Epoch: 0
 %endif
 Version: 0.10.1.3
-Release: 1.git%{shortcommit0}%{?dist}
+Release: 2.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://podman.io/
@@ -221,7 +223,7 @@ This package contains Python 3 tool for %{name}.
 %package docker
 Summary: Emulate Docker CLI using podman
 BuildArch: noarch
-Requires: %{name} = %{version}-%{release}
+Requires: %{name} = %{epoch}:%{version}-%{release}
 Conflicts: docker
 Conflicts: docker-latest
 Conflicts: docker-ce
@@ -237,7 +239,7 @@ pages and podman.
 %package devel
 Summary: Library for applications looking to use Container Pods
 BuildArch: noarch
-Provides: %{repo}-devel = %{version}-%{release}
+Provides: %{repo}-devel = %{epoch}:%{version}-%{release}
 
 %if 0%{?with_check} && ! 0%{?with_bundled}
 BuildRequires: golang(github.com/BurntSushi/toml)
@@ -345,18 +347,18 @@ Requires: golang(k8s.io/apimachinery/pkg/util/wait)
 Requires: golang(k8s.io/client-go/tools/remotecommand)
 Requires: golang(k8s.io/kubernetes/pkg/kubelet/container)
 
-Provides: golang(%{import_path}/cmd/%{name}/docker) = %{version}-%{release}
-Provides: golang(%{import_path}/cmd/%{name}/formats) = %{version}-%{release}
-Provides: golang(%{import_path}/libkpod) = %{version}-%{release}
-Provides: golang(%{import_path}/libpod) = %{version}-%{release}
-Provides: golang(%{import_path}/libpod/common) = %{version}-%{release}
-Provides: golang(%{import_path}/libpod/driver) = %{version}-%{release}
-Provides: golang(%{import_path}/libpod/layers) = %{version}-%{release}
-Provides: golang(%{import_path}/pkg/annotations) = %{version}-%{release}
-Provides: golang(%{import_path}/pkg/chrootuser) = %{version}-%{release}
-Provides: golang(%{import_path}/pkg/registrar) = %{version}-%{release}
-Provides: golang(%{import_path}/pkg/storage) = %{version}-%{release}
-Provides: golang(%{import_path}/utils) = %{version}-%{release}
+Provides: golang(%{import_path}/cmd/%{name}/docker) = %{epoch}:%{version}-%{release}
+Provides: golang(%{import_path}/cmd/%{name}/formats) = %{epoch}:%{version}-%{release}
+Provides: golang(%{import_path}/libkpod) = %{epoch}:%{version}-%{release}
+Provides: golang(%{import_path}/libpod) = %{epoch}:%{version}-%{release}
+Provides: golang(%{import_path}/libpod/common) = %{epoch}:%{version}-%{release}
+Provides: golang(%{import_path}/libpod/driver) = %{epoch}:%{version}-%{release}
+Provides: golang(%{import_path}/libpod/layers) = %{epoch}:%{version}-%{release}
+Provides: golang(%{import_path}/pkg/annotations) = %{epoch}:%{version}-%{release}
+Provides: golang(%{import_path}/pkg/chrootuser) = %{epoch}:%{version}-%{release}
+Provides: golang(%{import_path}/pkg/registrar) = %{epoch}:%{version}-%{release}
+Provides: golang(%{import_path}/pkg/storage) = %{epoch}:%{version}-%{release}
+Provides: golang(%{import_path}/utils) = %{epoch}:%{version}-%{release}
 
 %description -n libpod-devel
 %{summary}
@@ -375,7 +377,7 @@ Summary:         Unit tests for %{name} package
 %endif
 
 # test subpackage tests code from devel subpackage
-Requires: %{name}-devel = %{version}-%{release}
+Requires: %{name}-devel = %{epoch}:%{version}-%{release}
 
 %if 0%{?with_check} && ! 0%{?with_bundled}
 BuildRequires: golang(github.com/stretchr/testify/assert)
@@ -578,6 +580,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Thu Oct 18 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:0.10.1.3-2.dev.gitdb08685
+- correct epoch mentions
+
 * Thu Oct 18 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:0.10.1.3-1.dev.gitdb08685
 - bump to v0.10.1.3
 
