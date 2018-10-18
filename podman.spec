@@ -26,12 +26,12 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 da5c89497f9d6ee5cb6e826d7db7cca5686ab4f7
+%global commit0 db08685af57206c21fd3dd150ecb70d7147ce7f4
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global import_path_conmon github.com/kubernetes-sigs/cri-o
 %global git_conmon https://%{import_path_conmon}
-%global commit_conmon 2cbe48b8907849fc3982615fbadb0f584200c5b5
+%global commit_conmon a30f93ca229c7fc68fb1d8c7a3342de3c3f54ae5
 %global shortcommit_conmon %(c=%{commit_conmon}; echo ${c:0:7})
 
 Name: podman
@@ -40,7 +40,7 @@ Name: podman
 %if 0%{?fedora} > 28
 Epoch: 1
 %endif
-Version: 0.10.1
+Version: 0.10.1.3
 Release: 1.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
@@ -578,8 +578,11 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
-* Thu Oct 11 2018 baude <bbaude@redhat.com> - 0.10.1-1.gitda5c894
-- Upstream 10.1 release
+* Thu Oct 18 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:0.10.1.3-1.dev.gitdb08685
+- bump to v0.10.1.3
+
+* Thu Oct 11 2018 baude <bbaude@redhat.com> - 1:0.10.1-1.gitda5c894
+- Upstream v0.10.1 release
 
 * Fri Sep 28 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:0.9.4-3.dev.gite7e81e6
 - built libpod commit e7e81e6
