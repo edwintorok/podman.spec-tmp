@@ -26,7 +26,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 db08685af57206c21fd3dd150ecb70d7147ce7f4
+%global commit0 49555721ec84ca630e8fbbf32a400e523c477439
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global import_path_conmon github.com/kubernetes-sigs/cri-o
@@ -42,8 +42,8 @@ Epoch: 1
 %else
 Epoch: 0
 %endif
-Version: 0.10.1.3
-Release: 3.dev.git%{shortcommit0}%{?dist}
+Version: 0.10.2
+Release: 1.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://podman.io/
@@ -181,7 +181,6 @@ Provides: bundled(golang(k8s.io/apiserver)) = 4d1163080139f1f9094baf8a3a6099e85e
 Provides: bundled(golang(k8s.io/client-go)) = 7cd1d3291b7d9b1e2d54d4b69eb65995eaf8888e
 Provides: bundled(golang(k8s.io/kube-openapi)) = 275e2ce91dec4c05a4094a7b1daee5560b555ac9
 Provides: bundled(golang(k8s.io/utils)) = 258e2a2fa64568210fbd6267cf1d8fd87c3cb86e
-
 
 %description
 %{summary}
@@ -412,8 +411,8 @@ mkdir -p src/%{provider}.%{provider_tld}/%{project}
 ln -s ../../../../ src/%{import_path}
 popd
 ln -s vendor src
-export GOPATH=$(pwd)/_build:$(pwd):%{gopath}
-export BUILDTAGS="varlink selinux seccomp $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) exclude_graphdriver_devicemapper"
+export GOPATH=$(pwd)/_build:$(pwd)
+export BUILDTAGS="varlink seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/ostree_tag.sh) $(hack/selinux_tag.sh)"
 %gogenerate ./cmd/%{name}/varlink/...
 %gobuild -o bin/%{name} %{import_path}/cmd/%{name}
 
@@ -425,7 +424,7 @@ mkdir -p src/%{provider}.%{provider_tld}/{kubernetes-sigs,opencontainers}
 ln -s $(dirs +1 -l) src/%{import_path_conmon}
 popd
 ln -s vendor src
-export GOPATH=$(pwd)/_output:$(pwd):%{gopath}
+export GOPATH=$(pwd)/_output:$(pwd)
 export BUILDTAGS="selinux seccomp $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) containers_image_ostree_stub"
 BUILDTAGS=$BUILDTAGS make -C conmon
 popd
@@ -580,6 +579,11 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Sun Oct 28 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:0.10.2-1.dev.git4955572
+- Resolves: #1643744 - build podman with ostree support
+- bump to v0.10.2
+- built commit 4955572
+
 * Fri Oct 19 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:0.10.1.3-3.dev.gitdb08685
 - consistent epoch:version-release in changelog
 
