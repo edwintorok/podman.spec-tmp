@@ -26,7 +26,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 49555721ec84ca630e8fbbf32a400e523c477439
+%global commit0 e9f8aed407f3e05f47e3eb40b23aa7c2f57e0a60
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global import_path_conmon github.com/kubernetes-sigs/cri-o
@@ -43,7 +43,7 @@ Epoch: 1
 Epoch: 0
 %endif
 Version: 0.10.2
-Release: 1.dev.git%{shortcommit0}%{?dist}
+Release: 2.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://podman.io/
@@ -579,6 +579,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Wed Nov 07 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 1:0.10.2-2.dev.gite9f8aed
+- autobuilt e9f8aed
+
 * Sun Oct 28 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 1:0.10.2-1.dev.git4955572
 - Resolves: #1643744 - build podman with ostree support
 - bump to v0.10.2
