@@ -26,7 +26,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 672f572f507400a87c63b34fad137f321ded040d
+%global commit0 a4adfe5e0c9de160866455c77b24342304fa3706
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global import_path_conmon github.com/kubernetes-sigs/cri-o
@@ -42,8 +42,8 @@ Epoch: 1
 %else
 Epoch: 0
 %endif
-Version: 0.10.2
-Release: 3.dev.git%{shortcommit0}%{?dist}
+Version: 0.11.1
+Release: 1.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://podman.io/
@@ -68,7 +68,7 @@ BuildRequires: libselinux-devel
 BuildRequires: ostree-devel
 BuildRequires: pkgconfig
 BuildRequires: make
-Requires: runc
+Requires: runc >= 2:1.0.0-57
 Requires: containers-common
 Requires: containernetworking-plugins >= 0.7.3-2
 Requires: iptables
@@ -579,6 +579,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Thu Nov 08 2018 baude <bbaude@redhat.com> - 1:0.11.1-1.dev.gita4adfe5
+- Upstream 0.11.1-1
+
 * Thu Nov 08 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 1:0.10.2-3.dev.git672f572
 - autobuilt 672f572
 
