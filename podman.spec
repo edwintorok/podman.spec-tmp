@@ -43,7 +43,7 @@ Epoch: 1
 Epoch: 0
 %endif
 Version: 0.11.20.11.2
-Release: 1.dev.git%{shortcommit0}%{?dist}1%{?dist}
+Release: 2.dev.git%{shortcommit0}%{?dist}1%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://podman.io/
@@ -396,10 +396,6 @@ providing packages with %{import_path} prefix.
 
 %prep
 %autosetup -Sgit -n %{repo}-%{commit0}
-sed -i '/\/bin\/env/d' completions/bash/%{name}
-sed -i 's/0.0.0/%{version}/' contrib/python/%{name}/setup.py
-sed -i 's/0.0.0/%{version}/' contrib/python/py%{name}/setup.py
-mv pkg/hooks/README.md pkg/hooks/README-hooks.md
 
 # untar cri-o
 tar zxf %{SOURCE1}
@@ -443,7 +439,7 @@ popd
 %endif # varlink
 %install
 install -dp %{buildroot}%{_unitdir}
-%{__make} PREFIX=%{buildroot}%{_prefix} ETCDIR=%{buildroot}%{_sysconfdir} \
+PODMAN_VERSION=%{version} %{__make} PREFIX=%{buildroot}%{_prefix} ETCDIR=%{buildroot}%{_sysconfdir} \
         install.bin \
         install.man \
         install.cni \
@@ -451,8 +447,10 @@ install -dp %{buildroot}%{_unitdir}
         install.completions \
         install.docker
 
+mv pkg/hooks/README.md pkg/hooks/README-hooks.md
+
 %if %{with varlink}
-%{__make} DESTDIR=%{buildroot} install.python
+PODMAN_VERSION=%{version}  %{__make} DESTDIR=%{buildroot} install.python
 %endif # varlink
 
 # install libpod.conf
@@ -579,6 +577,10 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Sat Nov 10 2018 Dan Walsh <dwalsh@redhat.com> - 1:0.11.20.11.2-2.dev.git78e6d8e1
+- Remove dirty flag from podman version
+
+
 * Sat Nov 10 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 1:0.11.20.11.2-1.dev.git78e6d8e1
 - bump to 0.11.2
 - autobuilt 78e6d8e
