@@ -1,0 +1,27 @@
+---
+- hosts: localhost
+  vars:
+  - artifacts: ./artifacts
+  - required_packages:
+      - podman
+  tags:
+    - classic
+    - container
+
+  tasks:
+  - name: install packages
+    dnf: name="{{ required_packages }}" state=installed
+        enablerepo=updates-testing
+
+  - block:
+      - name: Run test
+        script: ./test_podman.sh
+    always:
+      - name: Pull out logs
+        fetch:
+          src: "/tmp/{{ item }}"
+          dest: "{{ artifacts }}/{{ item }}"
+          flat: yes
+        with_items:
+          - test.log
+          - test.debug.log
