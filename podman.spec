@@ -26,7 +26,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 7965716c74ef249e14f66702cff66baf759f6d68
+%global commit0 97bded4a52c8d829c350eb170d4c3afd30f92d72
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global import_path_conmon github.com/kubernetes-sigs/cri-o
@@ -38,12 +38,12 @@ Name: podman
 # Version string is wrong but only written as such to avoid epoch bumps
 # Will be fixed once upstream moves to 0.8.11-dev
 %if 0%{?fedora} > 28
-Epoch: 1
+Epoch: 2
 %else
 Epoch: 0
 %endif
-Version: 0.11.20.11.2
-Release: 1.dev.git%{shortcommit0}%{?dist}1%{?dist}
+Version: 0.11.2
+Release: 1.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://podman.io/
@@ -577,6 +577,10 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Wed Nov 14 2018 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:0.11.2-1.dev.git97bded4
+- bump epoch cause previous version was messed up
+- built 97bded4
+
 * Tue Nov 13 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 1:0.11.20.11.2-1.dev.git79657161
 - bump to 0.11.2
 - autobuilt 7965716
