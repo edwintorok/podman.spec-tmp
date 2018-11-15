@@ -35,12 +35,12 @@
 %global shortcommit_conmon %(c=%{commit_conmon}; echo ${c:0:7})
 
 Name: podman
-# Version string is wrong but only written as such to avoid epoch bumps
-# Will be fixed once upstream moves to 0.8.11-dev
-%if 0%{?fedora} > 28
+# Epoch is 2 for f30 (rawhide), 1 for f28 and f29
+# BEWARE while using on other distros
+%if 0%{?fedora} >= 30
 Epoch: 2
 %else
-Epoch: 0
+Epoch: 1
 %endif
 Version: 0.11.2
 Release: 1.dev.git%{shortcommit0}%{?dist}
