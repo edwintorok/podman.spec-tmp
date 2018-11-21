@@ -213,6 +213,7 @@ Requires: python3-setuptools
 Requires: python3-varlink
 Requires: python3-dateutil
 Requires: python3-psutil
+Requires: python3-pytoml
 Summary: Python 3 tool for %{name}
 
 %description -n python3-py%{name}
