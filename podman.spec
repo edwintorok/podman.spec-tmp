@@ -1,3 +1,4 @@
+%{?python_enable_dependency_generator}
 %global with_devel 0
 %global with_bundled 1
 %global with_debug 1
@@ -43,7 +44,7 @@ Epoch: 2
 Epoch: 1
 %endif
 Version: 0.12.2
-Release: 17.dev.git%{shortcommit0}%{?dist}
+Release: 18.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://podman.io/
@@ -193,12 +194,6 @@ BuildArch: noarch
 BuildRequires: python3-devel
 BuildRequires: python3-setuptools
 BuildRequires: python3-varlink
-Requires: python3-setuptools
-Requires: python3-varlink
-Requires: python3-dateutil
-Requires: python3-humanize
-Requires: python3-psutil
-Provides: python3-%{name} = %{version}-%{release}
 Summary: Python 3 bindings for %{name}
 
 %description -n python3-%{name}
@@ -208,12 +203,6 @@ This package contains Python 3 bindings for %{name}.
 BuildArch: noarch
 BuildRequires: python3-devel
 BuildRequires: python3-setuptools
-BuildRequires: python3-varlink
-Requires: python3-setuptools
-Requires: python3-varlink
-Requires: python3-dateutil
-Requires: python3-psutil
-Requires: python3-pytoml
 Summary: Python 3 tool for %{name}
 
 %description -n python3-py%{name}
@@ -578,6 +567,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Thu Dec 27 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 2:0.12.2-18.dev.gitc50332d
+- Enable python dependency generator
+
 * Tue Dec 25 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:0.12.2-17.dev.gitc50332d
 - autobuilt c50332d
 
