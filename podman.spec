@@ -27,7 +27,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 c50332d057a148f6ffa7879e99e969cf97af9878
+%global commit0 1aa55edda50df507c7fa8a2a50b67d7fd65a4ef5
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global import_path_conmon github.com/kubernetes-sigs/cri-o
@@ -44,7 +44,7 @@ Epoch: 2
 Epoch: 1
 %endif
 Version: 0.12.2
-Release: 18.dev.git%{shortcommit0}%{?dist}
+Release: 19.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://podman.io/
@@ -567,6 +567,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Sat Dec 29 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:0.12.2-19.dev.git1aa55ed
+- autobuilt 1aa55ed
+
 * Thu Dec 27 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 2:0.12.2-18.dev.gitc50332d
 - Enable python dependency generator
 
