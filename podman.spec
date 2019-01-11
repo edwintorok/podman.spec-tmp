@@ -27,7 +27,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 0f6535cf6b4bfac265983c2fdd3482310ab4f39b
+%global commit0 82e80110c3f2d8728745c47e340f3bee4d408846
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global import_path_conmon github.com/kubernetes-sigs/cri-o
@@ -43,8 +43,8 @@ Epoch: 2
 %else
 Epoch: 1
 %endif
-Version: 0.12.2
-Release: 27.dev.git%{shortcommit0}%{?dist}
+Version: 1.0.0
+Release: 1.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://podman.io/
@@ -187,27 +187,6 @@ Provides: bundled(golang(k8s.io/utils)) = 258e2a2fa64568210fbd6267cf1d8fd87c3cb8
 %{summary}
 %{repo} provides a library for applications looking to use
 the Container Pod concept popularized by Kubernetes.
-
-%if %{with varlink}
-%package -n python3-%{name}
-BuildArch: noarch
-BuildRequires: python3-devel
-BuildRequires: python3-setuptools
-BuildRequires: python3-varlink
-Summary: Python 3 bindings for %{name}
-
-%description -n python3-%{name}
-This package contains Python 3 bindings for %{name}.
-
-%package -n python3-py%{name}
-BuildArch: noarch
-BuildRequires: python3-devel
-BuildRequires: python3-setuptools
-Summary: Python 3 tool for %{name}
-
-%description -n python3-py%{name}
-This package contains Python 3 tool for %{name}.
-%endif # varlink
 
 %package docker
 Summary: Emulate Docker CLI using podman
@@ -415,18 +394,6 @@ export BUILDTAGS="selinux seccomp $(hack/btrfs_installed_tag.sh) $(hack/btrfs_ta
 BUILDTAGS=$BUILDTAGS make -C conmon
 popd
 
-%if %{with varlink}
-#install python-podman
-pushd contrib/python/podman
-%py3_build
-popd
-
-#install python-pypodman
-pushd contrib/python/pypodman
-%py3_build
-popd
-
-%endif # varlink
 %install
 install -dp %{buildroot}%{_unitdir}
 PODMAN_VERSION=%{version} %{__make} PREFIX=%{buildroot}%{_prefix} ETCDIR=%{buildroot}%{_sysconfdir} \
@@ -438,10 +405,6 @@ PODMAN_VERSION=%{version} %{__make} PREFIX=%{buildroot}%{_prefix} ETCDIR=%{build
         install.docker
 
 mv pkg/hooks/README.md pkg/hooks/README-hooks.md
-
-%if %{with varlink}
-PODMAN_VERSION=%{version}  %{__make} DESTDIR=%{buildroot} install.python
-%endif # varlink
 
 # install libpod.conf
 install -dp %{buildroot}%{_datadir}/containers
@@ -532,23 +495,6 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %{_unitdir}/io.%{name}.socket
 %{_usr}/lib/tmpfiles.d/%{name}.conf
 
-%if %{with varlink}
-%files -n python3-%{name}
-%license LICENSE
-%doc README.md CONTRIBUTING.md pkg/hooks/README-hooks.md install.md code-of-conduct.md transfer.md
-%dir %{python3_sitelib}/%{name}
-%{python3_sitelib}/%{name}/*
-%{python3_sitelib}/%{name}*.egg-info
-
-%files -n python3-py%{name}
-%license LICENSE
-%doc README.md CONTRIBUTING.md pkg/hooks/README-hooks.md install.md code-of-conduct.md transfer.md
-%dir %{python3_sitelib}/py%{name}
-%{python3_sitelib}/py%{name}/*
-%{python3_sitelib}/py%{name}*.egg-info
-%{_bindir}/py%{name}
-%endif # varlink
-
 %files docker
 %{_bindir}/docker
 %{_mandir}/man1/docker*.1*
@@ -567,6 +513,9 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Fri Jan 11 2019 bbaude <bbaude@redhat.com> - 1:1.0.0-1.dev.git82e8011
+- Upstream 1.0.0 release
+
 * Thu Jan 10 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:0.12.2-27.dev.git0f6535c
 - autobuilt 0f6535c
 
