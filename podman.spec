@@ -27,7 +27,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 82e80110c3f2d8728745c47e340f3bee4d408846
+%global commit0 5c86efb28976938ad77fcc0f677e0842d06b65b5
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global import_path_conmon github.com/kubernetes-sigs/cri-o
@@ -43,8 +43,8 @@ Epoch: 2
 %else
 Epoch: 1
 %endif
-Version: 1.0.0
-Release: 1.dev.git%{shortcommit0}%{?dist}
+Version: 0.12.2
+Release: 2.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://podman.io/
@@ -513,6 +513,10 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %endif
 
 %changelog
+* Sat Jan 12 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:0.12.2-2.dev.git5c86efb
+- bump to 0.12.2
+- autobuilt 5c86efb
+
 * Fri Jan 11 2019 bbaude <bbaude@redhat.com> - 1:1.0.0-1.dev.git82e8011
 - Upstream 1.0.0 release
 
@@ -540,34 +544,34 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 * Tue Jan 01 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:0.12.2-20.dev.git7438b7b
 - autobuilt 7438b7b
 
-* Sat Dec 29 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:0.12.2-19.dev.git1aa55ed
+* Sat Dec 29 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:0.12.2-1.nightly.git5c86efb9.dev.git1aa55ed
 - autobuilt 1aa55ed
 
-* Thu Dec 27 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 2:0.12.2-18.dev.gitc50332d
+* Thu Dec 27 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 2:0.12.2-1.nightly.git5c86efb8.dev.gitc50332d
 - Enable python dependency generator
 
-* Tue Dec 25 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:0.12.2-17.dev.gitc50332d
+* Tue Dec 25 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:0.12.2-1.nightly.git5c86efb7.dev.gitc50332d
 - autobuilt c50332d
 
-* Mon Dec 24 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:0.12.2-16.dev.git8fe3050
+* Mon Dec 24 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:0.12.2-1.nightly.git5c86efb6.dev.git8fe3050
 - autobuilt 8fe3050
 
-* Sun Dec 23 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:0.12.2-15.dev.git792f109
+* Sun Dec 23 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:0.12.2-1.nightly.git5c86efb5.dev.git792f109
 - autobuilt 792f109
 
-* Sat Dec 22 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:0.12.2-14.dev.gitfe186c6
+* Sat Dec 22 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:0.12.2-1.nightly.git5c86efb4.dev.gitfe186c6
 - autobuilt fe186c6
 
-* Fri Dec 21 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:0.12.2-13.dev.gitfa998f2
+* Fri Dec 21 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:0.12.2-1.nightly.git5c86efb3.dev.gitfa998f2
 - autobuilt fa998f2
 
-* Thu Dec 20 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:0.12.2-12.dev.git6b059a5
+* Thu Dec 20 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:0.12.2-1.nightly.git5c86efb2.dev.git6b059a5
 - autobuilt 6b059a5
 
-* Wed Dec 19 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:0.12.2-11.dev.gitc8eaf59
+* Wed Dec 19 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:0.12.2-1.nightly.git5c86efb1.dev.gitc8eaf59
 - autobuilt c8eaf59
 
-* Tue Dec 18 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:0.12.2-10.dev.git68414c5
+* Tue Dec 18 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:0.12.2-1.nightly.git5c86efb0.dev.git68414c5
 - autobuilt 68414c5
 
 * Mon Dec 17 2018 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:0.12.2-9.dev.gitb21d474
