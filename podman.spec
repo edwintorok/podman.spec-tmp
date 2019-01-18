@@ -44,7 +44,7 @@ Epoch: 2
 Epoch: 1
 %endif
 Version: 1.2.0
-Release: 15.dev.git%{shortcommit0}%{?dist}
+Release: 16.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://podman.io/
@@ -197,7 +197,7 @@ Conflicts: docker
 Conflicts: docker-latest
 Conflicts: docker-ce
 Conflicts: docker-ee
-Conflicts: moby-engine 
+Conflicts: moby-engine
 
 %description docker
 This package installs a script named docker that emulates the Docker CLI by
@@ -364,6 +364,18 @@ This package contains unit tests for project
 providing packages with %{import_path} prefix.
 %endif
 
+%package tests
+Summary:         Tests for %{name}
+
+Requires: %{name} = %{epoch}:%{version}-%{release}
+Requires: bats
+Requires: jq
+
+%description tests
+%{summary}
+
+This package contains system tests for %{name}
+
 %prep
 %autosetup -Sgit -n %{repo}-%{commit0}
 
@@ -472,12 +484,15 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %if ! 0%{?gotest:1}
 %global gotest go test
 %endif
-        
+
 %gotest %{import_path}/cmd/%{name}
 %gotest %{import_path}/libkpod
 %gotest %{import_path}/libpod
 %gotest %{import_path}/pkg/registrar
 %endif
+
+install -d -p %{buildroot}/%{_datadir}/%{name}/test/system
+cp -pav test/system %{buildroot}/%{_datadir}/%{name}/test/
 
 #define license tag if not already defined
 %{!?_licensedir:%global license %doc}
@@ -517,7 +532,14 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 podman system renumber
 exit 0
 
+%files tests
+%license LICENSE
+%{_datadir}/%{name}/test
+
 %changelog
+* Wed Mar 13 2019 Eduardo Santiago <santiago@redhat.com> - 2:1.2.0-16.dev.git883566f
+- new -tests subpackage
+
 * Wed Mar 13 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.2.0-15.dev.git883566f
 - autobuilt 883566f
 
@@ -1299,4 +1321,3 @@ containernetworking-cni
 
 * Wed Jan 10 2018 Frantisek Kluknavsky <fkluknav@redhat.com> - 0-0.1.gitc1b2278
 - First package for Fedora
-

@@ -2,8 +2,15 @@
 - hosts: localhost
   vars:
   - artifacts: ./artifacts
+  # FIXME! It would be cleaner to include 'podman' in this list; but the
+  # dnf module is broken in ansible <= 2.8, it doesn't report failures
+  # to install as long as _one_ package installs! So if podman installs
+  # but podman-tests doesn't, the `dnf` stanza succeeds, then the test
+  # one fails with a less-than-helpful error.
+  #
+  # See https://github.com/ansible/ansible/pull/49760
   - required_packages:
-      - podman
+      - podman-tests
   tags:
     - classic
     - container
@@ -14,6 +21,7 @@
         enablerepo=updates-testing
 
   - block:
+      # FIXME: how to make two passes, one as root and one rootless?
       - name: Run test
         script: ./test_podman.sh
     always:
