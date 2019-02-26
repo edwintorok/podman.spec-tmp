@@ -76,7 +76,7 @@ Requires: iptables
 Requires: nftables
 Requires: conmon
 Recommends: container-selinux
-Recommends: slirp4netns
+Recommends: slirp4netns >= 0.3-0
 %if 0%{?fedora} > 28
 Recommends: fuse-overlayfs
 %endif
@@ -512,7 +512,12 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %doc README.md CONTRIBUTING.md pkg/hooks/README-hooks.md install.md code-of-conduct.md transfer.md
 %endif
 
+%triggerpostun -- %{name} < 1.1
+podman system renumber
+exit 0
+
 %changelog
+* Tue Feb 26 2019 Dan Walsh <dwalsh@fedoraproject.org> - 2:1.0.1-39.dev.gitcf52144
 * Tue Feb 26 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.0.1-38.dev.gitcf52144
 - autobuilt cf52144
 
