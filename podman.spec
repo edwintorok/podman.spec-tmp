@@ -44,7 +44,7 @@ Epoch: 2
 Epoch: 1
 %endif
 Version: 1.2.0
-Release: 10.dev.git%{shortcommit0}%{?dist}
+Release: 11.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://podman.io/
@@ -74,7 +74,8 @@ Requires: containers-common
 Requires: containernetworking-plugins >= 0.7.3-2
 Requires: iptables
 Requires: nftables
-Requires: conmon
+# #1686813 - conmon hasn't been made independent yet
+#Requires: conmon
 Recommends: container-selinux
 Recommends: slirp4netns >= 0.3-0
 %if 0%{?fedora} > 28
@@ -517,6 +518,9 @@ podman system renumber
 exit 0
 
 %changelog
+* Fri Mar 08 2019 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.2.0-11.dev.git1b2f867
+- Resolves: #1686813 - conmon bundled inside podman rpm
+
 * Fri Mar 08 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.2.0-10.dev.git1b2f867
 - autobuilt 1b2f867
 
