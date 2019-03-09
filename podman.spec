@@ -27,7 +27,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 1b2f8679b864b882fdccaad6fdd6a5c86c83291b
+%global commit0 9b21f14eefae8ab7d24cca1087d88023245357d9
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global import_path_conmon github.com/kubernetes-sigs/cri-o
@@ -44,7 +44,7 @@ Epoch: 2
 Epoch: 1
 %endif
 Version: 1.2.0
-Release: 11.dev.git%{shortcommit0}%{?dist}
+Release: 12.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://podman.io/
@@ -518,6 +518,9 @@ podman system renumber
 exit 0
 
 %changelog
+* Sat Mar 09 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.2.0-12.dev.git9b21f14
+- autobuilt 9b21f14
+
 * Fri Mar 08 2019 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.2.0-11.dev.git1b2f867
 - Resolves: #1686813 - conmon bundled inside podman rpm
 
