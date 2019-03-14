@@ -27,7 +27,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 883566fbc068cb9c24414b210d01340193575317
+%global commit0 7426d4fbbeaf5ebd3d55576add89b99cd3f3f760
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global import_path_conmon github.com/kubernetes-sigs/cri-o
@@ -44,7 +44,7 @@ Epoch: 2
 Epoch: 1
 %endif
 Version: 1.2.0
-Release: 16.dev.git%{shortcommit0}%{?dist}
+Release: 17.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://podman.io/
@@ -537,6 +537,9 @@ exit 0
 %{_datadir}/%{name}/test
 
 %changelog
+* Thu Mar 14 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.2.0-17.dev.git7426d4f
+- autobuilt 7426d4f
+
 * Wed Mar 13 2019 Eduardo Santiago <santiago@redhat.com> - 2:1.2.0-16.dev.git883566f
 - new -tests subpackage
 
