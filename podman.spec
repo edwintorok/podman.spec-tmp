@@ -27,7 +27,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 31f11a8a9bddc4dcfc22463097b852fcdc9f0172
+%global commit0 6aa8078cc1f54a5c6e6197d7e0273e36ed55060e
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global import_path_conmon github.com/kubernetes-sigs/cri-o
@@ -44,7 +44,7 @@ Epoch: 2
 Epoch: 1
 %endif
 Version: 1.2.0
-Release: 18.dev.git%{shortcommit0}%{?dist}
+Release: 19.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://podman.io/
@@ -504,6 +504,9 @@ cp -pav test/system %{buildroot}/%{_datadir}/%{name}/test/
 %{_mandir}/man1/podman*.1*
 %{_mandir}/man5/*.5*
 %{_datadir}/bash-completion/completions/*
+# By "owning" the site-functions dir, we don't need to Require zsh
+%{_datadir}/zsh/site-functions
+%{_datadir}/zsh/site-functions/*
 %{_libexecdir}/%{name}/conmon
 %config(noreplace) %{_sysconfdir}/cni/net.d/87-%{name}-bridge.conflist
 %{_datadir}/containers/%{repo}.conf
@@ -537,6 +540,9 @@ exit 0
 %{_datadir}/%{name}/test
 
 %changelog
+* Mon Mar 18 2019 Eduardo Santiago <santiago@redhat.com> - 2:1.2.0-19.dev.git6aa8078
+- include zsh completion
+
 * Fri Mar 15 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.2.0-18.dev.git31f11a8
 - autobuilt 31f11a8
 
