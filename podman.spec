@@ -69,6 +69,7 @@ BuildRequires: libselinux-devel
 BuildRequires: ostree-devel
 BuildRequires: pkgconfig
 BuildRequires: make
+BuildRequires: systemd
 Requires: runc >= 2:1.0.0-57
 Requires: containers-common
 Requires: containernetworking-plugins >= 0.7.3-2
