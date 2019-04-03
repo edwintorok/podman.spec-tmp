@@ -44,7 +44,7 @@ Epoch: 2
 Epoch: 1
 %endif
 Version: 1.3.0
-Release: 3.dev.git%{shortcommit0}%{?dist}
+Release: 4.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://podman.io/
@@ -508,6 +508,7 @@ cp -pav test/system %{buildroot}/%{_datadir}/%{name}/test/
 # By "owning" the site-functions dir, we don't need to Require zsh
 %{_datadir}/zsh/site-functions
 %{_datadir}/zsh/site-functions/*
+%dir %{_libexecdir}/%{name}
 %{_libexecdir}/%{name}/conmon
 %config(noreplace) %{_sysconfdir}/cni/net.d/87-%{name}-bridge.conflist
 %{_datadir}/containers/%{repo}.conf
@@ -541,6 +542,9 @@ exit 0
 %{_datadir}/%{name}/test
 
 %changelog
+* Wed Apr 03 2019 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.3.0-4.dev.gitad467ba
+- Resolves: #1695492 - own /usr/libexec/podman
+
 * Tue Apr 02 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.3.0-3.dev.gitad467ba
 - autobuilt ad467ba
 
