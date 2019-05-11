@@ -27,7 +27,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 b01fdcbbd5344e89c3d9f3462c1df1764277d9fd
+%global commit0 9ae32214f466e2150b7bc383585f60694b53c4b3
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global import_path_conmon github.com/kubernetes-sigs/cri-o
@@ -43,8 +43,8 @@ Epoch: 2
 %else
 Epoch: 1
 %endif
-Version: 1.3.0
-Release: 21.dev.git%{shortcommit0}%{?dist}
+Version: 1.3.1
+Release: 0.1.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://podman.io/
@@ -542,6 +542,11 @@ exit 0
 %{_datadir}/%{name}/test
 
 %changelog
+* Fri May 10 2019 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.3.1-0.1.dev.git9ae3221
+- bump to v1.3.1-dev
+- built 9ae3221
+- correct release tag format for unreleased versions
+
 * Thu Apr 25 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.3.0-21.dev.gitb01fdcb
 - autobuilt b01fdcb
 
