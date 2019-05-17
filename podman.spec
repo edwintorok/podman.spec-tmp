@@ -77,11 +77,10 @@ Requires: iptables
 Requires: nftables
 # #1686813 - conmon hasn't been made independent yet
 #Requires: conmon
+Recommends: podman-manpages = %{epoch}:%{version}-%{release}
 Recommends: container-selinux
 Recommends: slirp4netns >= 0.3-0
-%if 0%{?fedora} > 28
-Recommends: fuse-overlayfs
-%endif
+Recommends: fuse-overlayfs >= 0.3-8
 
 # vendored libraries
 # awk '{print "Provides: bundled(golang("$1")) = "$2}' vendor.conf | sort
@@ -186,9 +185,12 @@ Provides: bundled(golang(k8s.io/kube-openapi)) = 275e2ce91dec4c05a4094a7b1daee55
 Provides: bundled(golang(k8s.io/utils)) = 258e2a2fa64568210fbd6267cf1d8fd87c3cb86e
 
 %description
+Podman (Pod Manager) is a fully featured container engine that is a simple daemonless tool.  Podman provides a Docker-CLI comparable command line that eases the transition from other container engines and allows the management of pods, containers and images.  Simply put: alias docker=podman.  Most Podman commands can be run as a regular user, without requiring additional privileges.
+
+Podman uses Buildah(1) internally to create container images. Both tools share image (not container) storage, hence each can use or manipulate images (but not containers) created by the other.
+
 %{summary}
-%{repo} provides a library for applications looking to use
-the Container Pod concept popularized by Kubernetes.
+%{repo} Simple management tool for pods, containers and images
 
 %package docker
 Summary: Emulate Docker CLI using podman
@@ -502,7 +504,6 @@ cp -pav test/system %{buildroot}/%{_datadir}/%{name}/test/
 %license LICENSE
 %doc README.md CONTRIBUTING.md pkg/hooks/README-hooks.md install.md code-of-conduct.md transfer.md
 %{_bindir}/%{name}
-%{_mandir}/man1/podman*.1*
 %{_mandir}/man5/*.5*
 %{_datadir}/bash-completion/completions/*
 # By "owning" the site-functions dir, we don't need to Require zsh
@@ -533,8 +534,35 @@ cp -pav test/system %{buildroot}/%{_datadir}/%{name}/test/
 %doc README.md CONTRIBUTING.md pkg/hooks/README-hooks.md install.md code-of-conduct.md transfer.md
 %endif
 
+%package manpages
+Summary: Man pages for the podman commands
+BuildArch: noarch
+
+%files manpages
+%{_mandir}/man1/podman*.1*
+
+%description manpages
+Man pages for the podman commands
+
+%package remote
+Summary: (Experimental) Remote client for managing podman containers
+Recommends: podman-manpages = %{epoch}:%{version}-%{release}
+
+%description remote
+Remote client for managing podman containers.
+
+This experimental remote client is under heavy development. Please do not
+run podman-remote in production.
+
+podman-remote uses the varlink connection to connect to a podman client to
+manage pods, containers and container images. Podman-remote supports ssh
+connections as well.
+
+%files remote
+%{_bindir}/podman-remote
+
 %triggerpostun -- %{name} < 1.1
-podman system renumber
+%{_bindir}/%{name} system renumber
 exit 0
 
 %files tests
