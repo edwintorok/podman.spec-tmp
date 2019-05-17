@@ -406,6 +406,7 @@ ln -s $(dirs +1 -l) src/%{import_path_conmon}
 popd
 ln -s vendor src
 export GOPATH=$(pwd)/_output:$(pwd)
+PODMAN_VERSION=%{version} %{__make} PREFIX=%{buildroot}%{_prefix} ETCDIR=%{buildroot}%{_sysconfdir} podman-remote
 export BUILDTAGS="selinux seccomp $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) containers_image_ostree_stub"
 BUILDTAGS=$BUILDTAGS make -C conmon
 popd
