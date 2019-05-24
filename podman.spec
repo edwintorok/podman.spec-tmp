@@ -43,8 +43,8 @@ Epoch: 2
 %else
 Epoch: 1
 %endif
-Version: 1.3.1
-Release: 1.1.dev.git%{shortcommit0}%{?dist}
+Version: 1.3.2
+Release: 0.1.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://podman.io/
@@ -393,6 +393,7 @@ ln -s ../../../../ src/%{import_path}
 popd
 ln -s vendor src
 export GOPATH=$(pwd)/_build:$(pwd)
+PODMAN_VERSION=%{version} %{__make} PREFIX=%{buildroot}%{_prefix} ETCDIR=%{buildroot}%{_sysconfdir} podman-remote
 export BUILDTAGS="varlink seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/ostree_tag.sh) $(hack/selinux_tag.sh)"
 %gogenerate ./cmd/%{name}/varlink/...
 %gobuild -o bin/%{name} %{import_path}/cmd/%{name}
@@ -406,7 +407,6 @@ ln -s $(dirs +1 -l) src/%{import_path_conmon}
 popd
 ln -s vendor src
 export GOPATH=$(pwd)/_output:$(pwd)
-PODMAN_VERSION=%{version} %{__make} PREFIX=%{buildroot}%{_prefix} ETCDIR=%{buildroot}%{_sysconfdir} podman-remote
 export BUILDTAGS="selinux seccomp $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) containers_image_ostree_stub"
 BUILDTAGS=$BUILDTAGS make -C conmon
 popd
@@ -415,6 +415,7 @@ popd
 install -dp %{buildroot}%{_unitdir}
 PODMAN_VERSION=%{version} %{__make} PREFIX=%{buildroot}%{_prefix} ETCDIR=%{buildroot}%{_sysconfdir} \
         install.bin \
+        install.remote \
         install.man \
         install.cni \
         install.systemd \
@@ -508,8 +509,8 @@ cp -pav test/system %{buildroot}/%{_datadir}/%{name}/test/
 %{_mandir}/man5/*.5*
 %{_datadir}/bash-completion/completions/*
 # By "owning" the site-functions dir, we don't need to Require zsh
-%{_datadir}/zsh/site-functions
-%{_datadir}/zsh/site-functions/*
+%dir %{_datadir}/zsh/site-functions
+%{_datadir}/zsh/site-functions/_podman
 %dir %{_libexecdir}/%{name}
 %{_libexecdir}/%{name}/conmon
 %config(noreplace) %{_sysconfdir}/cni/net.d/87-%{name}-bridge.conflist
@@ -571,7 +572,7 @@ exit 0
 %{_datadir}/%{name}/test
 
 %changelog
-* Fri May 24 2019 Dan Walsh <dwalsh@fedoraproject.org> - 2:1.3.1-1.1.dev.git5296428
+* Fri May 24 2019 Dan Walsh <dwalsh@fedoraproject.org> - 2:1.3.2-0.1.dev.git5296428
 Bump up to latest on master
 
 * Fri May 10 2019 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.3.1-0.1.dev.git9ae3221
