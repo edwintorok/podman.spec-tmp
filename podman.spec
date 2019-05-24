@@ -1,16 +1,11 @@
-%{?python_enable_dependency_generator}
 %global with_devel 0
 %global with_bundled 1
 %global with_debug 1
 %global with_check 0
 %global with_unit_test 0
 
-%if 0%{?fedora} >= 28
 %bcond_without varlink
 %define gogenerate go generate
-%else
-%bcond_with varlink
-%endif
 
 %if 0%{?with_debug}
 %global _find_debuginfo_dwz_opts %{nil}
@@ -27,7 +22,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 5296428e91a56ba47705849512e287302d572cfd
+%global commit0 1ac06d8469295c24a2a629b8926bcd66805c6054
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global import_path_conmon github.com/kubernetes-sigs/cri-o
@@ -44,15 +39,15 @@ Epoch: 2
 Epoch: 1
 %endif
 Version: 1.3.2
-Release: 0.1.dev.git%{shortcommit0}%{?dist}
+# Rawhide almost always ships unreleased builds,
+# so release tag should be of the form 0.N.blahblah
+Release: 0.2.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
-URL: https://podman.io/
+URL: https://%{name}.io/
 Source0: %{git0}/archive/%{commit0}/%{repo}-%{shortcommit0}.tar.gz
 Source1: %{git_conmon}/archive/%{commit_conmon}/cri-o-%{shortcommit_conmon}.tar.gz
-# e.g. el6 has ppc64 arch without gcc-go, so EA tag is required
-#ExclusiveArch:  %%{?go_arches:%%{go_arches}}%%{!?go_arches:%%{ix86} x86_64 aarch64 %%{arm}}
-ExclusiveArch: aarch64 %{arm} ppc64le s390x x86_64
+ExclusiveArch: aarch64 ppc64le s390x x86_64
 # If go_compiler is not set to 1, there is no virtual provide. Use golang instead.
 BuildRequires: %{?go_compiler:compiler(go-compiler)}%{!?go_compiler:golang}
 BuildRequires: btrfs-progs-devel
@@ -70,6 +65,7 @@ BuildRequires: ostree-devel
 BuildRequires: pkgconfig
 BuildRequires: make
 BuildRequires: systemd
+BuildRequires: systemd-devel
 Requires: runc >= 2:1.0.0-57
 Requires: containers-common
 Requires: containernetworking-plugins >= 0.7.3-2
@@ -77,7 +73,7 @@ Requires: iptables
 Requires: nftables
 # #1686813 - conmon hasn't been made independent yet
 #Requires: conmon
-Recommends: podman-manpages = %{epoch}:%{version}-%{release}
+Recommends: %{name}-manpages = %{epoch}:%{version}-%{release}
 Recommends: container-selinux
 Recommends: slirp4netns >= 0.3-0
 Recommends: fuse-overlayfs >= 0.3-8
@@ -185,15 +181,19 @@ Provides: bundled(golang(k8s.io/kube-openapi)) = 275e2ce91dec4c05a4094a7b1daee55
 Provides: bundled(golang(k8s.io/utils)) = 258e2a2fa64568210fbd6267cf1d8fd87c3cb86e
 
 %description
-Podman (Pod Manager) is a fully featured container engine that is a simple daemonless tool.  Podman provides a Docker-CLI comparable command line that eases the transition from other container engines and allows the management of pods, containers and images.  Simply put: alias docker=podman.  Most Podman commands can be run as a regular user, without requiring additional privileges.
+%{name} (Pod Manager) is a fully featured container engine that is a simple
+daemonless tool.  %{name} provides a Docker-CLI comparable command line that
+eases the transition from other container engines and allows the management of
+pods, containers and images.  Simply put: alias docker=%{name}.
+Most %{name} commands can be run as a regular user, without requiring additional privileges.
 
-Podman uses Buildah(1) internally to create container images. Both tools share image (not container) storage, hence each can use or manipulate images (but not containers) created by the other.
+%{name} uses Buildah(1) internally to create container images. Both tools share image (not container) storage, hence each can use or manipulate images (but not containers) created by the other.
 
 %{summary}
 %{repo} Simple management tool for pods, containers and images
 
 %package docker
-Summary: Emulate Docker CLI using podman
+Summary: Emulate Docker CLI using %{name}
 BuildArch: noarch
 Requires: %{name} = %{epoch}:%{version}-%{release}
 Conflicts: docker
@@ -204,8 +204,8 @@ Conflicts: moby-engine
 
 %description docker
 This package installs a script named docker that emulates the Docker CLI by
-executes podman commands, it also creates links between all Docker CLI man
-pages and podman.
+executes %{name} commands, it also creates links between all Docker CLI man
+pages and %{name}.
 
 %if 0%{?with_devel}
 %package devel
@@ -368,7 +368,7 @@ providing packages with %{import_path} prefix.
 %endif
 
 %package tests
-Summary:         Tests for %{name}
+Summary: Tests for %{name}
 
 Requires: %{name} = %{epoch}:%{version}-%{release}
 Requires: bats
@@ -378,6 +378,30 @@ Requires: jq
 %{summary}
 
 This package contains system tests for %{name}
+
+%package manpages
+Summary: Man pages for the %{name} commands
+BuildArch: noarch
+
+%files manpages
+%{_mandir}/man1/%{name}*.1*
+
+%description manpages
+Man pages for the %{name} commands
+
+%package remote
+Summary: (Experimental) Remote client for managing %{name} containers
+Recommends: %{name}-manpages = %{epoch}:%{version}-%{release}
+
+%description remote
+Remote client for managing %{name} containers.
+
+This experimental remote client is under heavy development. Please do not
+run %{name}-remote in production.
+
+%{name}-remote uses the varlink connection to connect to a %{name} client to
+manage pods, containers and container images. %{name}-remote supports ssh
+connections as well.
 
 %prep
 %autosetup -Sgit -n %{repo}-%{commit0}
@@ -393,10 +417,15 @@ ln -s ../../../../ src/%{import_path}
 popd
 ln -s vendor src
 export GOPATH=$(pwd)/_build:$(pwd)
-PODMAN_VERSION=%{version} %{__make} PREFIX=%{buildroot}%{_prefix} ETCDIR=%{buildroot}%{_sysconfdir} podman-remote
-export BUILDTAGS="varlink seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/ostree_tag.sh) $(hack/selinux_tag.sh)"
 %gogenerate ./cmd/%{name}/varlink/...
+
+# build %%{name}
+export BUILDTAGS="systemd varlink seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/ostree_tag.sh) $(hack/selinux_tag.sh)"
 %gobuild -o bin/%{name} %{import_path}/cmd/%{name}
+
+# build %%{name}-remote
+export BUILDTAGS="remoteclient systemd varlink seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/ostree_tag.sh) $(hack/selinux_tag.sh)"
+%gobuild -o bin/%{name}-remote %{import_path}/cmd/%{name}
 
 # build conmon
 pushd cri-o-%{commit_conmon}
@@ -408,7 +437,7 @@ popd
 ln -s vendor src
 export GOPATH=$(pwd)/_output:$(pwd)
 export BUILDTAGS="selinux seccomp $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) containers_image_ostree_stub"
-BUILDTAGS=$BUILDTAGS make -C conmon
+BUILDTAGS=$BUILDTAGS %{__make} -C conmon
 popd
 
 %install
@@ -499,6 +528,10 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 install -d -p %{buildroot}/%{_datadir}/%{name}/test/system
 cp -pav test/system %{buildroot}/%{_datadir}/%{name}/test/
 
+%triggerpostun -- %{name} < 1.1
+%{_bindir}/%{name} system renumber
+exit 0
+
 #define license tag if not already defined
 %{!?_licensedir:%global license %doc}
 
@@ -510,7 +543,7 @@ cp -pav test/system %{buildroot}/%{_datadir}/%{name}/test/
 %{_datadir}/bash-completion/completions/*
 # By "owning" the site-functions dir, we don't need to Require zsh
 %dir %{_datadir}/zsh/site-functions
-%{_datadir}/zsh/site-functions/_podman
+%{_datadir}/zsh/site-functions/_%{name}
 %dir %{_libexecdir}/%{name}
 %{_libexecdir}/%{name}/conmon
 %config(noreplace) %{_sysconfdir}/cni/net.d/87-%{name}-bridge.conflist
@@ -536,44 +569,21 @@ cp -pav test/system %{buildroot}/%{_datadir}/%{name}/test/
 %doc README.md CONTRIBUTING.md pkg/hooks/README-hooks.md install.md code-of-conduct.md transfer.md
 %endif
 
-%package manpages
-Summary: Man pages for the podman commands
-BuildArch: noarch
-
-%files manpages
-%{_mandir}/man1/podman*.1*
-
-%description manpages
-Man pages for the podman commands
-
-%package remote
-Summary: (Experimental) Remote client for managing podman containers
-Recommends: podman-manpages = %{epoch}:%{version}-%{release}
-
-%description remote
-Remote client for managing podman containers.
-
-This experimental remote client is under heavy development. Please do not
-run podman-remote in production.
-
-podman-remote uses the varlink connection to connect to a podman client to
-manage pods, containers and container images. Podman-remote supports ssh
-connections as well.
-
 %files remote
-%{_bindir}/podman-remote
-
-%triggerpostun -- %{name} < 1.1
-%{_bindir}/%{name} system renumber
-exit 0
+%{_bindir}/%{name}-remote
 
 %files tests
 %license LICENSE
 %{_datadir}/%{name}/test
 
 %changelog
+* Fri May 24 2019 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.3.2-0.2.dev.git1ac06d8
+- built commit 1ac06d8
+- BR: systemd-devel
+- correct build steps for %%{name}-remote
+
 * Fri May 24 2019 Dan Walsh <dwalsh@fedoraproject.org> - 2:1.3.2-0.1.dev.git5296428
-Bump up to latest on master
+- Bump up to latest on master
 
 * Fri May 10 2019 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.3.1-0.1.dev.git9ae3221
 - bump to v1.3.1-dev
