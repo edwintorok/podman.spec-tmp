@@ -22,7 +22,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 c871653e195d8051ddfb899c2b73cc95de8e6443
+%global commit0 558ce8d1417d3980e4622b3293a2e16ee1e267cb
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global import_path_conmon github.com/kubernetes-sigs/cri-o
@@ -41,7 +41,7 @@ Epoch: 1
 Version: 1.3.2
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.6.dev.git%{shortcommit0}%{?dist}
+Release: 0.7.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -577,6 +577,9 @@ exit 0
 %{_datadir}/%{name}/test
 
 %changelog
+* Fri May 31 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.3.2-0.7.dev.git558ce8d
+- autobuilt 558ce8d
+
 * Thu May 30 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.3.2-0.6.dev.gitc871653
 - autobuilt c871653
 
