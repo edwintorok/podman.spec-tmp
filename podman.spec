@@ -25,29 +25,22 @@
 %global commit0 6d285b879c3fa252545b15a3dea816426ba2c610
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
-%global import_path_conmon github.com/kubernetes-sigs/cri-o
+%global import_path_conmon github.com/containers/conmon
 %global git_conmon https://%{import_path_conmon}
-%global commit_conmon a30f93ca229c7fc68fb1d8c7a3342de3c3f54ae5
+%global commit_conmon 59952292a3b07ac125575024ae21956efe0ecdfb
 %global shortcommit_conmon %(c=%{commit_conmon}; echo ${c:0:7})
 
 Name: podman
-# Epoch is 2 for f30 (rawhide), 1 for f28 and f29
-# BEWARE while using on other distros
-%if 0%{?fedora} >= 30
 Epoch: 2
-%else
-Epoch: 1
-%endif
 Version: 1.3.2
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.12.dev.git%{shortcommit0}%{?dist}
+Release: 0.13.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
 Source0: %{git0}/archive/%{commit0}/%{repo}-%{shortcommit0}.tar.gz
-Source1: %{git_conmon}/archive/%{commit_conmon}/cri-o-%{shortcommit_conmon}.tar.gz
-ExclusiveArch: aarch64 ppc64le s390x x86_64
+Source1: %{git_conmon}/archive/%{commit_conmon}/conmon-%{shortcommit_conmon}.tar.gz
 # If go_compiler is not set to 1, there is no virtual provide. Use golang instead.
 BuildRequires: %{?go_compiler:compiler(go-compiler)}%{!?go_compiler:golang}
 BuildRequires: btrfs-progs-devel
@@ -68,7 +61,7 @@ BuildRequires: systemd
 BuildRequires: systemd-devel
 Requires: runc >= 2:1.0.0-57
 Requires: containers-common
-Requires: containernetworking-plugins >= 0.7.3-2
+Requires: containernetworking-plugins >= 0.7.5-1
 Requires: iptables
 Requires: nftables
 # #1686813 - conmon hasn't been made independent yet
@@ -428,16 +421,8 @@ export BUILDTAGS="remoteclient systemd varlink seccomp exclude_graphdriver_devic
 %gobuild -o bin/%{name}-remote %{import_path}/cmd/%{name}
 
 # build conmon
-pushd cri-o-%{commit_conmon}
-mkdir _output
-pushd _output
-mkdir -p src/%{provider}.%{provider_tld}/{kubernetes-sigs,opencontainers}
-ln -s $(dirs +1 -l) src/%{import_path_conmon}
-popd
-ln -s vendor src
-export GOPATH=$(pwd)/_output:$(pwd)
-export BUILDTAGS="selinux seccomp $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) containers_image_ostree_stub"
-BUILDTAGS=$BUILDTAGS %{__make} -C conmon
+pushd conmon-%{commit_conmon}
+%{__make} all
 popd
 
 %install
@@ -458,8 +443,11 @@ install -dp %{buildroot}%{_datadir}/containers
 install -p -m 644 %{repo}.conf %{buildroot}%{_datadir}/containers
 
 # install conmon
+pushd conmon-%{commit_conmon}
+%{__make} LIBEXECDIR=%{buildroot}%{_libexecdir} install
 install -dp %{buildroot}%{_libexecdir}/%{name}
-install -p -m 755 cri-o-%{commit_conmon}/bin/conmon %{buildroot}%{_libexecdir}/%{name}
+install -p -m 755 bin/conmon %{buildroot}%{_libexecdir}/%{name}
+popd
 
 # source codes for building projects
 %if 0%{?with_devel}
@@ -546,6 +534,8 @@ exit 0
 %{_datadir}/zsh/site-functions/_%{name}
 %dir %{_libexecdir}/%{name}
 %{_libexecdir}/%{name}/conmon
+%dir %{_libexecdir}/crio
+%{_libexecdir}/crio/conmon
 %config(noreplace) %{_sysconfdir}/cni/net.d/87-%{name}-bridge.conflist
 %{_datadir}/containers/%{repo}.conf
 %{_unitdir}/io.%{name}.service
@@ -570,6 +560,7 @@ exit 0
 %endif
 
 %files remote
+%license LICENSE
 %{_bindir}/%{name}-remote
 
 %files tests
@@ -577,6 +568,9 @@ exit 0
 %{_datadir}/%{name}/test
 
 %changelog
+* Fri Jun 07 2019 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.3.2-0.13.dev.git6d285b8
+- Resolves: #1716809 - use conmon v0.2.0
+
 * Thu Jun 06 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.3.2-0.12.dev.git6d285b8
 - autobuilt 6d285b8
 
