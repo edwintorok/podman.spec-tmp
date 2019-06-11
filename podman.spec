@@ -35,7 +35,7 @@ Epoch: 2
 Version: 1.4.1
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.18.dev.git%{shortcommit0}%{?dist}
+Release: 0.19.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -445,8 +445,7 @@ install -p -m 644 %{repo}.conf %{buildroot}%{_datadir}/containers
 # install conmon
 pushd conmon-%{commit_conmon}
 %{__make} LIBEXECDIR=%{buildroot}%{_libexecdir} install
-install -dp %{buildroot}%{_libexecdir}/%{name}
-install -p -m 755 bin/conmon %{buildroot}%{_libexecdir}/%{name}
+mv %{buildroot}%{_libexecdir}/crio %{buildroot}%{_libexecdir}/%{name}
 popd
 
 # source codes for building projects
@@ -534,8 +533,6 @@ exit 0
 %{_datadir}/zsh/site-functions/_%{name}
 %dir %{_libexecdir}/%{name}
 %{_libexecdir}/%{name}/conmon
-%dir %{_libexecdir}/crio
-%{_libexecdir}/crio/conmon
 %config(noreplace) %{_sysconfdir}/cni/net.d/87-%{name}-bridge.conflist
 %{_datadir}/containers/%{repo}.conf
 %{_unitdir}/io.%{name}.service
@@ -568,6 +565,9 @@ exit 0
 %{_datadir}/%{name}/test
 
 %changelog
+* Tue Jun 11 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.4.1-0.19.dev.gitc93b8d6
+- do not install /usr/libexec/crio - conflicts with crio
+
 * Tue Jun 11 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.4.1-0.18.dev.gitc93b8d6
 - autobuilt c93b8d6
 
