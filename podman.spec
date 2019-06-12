@@ -22,7 +22,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 c93b8d6b02c7ec0c91af34481133001421b9628d
+%global commit0 f8a84fdcff12fdc150bb303d0004d5ba0cd6087b
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global import_path_conmon github.com/containers/conmon
@@ -35,7 +35,7 @@ Epoch: 2
 Version: 1.4.1
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.19.dev.git%{shortcommit0}%{?dist}
+Release: 0.20.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -565,6 +565,9 @@ exit 0
 %{_datadir}/%{name}/test
 
 %changelog
+* Wed Jun 12 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.4.1-0.20.dev.gitf8a84fd
+- autobuilt f8a84fd
+
 * Tue Jun 11 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.4.1-0.19.dev.gitc93b8d6
 - do not install /usr/libexec/crio - conflicts with crio
 
