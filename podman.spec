@@ -22,7 +22,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 0906b32087c3d7db6844873a7d46241430a1b065
+%global commit0 7c4e4449b0372c5b617c2708042dd2e5fafe7d22
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global import_path_conmon github.com/containers/conmon
@@ -32,10 +32,10 @@
 
 Name: podman
 Epoch: 2
-Version: 1.5.0
+Version: 1.4.3
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.1.dev.git%{shortcommit0}%{?dist}
+Release: 0.30.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -68,9 +68,8 @@ Requires: nftables
 #Requires: conmon
 Recommends: %{name}-manpages = %{epoch}:%{version}-%{release}
 Recommends: container-selinux
-Recommends: slirp4netns >= 0.3.0-2
+Recommends: slirp4netns >= 0.3-0
 Recommends: fuse-overlayfs >= 0.3-8
-Recommends: libvarlink-util >= 18-1
 
 # vendored libraries
 # awk '{print "Provides: bundled(golang("$1")) = "$2}' vendor.conf | sort
@@ -200,30 +199,6 @@ Conflicts: moby-engine
 This package installs a script named docker that emulates the Docker CLI by
 executes %{name} commands, it also creates links between all Docker CLI man
 pages and %{name}.
-
-%package manpages
-Summary: Man pages for the %{name} commands
-BuildArch: noarch
-
-%description manpages
-Man pages for the %{name} commands
-
-%files manpages
-%{_mandir}/man1/%{name}*.1*
-
-%package remote
-Summary: (Experimental) Remote client for managing %{name} containers
-Recommends: %{name}-manpages = %{epoch}:%{version}-%{release}
-
-%description remote
-Remote client for managing %{name} containers.
-
-This experimental remote client is under heavy development. Please do not
-run %{name}-remote in production.
-
-%{name}-remote uses the varlink connection to connect to a %{name} client to
-manage pods, containers and container images. %{name}-remote supports ssh
-connections as well.
 
 %if 0%{?with_devel}
 %package devel
@@ -360,7 +335,7 @@ building other packages which use import path with
 
 %if 0%{?with_unit_test} && 0%{?with_devel}
 %package unit-test-devel
-Summary: Unit tests for %{name} package
+Summary:         Unit tests for %{name} package
 %if 0%{?with_check}
 #Here comes all BuildRequires: PACKAGE the unit tests
 #in %%check section need for running
@@ -397,6 +372,30 @@ Requires: jq
 
 This package contains system tests for %{name}
 
+%package manpages
+Summary: Man pages for the %{name} commands
+BuildArch: noarch
+
+%files manpages
+%{_mandir}/man1/%{name}*.1*
+
+%description manpages
+Man pages for the %{name} commands
+
+%package remote
+Summary: (Experimental) Remote client for managing %{name} containers
+Recommends: %{name}-manpages = %{epoch}:%{version}-%{release}
+
+%description remote
+Remote client for managing %{name} containers.
+
+This experimental remote client is under heavy development. Please do not
+run %{name}-remote in production.
+
+%{name}-remote uses the varlink connection to connect to a %{name} client to
+manage pods, containers and container images. %{name}-remote supports ssh
+connections as well.
+
 %prep
 %autosetup -Sgit -n %{repo}-%{commit0}
 
@@ -411,18 +410,14 @@ ln -s ../../../../ src/%{import_path}
 popd
 ln -s vendor src
 export GOPATH=$(pwd)/_build:$(pwd)
-
-export GO111MODULE=off 
 %gogenerate ./cmd/%{name}/varlink/...
 
 # build %%{name}
 export BUILDTAGS="systemd varlink seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/ostree_tag.sh) $(hack/selinux_tag.sh)"
-export GO111MODULE=off 
 %gobuild -o bin/%{name} %{import_path}/cmd/%{name}
 
 # build %%{name}-remote
 export BUILDTAGS="remoteclient systemd varlink seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/ostree_tag.sh) $(hack/selinux_tag.sh)"
-export GO111MODULE=off 
 %gobuild -o bin/%{name}-remote %{import_path}/cmd/%{name}
 
 # build conmon
@@ -570,9 +565,6 @@ exit 0
 %{_datadir}/%{name}/test
 
 %changelog
-* Jun 27 2019 Dan Walsh <dwalsh@fedoraproject.org> - 2:1.5.0-0.1.dev
-- Bump up to latest on master
-
 * Sun Jun 23 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.4.3-0.30.dev.git7c4e444
 - autobuilt 7c4e444
 
