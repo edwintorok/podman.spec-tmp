@@ -4,8 +4,13 @@
 %global with_check 0
 %global with_unit_test 0
 
+%if 0%{?fedora}
+#### DO NOT REMOVE - NEEDED FOR CENTOS
 %bcond_without varlink
 %define gogenerate go generate
+%else
+%bcond_with varlink
+%endif
 
 %if 0%{?with_debug}
 %global _find_debuginfo_dwz_opts %{nil}
@@ -22,7 +27,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 7c4e4449b0372c5b617c2708042dd2e5fafe7d22
+%global commit0 f7407f2eb512e1407f8281009eb829f37405119b
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global import_path_conmon github.com/containers/conmon
@@ -31,11 +36,13 @@
 %global shortcommit_conmon %(c=%{commit_conmon}; echo ${c:0:7})
 
 Name: podman
+%if 0%{?fedora}
 Epoch: 2
-Version: 1.4.3
+%endif
+Version: 1.4.5
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.30.dev.git%{shortcommit0}%{?dist}
+Release: 0.1.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -48,7 +55,7 @@ BuildRequires: glib2-devel
 BuildRequires: glibc-devel
 BuildRequires: glibc-static
 BuildRequires: git
-BuildRequires: go-md2man
+BuildRequires: golang-github-cpuguy83-md2man
 BuildRequires: gpgme-devel
 BuildRequires: libassuan-devel
 BuildRequires: libgpg-error-devel
@@ -66,10 +73,18 @@ Requires: iptables
 Requires: nftables
 # #1686813 - conmon hasn't been made independent yet
 #Requires: conmon
+%if 0%{?fedora}
 Recommends: %{name}-manpages = %{epoch}:%{version}-%{release}
 Recommends: container-selinux
-Recommends: slirp4netns >= 0.3-0
+Recommends: slirp4netns >= 0.3.0-2
 Recommends: fuse-overlayfs >= 0.3-8
+%else
+#### DO NOT REMOVE - NEEDED FOR CENTOS
+Requires: %{name}-manpages = %{version}-%{release}
+Requires: container-selinux
+Requires: slirp4netns >= 0.3.0-2
+Requires: runc >= 1.0.0-57
+%endif
 
 # vendored libraries
 # awk '{print "Provides: bundled(golang("$1")) = "$2}' vendor.conf | sort
@@ -360,6 +375,7 @@ This package contains unit tests for project
 providing packages with %{import_path} prefix.
 %endif
 
+%if 0%{?fedora}
 %package tests
 Summary: Tests for %{name}
 
@@ -371,16 +387,6 @@ Requires: jq
 %{summary}
 
 This package contains system tests for %{name}
-
-%package manpages
-Summary: Man pages for the %{name} commands
-BuildArch: noarch
-
-%files manpages
-%{_mandir}/man1/%{name}*.1*
-
-%description manpages
-Man pages for the %{name} commands
 
 %package remote
 Summary: (Experimental) Remote client for managing %{name} containers
@@ -395,6 +401,17 @@ run %{name}-remote in production.
 %{name}-remote uses the varlink connection to connect to a %{name} client to
 manage pods, containers and container images. %{name}-remote supports ssh
 connections as well.
+%endif
+
+%package manpages
+Summary: Man pages for the %{name} commands
+BuildArch: noarch
+
+%files manpages
+%{_mandir}/man1/%{name}*.1*
+
+%description manpages
+Man pages for the %{name} commands
 
 %prep
 %autosetup -Sgit -n %{repo}-%{commit0}
@@ -410,15 +427,19 @@ ln -s ../../../../ src/%{import_path}
 popd
 ln -s vendor src
 export GOPATH=$(pwd)/_build:$(pwd)
+export GO111MODULE=off
 %gogenerate ./cmd/%{name}/varlink/...
 
 # build %%{name}
 export BUILDTAGS="systemd varlink seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/ostree_tag.sh) $(hack/selinux_tag.sh)"
 %gobuild -o bin/%{name} %{import_path}/cmd/%{name}
 
+%if 0%{?fedora}
+#### DO NOT REMOVE - NEEDED FOR CENTOS
 # build %%{name}-remote
 export BUILDTAGS="remoteclient systemd varlink seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/ostree_tag.sh) $(hack/selinux_tag.sh)"
 %gobuild -o bin/%{name}-remote %{import_path}/cmd/%{name}
+%endif 
 
 # build conmon
 pushd conmon-%{commit_conmon}
@@ -429,7 +450,9 @@ popd
 install -dp %{buildroot}%{_unitdir}
 PODMAN_VERSION=%{version} %{__make} PREFIX=%{buildroot}%{_prefix} ETCDIR=%{buildroot}%{_sysconfdir} \
         install.bin \
+%if 0%{?fedora}
         install.remote \
+%endif
         install.man \
         install.cni \
         install.systemd \
@@ -556,6 +579,8 @@ exit 0
 %doc README.md CONTRIBUTING.md pkg/hooks/README-hooks.md install.md code-of-conduct.md transfer.md
 %endif
 
+#### DO NOT REMOVE - NEEDED FOR CENTOS
+%if 0%{?fedora}
 %files remote
 %license LICENSE
 %{_bindir}/%{name}-remote
@@ -563,8 +588,14 @@ exit 0
 %files tests
 %license LICENSE
 %{_datadir}/%{name}/test
+%endif
 
 %changelog
+* Sun Jul 07 2019 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.4.5-0.1.dev.gitf7407f2
+- bump to v1.4.5-dev
+- use new name for go-md2man
+- include centos conditionals
+
 * Sun Jun 23 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.4.3-0.30.dev.git7c4e444
 - autobuilt 7c4e444
 
