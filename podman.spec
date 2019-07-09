@@ -27,7 +27,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 f7407f2eb512e1407f8281009eb829f37405119b
+%global commit0 cea0e93a658f10cc46b56cb9b00ac8b824bc8b02
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global import_path_conmon github.com/containers/conmon
@@ -42,7 +42,7 @@ Epoch: 2
 Version: 1.4.5
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.1.dev.git%{shortcommit0}%{?dist}
+Release: 0.2.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -415,6 +415,7 @@ Man pages for the %{name} commands
 
 %prep
 %autosetup -Sgit -n %{repo}-%{commit0}
+rm -rf docs/containers-mounts.conf.5.md
 
 # untar cri-o
 tar zxf %{SOURCE1}
@@ -591,6 +592,9 @@ exit 0
 %endif
 
 %changelog
+* Tue Jul 09 2019 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.4.5-0.2.dev.gitcea0e93
+- Resolves: #1727933 - containers-monuts.conf.5 moved to containers-common
+
 * Sun Jul 07 2019 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.4.5-0.1.dev.gitf7407f2
 - bump to v1.4.5-dev
 - use new name for go-md2man
