@@ -32,7 +32,7 @@
 
 %global import_path_conmon github.com/containers/conmon
 %global git_conmon https://%{import_path_conmon}
-%global commit_conmon 59952292a3b07ac125575024ae21956efe0ecdfb
+%global commit_conmon 1de71ad51b9f390451eb37029ae913b0a86f1a5b
 %global shortcommit_conmon %(c=%{commit_conmon}; echo ${c:0:7})
 
 Name: podman
@@ -42,7 +42,7 @@ Epoch: 2
 Version: 1.4.5
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.4.dev.git%{shortcommit0}%{?dist}
+Release: 0.5.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -468,8 +468,7 @@ install -p -m 644 %{repo}.conf %{buildroot}%{_datadir}/containers
 
 # install conmon
 pushd conmon-%{commit_conmon}
-%{__make} LIBEXECDIR=%{buildroot}%{_libexecdir} install
-mv %{buildroot}%{_libexecdir}/crio %{buildroot}%{_libexecdir}/%{name}
+%{__make} LIBEXECDIR=%{buildroot}%{_libexecdir} install.%{name}
 popd
 
 # source codes for building projects
@@ -592,6 +591,9 @@ exit 0
 %endif
 
 %changelog
+* Fri Jul 12 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.4.5-0.5.dev.gite2e8477
+- built conmon 1de71ad
+
 * Thu Jul 11 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.4.5-0.4.dev.gite2e8477
 - autobuilt e2e8477
 
