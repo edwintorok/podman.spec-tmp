@@ -35,6 +35,10 @@
 %global commit_conmon 1de71ad51b9f390451eb37029ae913b0a86f1a5b
 %global shortcommit_conmon %(c=%{commit_conmon}; echo ${c:0:7})
 
+# Used for comparing with latest upstream tag
+# to decide whether to autobuild (non-rawhide only)
+%global built_tag v1.4.4
+
 Name: podman
 %if 0%{?fedora}
 Epoch: 2
