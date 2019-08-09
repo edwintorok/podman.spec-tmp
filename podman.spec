@@ -32,7 +32,7 @@
 
 %global import_path_conmon github.com/containers/conmon
 %global git_conmon https://%{import_path_conmon}
-%global commit_conmon 1de71ad51b9f390451eb37029ae913b0a86f1a5b
+%global commit_conmon e217fdff82e0b1a6184a28c43043a4065083407f
 %global shortcommit_conmon %(c=%{commit_conmon}; echo ${c:0:7})
 
 # Used for comparing with latest upstream tag
