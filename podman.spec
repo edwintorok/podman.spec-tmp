@@ -426,7 +426,6 @@ tar zxf %{SOURCE1}
 
 sed -i 's/install.remote: podman-remote/install.remote:/' Makefile
 sed -i 's/install.bin: podman/install.bin:/' Makefile
-sed -i 's/install.man: docs/install.man:/' Makefile
 
 %build
 mkdir _build
