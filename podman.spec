@@ -46,7 +46,7 @@ Epoch: 2
 Version: 1.5.1
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.16.dev.git%{shortcommit0}%{?dist}
+Release: 1.16.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -80,6 +80,7 @@ Requires: nftables
 %if 0%{?fedora}
 Recommends: %{name}-manpages = %{epoch}:%{version}-%{release}
 Recommends: container-selinux
+Recommends: libvarlink-util
 Recommends: slirp4netns >= 0.3.0-2
 Recommends: fuse-overlayfs >= 0.3-8
 %else
@@ -598,6 +599,9 @@ exit 0
 %endif
 
 %changelog
+* Tue Aug 13 2019 Dan Walsh <dwalsh@fedoraproject.org> - 2:1.5.1-1.16.dev.gitce64c14
+- Add recommends libvarlink-util
+
 * Tue Aug 13 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.5.1-0.16.dev.gitce64c14
 - autobuilt ce64c14
 
