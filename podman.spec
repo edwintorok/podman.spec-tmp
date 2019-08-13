@@ -568,6 +568,9 @@ exit 0
 %{_datadir}/containers/%{repo}.conf
 %{_unitdir}/io.%{name}.service
 %{_unitdir}/io.%{name}.socket
+%{_userunitdir}/io.%{name}.service
+%{_userunitdir}/io.%{name}.socket
+
 %{_usr}/lib/tmpfiles.d/%{name}.conf
 
 %files docker
