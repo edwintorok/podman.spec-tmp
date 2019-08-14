@@ -27,7 +27,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 ce64c1403df0e4ca75be50e4a835cc0889b0c8ac
+%global commit0 a734b53357a84d5156e2902113e72d9384f9515b
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global import_path_conmon github.com/containers/conmon
@@ -46,7 +46,7 @@ Epoch: 2
 Version: 1.5.1
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 1.16.dev.git%{shortcommit0}%{?dist}
+Release: 2.16.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -602,6 +602,9 @@ exit 0
 %endif
 
 %changelog
+* Wed Aug 14 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.5.1-2.16.dev.gita734b53
+- autobuilt a734b53
+
 * Tue Aug 13 2019 Dan Walsh <dwalsh@fedoraproject.org> - 2:1.5.1-1.16.dev.gitce64c14
 - Add recommends libvarlink-util
 
