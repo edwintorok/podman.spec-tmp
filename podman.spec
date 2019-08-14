@@ -27,7 +27,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 4823cf8fcc460f2d4f8707ff603234baff9d452a
+%global commit0 f5dcb8011df1f8c7dd501e2ee1db9e069135fba9
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global import_path_conmon github.com/containers/conmon
@@ -46,7 +46,7 @@ Epoch: 2
 Version: 1.5.1
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 3.16.dev.git%{shortcommit0}%{?dist}
+Release: 4.16.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -602,6 +602,9 @@ exit 0
 %endif
 
 %changelog
+* Wed Aug 14 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.5.1-4.16.dev.gitf5dcb80
+- autobuilt f5dcb80
+
 * Wed Aug 14 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.5.1-3.16.dev.git4823cf8
 - autobuilt 4823cf8
 
