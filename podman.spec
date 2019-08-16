@@ -75,12 +75,12 @@ Requires: containers-common
 Requires: containernetworking-plugins >= 0.7.5-1
 Requires: iptables
 Requires: nftables
-Recommends: libvarlink-util
 # #1686813 - conmon hasn't been made independent yet
 #Requires: conmon
 %if 0%{?fedora}
 Recommends: %{name}-manpages = %{epoch}:%{version}-%{release}
 Recommends: container-selinux
+Recommends: libvarlink-util
 Recommends: slirp4netns >= 0.3.0-2
 Recommends: fuse-overlayfs >= 0.3-8
 %else
