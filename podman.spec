@@ -46,7 +46,7 @@ Epoch: 2
 Version: 1.5.2
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.22.dev.git%{shortcommit0}%{?dist}
+Release: 0.23.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -414,6 +414,7 @@ BuildArch: noarch
 
 %files manpages
 %{_mandir}/man1/%{name}*.1*
+%{_mandir}/man5/*.5*
 
 %description manpages
 Man pages for the %{name} commands
@@ -557,7 +558,6 @@ exit 0
 %license LICENSE
 %doc README.md CONTRIBUTING.md pkg/hooks/README-hooks.md install.md code-of-conduct.md transfer.md
 %{_bindir}/%{name}
-%{_mandir}/man5/*.5*
 %{_datadir}/bash-completion/completions/*
 # By "owning" the site-functions dir, we don't need to Require zsh
 %dir %{_datadir}/zsh/site-functions
@@ -602,6 +602,9 @@ exit 0
 %endif
 
 %changelog
+* Thu Aug 22 2019 Daniel J Walsh <dwalsh@redhat.com> - 2:1.5.2-0.23.dev.gitb263dd9
+- Move man5 man pages into podman-manpage package
+
 * Thu Aug 22 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.5.2-0.22.dev.gitb263dd9
 - autobuilt b263dd9
 
