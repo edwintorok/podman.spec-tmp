@@ -46,7 +46,7 @@ Epoch: 2
 Version: 1.5.2
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.29.dev.git%{shortcommit0}%{?dist}
+Release: 0.30.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -70,7 +70,7 @@ BuildRequires: pkgconfig
 BuildRequires: make
 BuildRequires: systemd
 BuildRequires: systemd-devel
-Requires: runc >= 2:1.0.0-57
+Requires: crun
 Requires: containers-common
 Requires: containernetworking-plugins >= 0.7.5-1
 Requires: iptables
@@ -88,7 +88,7 @@ Recommends: fuse-overlayfs >= 0.3-8
 Requires: %{name}-manpages = %{version}-%{release}
 Requires: container-selinux
 Requires: slirp4netns >= 0.3.0-2
-Requires: runc >= 1.0.0-57
+Requires: crun
 %endif
 
 # vendored libraries
@@ -421,13 +421,9 @@ Man pages for the %{name} commands
 
 %prep
 %autosetup -Sgit -n %{repo}-%{commit0}
-rm -rf docs/containers-mounts.conf.5.md
 
 # untar conmon
 tar zxf %{SOURCE1}
-
-sed -i 's/install.remote: podman-remote/install.remote:/' Makefile
-sed -i 's/install.bin: podman/install.bin:/' Makefile
 
 %build
 mkdir _build
@@ -457,6 +453,11 @@ pushd conmon-%{commit_conmon}
 popd
 
 %install
+sed -s 's/^runtime[ =].*"runc/runtime = "crun/' libpod.conf  -i
+sed -i 's/install.remote: podman-remote/install.remote:/' Makefile
+sed -i 's/install.bin: podman/install.bin:/' Makefile
+rm -rf docs/containers-mounts.conf.5.md
+
 install -dp %{buildroot}%{_unitdir}
 PODMAN_VERSION=%{version} %{__make} PREFIX=%{buildroot}%{_prefix} ETCDIR=%{buildroot}%{_sysconfdir} \
         install.bin \
@@ -602,6 +603,10 @@ exit 0
 %endif
 
 %changelog
+* Thu Aug 27 2019 Daniel J Walsh <dwalsh@redhat.com> - 2:1.5.2-0.30.dev.gitf221c61
+- Require crun rather then runc
+- Switch to crun by default for cgroupsV2 support
+
 * Tue Aug 27 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.5.2-0.29.dev.gitf221c61
 - autobuilt f221c61
 
