@@ -30,11 +30,6 @@
 %global commit0 79ebb5f254d6f3498500f823cf1b856fed2e6149
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
-%global import_path_conmon github.com/containers/conmon
-%global git_conmon https://%{import_path_conmon}
-%global commit_conmon e217fdff82e0b1a6184a28c43043a4065083407f
-%global shortcommit_conmon %(c=%{commit_conmon}; echo ${c:0:7})
-
 # Used for comparing with latest upstream tag
 # to decide whether to autobuild (non-rawhide only)
 %global built_tag v1.5.1
@@ -46,12 +41,11 @@ Epoch: 2
 Version: 1.5.2
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.74.dev.git%{shortcommit0}%{?dist}
+Release: 0.75.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
 Source0: %{git0}/archive/%{commit0}/%{repo}-%{shortcommit0}.tar.gz
-Source1: %{git_conmon}/archive/%{commit_conmon}/conmon-%{shortcommit_conmon}.tar.gz
 # If go_compiler is not set to 1, there is no virtual provide. Use golang instead.
 BuildRequires: %{?go_compiler:compiler(go-compiler)}%{!?go_compiler:golang}
 BuildRequires: btrfs-progs-devel
@@ -75,8 +69,7 @@ Requires: containers-common
 Requires: containernetworking-plugins >= 0.7.5-1
 Requires: iptables
 Requires: nftables
-# #1686813 - conmon hasn't been made independent yet
-#Requires: conmon
+Requires: conmon
 %if 0%{?fedora}
 Recommends: %{name}-manpages = %{epoch}:%{version}-%{release}
 Recommends: container-selinux
@@ -422,9 +415,6 @@ Man pages for the %{name} commands
 %prep
 %autosetup -Sgit -n %{repo}-%{commit0}
 
-# untar conmon
-tar zxf %{SOURCE1}
-
 %build
 mkdir _build
 pushd _build
@@ -446,11 +436,6 @@ export BUILDTAGS="systemd varlink seccomp exclude_graphdriver_devicemapper $(hac
 export BUILDTAGS="remoteclient systemd varlink seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/ostree_tag.sh) $(hack/selinux_tag.sh)"
 %gobuild -o bin/%{name}-remote %{import_path}/cmd/%{name}
 %endif 
-
-# build conmon
-pushd conmon-%{commit_conmon}
-%{__make} all
-popd
 
 %install
 sed -s 's/^runtime[ =].*"runc/runtime = "crun/' libpod.conf  -i
@@ -475,11 +460,6 @@ mv pkg/hooks/README.md pkg/hooks/README-hooks.md
 # install libpod.conf
 install -dp %{buildroot}%{_datadir}/containers
 install -p -m 644 %{repo}.conf %{buildroot}%{_datadir}/containers
-
-# install conmon
-pushd conmon-%{commit_conmon}
-%{__make} LIBEXECDIR=%{buildroot}%{_libexecdir} install.%{name}
-popd
 
 # source codes for building projects
 %if 0%{?with_devel}
@@ -563,8 +543,6 @@ exit 0
 # By "owning" the site-functions dir, we don't need to Require zsh
 %dir %{_datadir}/zsh/site-functions
 %{_datadir}/zsh/site-functions/_%{name}
-%dir %{_libexecdir}/%{name}
-%{_libexecdir}/%{name}/conmon
 %config(noreplace) %{_sysconfdir}/cni/net.d/87-%{name}-bridge.conflist
 %{_datadir}/containers/%{repo}.conf
 %{_unitdir}/io.%{name}.service
@@ -603,6 +581,9 @@ exit 0
 %endif
 
 %changelog
+* Wed Sep 11 2019 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.5.2-0.75.dev.git79ebb5f
+- use conmon package as dependency
+
 * Wed Sep 11 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.5.2-0.74.dev.git79ebb5f
 - autobuilt 79ebb5f
 
@@ -735,7 +716,7 @@ exit 0
 * Wed Aug 28 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.5.2-0.31.dev.gita1a1342
 - autobuilt a1a1342
 
-* Thu Aug 27 2019 Daniel J Walsh <dwalsh@redhat.com> - 2:1.5.2-0.30.dev.gitf221c61
+* Tue Aug 27 2019 Daniel J Walsh <dwalsh@redhat.com> - 2:1.5.2-0.30.dev.gitf221c61
 - Require crun rather then runc
 - Switch to crun by default for cgroupsV2 support
 
