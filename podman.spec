@@ -27,7 +27,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 79ebb5f254d6f3498500f823cf1b856fed2e6149
+%global commit0 ce31aa37d6ca4762f4a82274452e089024529444
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 # Used for comparing with latest upstream tag
@@ -41,7 +41,7 @@ Epoch: 2
 Version: 1.5.2
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.75.dev.git%{shortcommit0}%{?dist}
+Release: 0.76.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -581,6 +581,9 @@ exit 0
 %endif
 
 %changelog
+* Thu Sep 12 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.5.2-0.76.dev.gitce31aa3
+- autobuilt ce31aa3
+
 * Wed Sep 11 2019 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.5.2-0.75.dev.git79ebb5f
 - use conmon package as dependency
 
