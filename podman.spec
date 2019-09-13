@@ -27,7 +27,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 b095d8a794edaab3b2d622b6882bfd57fad8375e
+%global commit0 5c09c4d2947a759724f9d5aef6bac04317e03f7e
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 # Used for comparing with latest upstream tag
@@ -41,7 +41,7 @@ Epoch: 2
 Version: 1.5.2
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.83.dev.git%{shortcommit0}%{?dist}
+Release: 0.84.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -581,6 +581,9 @@ exit 0
 %endif
 
 %changelog
+* Fri Sep 13 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.5.2-0.84.dev.git5c09c4d
+- autobuilt 5c09c4d
+
 * Fri Sep 13 2019 Daniel J Walsh <dwalsh@redhat.com> - 2:1.5.2-0.83.dev.gitb095d8a
 - Grab specific version of crun or newer.
 
