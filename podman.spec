@@ -41,7 +41,7 @@ Epoch: 2
 Version: 1.5.2
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.82.dev.git%{shortcommit0}%{?dist}
+Release: 0.83.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -64,7 +64,7 @@ BuildRequires: pkgconfig
 BuildRequires: make
 BuildRequires: systemd
 BuildRequires: systemd-devel
-Requires: crun
+Requires: crun >= 0.9.1-1
 Requires: containers-common
 Requires: containernetworking-plugins >= 0.7.5-1
 Requires: iptables
@@ -581,6 +581,9 @@ exit 0
 %endif
 
 %changelog
+* Fri Sep 13 2019 Daniel J Walsh <dwalsh@redhat.com> - 2:1.5.2-0.83.dev.gitb095d8a
+- Grab specific version of crun or newer.
+
 * Thu Sep 12 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.5.2-0.82.dev.gitb095d8a
 - autobuilt b095d8a
 
