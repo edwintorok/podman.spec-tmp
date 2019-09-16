@@ -27,7 +27,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 2a4e062c71ecf94aadd8c91ecf8b84e3fb64ce38
+%global commit0 2aa6771e787b46484245445b899cd2694aadbfc2
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 # Used for comparing with latest upstream tag
@@ -38,10 +38,10 @@ Name: podman
 %if 0%{?fedora}
 Epoch: 2
 %endif
-Version: 1.5.2
+Version: 1.6.0
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.92.dev.git%{shortcommit0}%{?dist}
+Release: 0.1.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -581,6 +581,10 @@ exit 0
 %endif
 
 %changelog
+* Mon Sep 16 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.6.0-0.1.dev.git2aa6771
+- bump to 1.6.0
+- autobuilt 2aa6771
+
 * Mon Sep 16 2019 Lokesh Mandvekar (Bot) <lsm5+bot@fedoraproject.org> - 2:1.5.2-0.92.dev.git2a4e062
 - autobuilt 2a4e062
 
