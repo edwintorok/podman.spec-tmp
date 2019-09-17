@@ -191,9 +191,12 @@ Provides: bundled(golang(k8s.io/utils)) = 258e2a2fa64568210fbd6267cf1d8fd87c3cb8
 daemonless tool.  %{name} provides a Docker-CLI comparable command line that
 eases the transition from other container engines and allows the management of
 pods, containers and images.  Simply put: alias docker=%{name}.
-Most %{name} commands can be run as a regular user, without requiring additional privileges.
+Most %{name} commands can be run as a regular user, without requiring
+additional privileges.
 
-%{name} uses Buildah(1) internally to create container images. Both tools share image (not container) storage, hence each can use or manipulate images (but not containers) created by the other.
+%{name} uses Buildah(1) internally to create container images.
+Both tools share image (not container) storage, hence each can use or
+manipulate images (but not containers) created by the other.
 
 %{summary}
 %{repo} Simple management tool for pods, containers and images
@@ -367,7 +370,8 @@ Requires: golang(github.com/urfave/cli)
 
 %description unit-test-devel
 %{summary}
-libpod provides a library for applications looking to use the Container Pod concept popularized by Kubernetes.
+%{repo} provides a library for applications looking to use the
+Container Pod concept popularized by Kubernetes.
 
 This package contains unit tests for project
 providing packages with %{import_path} prefix.
