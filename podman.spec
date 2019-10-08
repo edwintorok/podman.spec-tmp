@@ -41,7 +41,7 @@ Epoch: 2
 Version: 1.6.2
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.11.dev.git%{shortcommit0}%{?dist}
+Release: 0.12.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -76,12 +76,14 @@ Recommends: container-selinux
 Recommends: libvarlink-util
 Recommends: slirp4netns >= 0.3.0-2
 Recommends: fuse-overlayfs >= 0.3-8
+Recommends: runc
 %else
 #### DO NOT REMOVE - NEEDED FOR CENTOS
 Requires: %{name}-manpages = %{version}-%{release}
 Requires: container-selinux
 Requires: slirp4netns >= 0.3.0-2
 Requires: crun
+Requires: runc
 %endif
 
 # vendored libraries
@@ -585,6 +587,9 @@ exit 0
 %endif
 
 %changelog
+* Tue Oct 08 2019 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.6.2-0.12.dev.gitc817ea1
+- add runc back
+
 * Mon Oct 07 2019 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:1.6.2-0.11.dev.gitc817ea1
 - autobuilt c817ea1
 
