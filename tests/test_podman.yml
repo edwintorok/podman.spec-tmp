@@ -18,5 +18,5 @@
             # running the test with su doesn't create the directory for fedora user on /run/user/
             # so create it manually
             dir: ./
-            run: mkdir /run/user/$(id -u fedora); chown fedora /run/user/$(id -u fedora); su -c ${PWD}/test_podman.sh - fedora
+            run: loginctl enable-linger fedora; su -c ${PWD}/test_podman.sh - fedora
             timeout: 15m
