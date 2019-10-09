@@ -41,7 +41,7 @@ Epoch: 2
 Version: 1.6.2
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.15.dev.git%{shortcommit0}%{?dist}
+Release: 0.16.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -70,7 +70,6 @@ Requires: containernetworking-plugins >= 0.7.5-1
 Requires: iptables
 Requires: nftables
 Requires: conmon
-Requires: polkit
 %if 0%{?fedora}
 Recommends: %{name}-manpages = %{epoch}:%{version}-%{release}
 Recommends: container-selinux
@@ -588,6 +587,9 @@ exit 0
 %endif
 
 %changelog
+* Wed Oct 09 2019 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.6.2-0.16.dev.gitc3c40f9
+- remove polkit dependency for now
+
 * Wed Oct 09 2019 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.6.2-0.15.dev.gitc3c40f9
 - Requires: crun >= 0.10.2-1 and polkit
 
