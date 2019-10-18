@@ -30,6 +30,13 @@
 %global commit0 24efb5e4ebb6fa96219afeac543d33299b6e1491
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
+%global repo_plugins dnsname
+# https://github.com/containers/libpod
+%global import_path_plugins %%{provider}.%{provider_tld}/%{project}/%{repo_plugins}
+%global git_plugins https://%{import_path_plugins}
+%global commit_plugins f5af33dedcfc5e707e5560baa4a72f8d96a968fe
+%global shortcommit_plugins %(c=%{commit_plugins}; echo ${c:0:7})
+
 # Used for comparing with latest upstream tag
 # to decide whether to autobuild (non-rawhide only)
 %global built_tag v1.6.2
@@ -46,6 +53,7 @@ Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
 Source0: %{git0}/archive/%{commit0}/%{repo}-%{shortcommit0}.tar.gz
+Source1: %{git_plugins}/archive/%{commit_plugins}/%{repo_plugins}-%{shortcommit_plugins}.tar.gz
 # If go_compiler is not set to 1, there is no virtual provide. Use golang instead.
 BuildRequires: %{?go_compiler:compiler(go-compiler)}%{!?go_compiler:golang}
 BuildRequires: btrfs-progs-devel
@@ -70,6 +78,7 @@ Requires: containernetworking-plugins >= 0.7.5-1
 Requires: iptables
 Requires: nftables
 Requires: conmon
+Requires: %{name}-plugins = %{epoch}:%{version}-%{release}
 %if 0%{?fedora}
 Recommends: %{name}-manpages = %{epoch}:%{version}-%{release}
 Recommends: container-selinux
@@ -418,18 +427,33 @@ BuildArch: noarch
 %description manpages
 Man pages for the %{name} commands
 
+%package plugins
+Summary: Plugins for %{name}
+
+%description plugins
+This plugin sets up the use of dnsmasq on a given CNI network so
+that Pods can resolve each other by name.  When configured,
+the pod and its IP address are added to a network specific hosts file
+that dnsmasq will read in.  Similarly, when a pod
+is removed from the network, it will remove the entry from the hosts
+file.  Each CNI network will have its own dnsmasq instance.
+
 %prep
 %autosetup -Sgit -n %{repo}-%{commit0}
 
+# untar dnsname
+tar zxf %{SOURCE1}
+
 %build
+export GO111MODULE=off
+export GOPATH=$(pwd)/_build:$(pwd)
+
 mkdir _build
 pushd _build
 mkdir -p src/%{provider}.%{provider_tld}/%{project}
 ln -s ../../../../ src/%{import_path}
 popd
 ln -s vendor src
-export GOPATH=$(pwd)/_build:$(pwd)
-export GO111MODULE=off
 %gogenerate ./cmd/%{name}/varlink/...
 
 # build %%{name}
@@ -442,6 +466,17 @@ export BUILDTAGS="systemd varlink seccomp exclude_graphdriver_devicemapper $(hac
 export BUILDTAGS="remoteclient systemd varlink seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/ostree_tag.sh) $(hack/selinux_tag.sh)"
 %gobuild -o bin/%{name}-remote %{import_path}/cmd/%{name}
 %endif 
+
+pushd dnsname-%{commit_plugins}
+mkdir _build
+pushd _build
+mkdir -p src/%{provider}.%{provider_tld}/%{project}
+ln -s ../../../../ src/%{import_path_plugins}
+popd
+ln -s vendor src
+export GOPATH=$(pwd)/_build:$(pwd)
+%gobuild -o bin/dnsname %{import_path_plugins}/plugins/meta/dnsname
+popd
 
 %install
 sed -s 's/^runtime[ =].*"runc/runtime = "crun/' libpod.conf  -i
@@ -466,6 +501,11 @@ mv pkg/hooks/README.md pkg/hooks/README-hooks.md
 # install libpod.conf
 install -dp %{buildroot}%{_datadir}/containers
 install -p -m 644 %{repo}.conf %{buildroot}%{_datadir}/containers
+
+# install plugins
+pushd dnsname-%{commit_plugins}
+%{__make} PREFIX=%{_prefix} DESTDIR=%{buildroot} install
+popd
 
 # source codes for building projects
 %if 0%{?with_devel}
@@ -585,6 +625,11 @@ exit 0
 %license LICENSE
 %{_datadir}/%{name}/test
 %endif
+
+%files plugins
+%license dnsname-%{commit_plugins}/LICENSE
+%doc dnsname-%{commit_plugins}/{README.md,README_PODMAN.md}
+%{_libexecdir}/cni/dnsname
 
 %changelog
 * Thu Nov 07 2019 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:1.6.4-0.11.dev.git24efb5e
