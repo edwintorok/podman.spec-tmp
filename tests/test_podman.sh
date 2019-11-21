@@ -7,7 +7,7 @@
 echo "Important package versions:"
 (
     uname -r
-    rpm -qa | egrep 'podman|conmon|crun|runc|iptable|slirp|systemd' | sort
+    rpm -qa | egrep 'podman|conmon|crun|runc|iptable|slirp|systemd|container-selinux' | sort
 ) | sed -e 's/^/  /'
 
 # Log environment; or at least the useful bits
