@@ -395,6 +395,7 @@ Summary: Tests for %{name}
 Requires: %{name} = %{epoch}:%{version}-%{release}
 Requires: bats
 Requires: jq
+Obsoletes: oci-systemd-hook
 
 %description tests
 %{summary}
