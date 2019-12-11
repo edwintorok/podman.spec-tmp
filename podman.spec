@@ -27,7 +27,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 11541aec80c0fc588f675decd0ce759a4e353684
+%global commit0 5941138fdd3d203a949871f47f1d63462a0f18e8
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global repo_plugins dnsname
@@ -39,16 +39,16 @@
 
 # Used for comparing with latest upstream tag
 # to decide whether to autobuild (non-rawhide only)
-%global built_tag v1.6.2
+%global built_tag v1.7.0-rc1
 
 Name: podman
 %if 0%{?fedora}
 Epoch: 2
 %endif
-Version: 1.6.4
+Version: 1.7.0
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.74.dev.git%{shortcommit0}%{?dist}
+Release: 0.1.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -633,6 +633,10 @@ exit 0
 %{_libexecdir}/cni/dnsname
 
 %changelog
+* Wed Dec 11 2019 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:1.7.0-0.1.dev.git5941138
+- bump to 1.7.0
+- autobuilt 5941138
+
 * Wed Dec 11 2019 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:1.6.4-0.74.dev.git11541ae
 - autobuilt 11541ae
 
