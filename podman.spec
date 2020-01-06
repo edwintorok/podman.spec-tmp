@@ -48,13 +48,14 @@ Epoch: 2
 Version: 1.7.0
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.25.dev.git%{shortcommit0}%{?dist}
+Release: 0.26.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
 Source0: %{git0}/archive/%{commit0}/%{repo}-%{shortcommit0}.tar.gz
 Source1: %{git_plugins}/archive/%{commit_plugins}/%{repo_plugins}-%{shortcommit_plugins}.tar.gz
 Provides: %{name}-manpages = %{epoch}:%{version}-%{release}
+Obsoletes: %{name}-manpages < %{epoch}:%{version}-%{release}
 # If go_compiler is not set to 1, there is no virtual provide. Use golang instead.
 BuildRequires: %{?go_compiler:compiler(go-compiler)}%{!?go_compiler:golang}
 BuildRequires: btrfs-progs-devel
@@ -621,6 +622,9 @@ exit 0
 %{_libexecdir}/cni/dnsname
 
 %changelog
+* Mon Jan 06 2020 Jindrich Novy <jnovy@redhat.com> - 2:1.7.0-0.26.dev.git9758a97
+- also obsolete former podman-manpages package
+
 * Mon Jan 06 2020 Jindrich Novy <jnovy@redhat.com> - 2:1.7.0-0.25.dev.git9758a97
 - add podman-manpages provide to main podman package
 
