@@ -48,7 +48,7 @@ Epoch: 2
 Version: 1.7.0
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.23.dev.git%{shortcommit0}%{?dist}
+Release: 0.24.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -80,7 +80,6 @@ Requires: nftables
 Requires: conmon
 Requires: %{name}-plugins = %{epoch}:%{version}-%{release}
 %if 0%{?fedora}
-Recommends: %{name}-manpages = %{epoch}:%{version}-%{release}
 Recommends: container-selinux
 Recommends: libvarlink-util
 Recommends: slirp4netns >= 0.3.0-2
@@ -88,7 +87,6 @@ Recommends: fuse-overlayfs >= 0.3-8
 Recommends: runc
 %else
 #### DO NOT REMOVE - NEEDED FOR CENTOS
-Requires: %{name}-manpages = %{version}-%{release}
 Requires: container-selinux
 Requires: slirp4netns >= 0.3.0-2
 Requires: crun
@@ -404,7 +402,6 @@ This package contains system tests for %{name}
 
 %package remote
 Summary: (Experimental) Remote client for managing %{name} containers
-Recommends: %{name}-manpages = %{epoch}:%{version}-%{release}
 
 %description remote
 Remote client for managing %{name} containers.
@@ -416,17 +413,6 @@ run %{name}-remote in production.
 manage pods, containers and container images. %{name}-remote supports ssh
 connections as well.
 %endif
-
-%package manpages
-Summary: Man pages for the %{name} commands
-BuildArch: noarch
-
-%files manpages
-%{_mandir}/man1/%{name}*.1*
-%{_mandir}/man5/*.5*
-
-%description manpages
-Man pages for the %{name} commands
 
 %package plugins
 Summary: Plugins for %{name}
@@ -596,8 +582,9 @@ exit 0
 %{_unitdir}/io.%{name}.socket
 %{_userunitdir}/io.%{name}.service
 %{_userunitdir}/io.%{name}.socket
-
 %{_usr}/lib/tmpfiles.d/%{name}.conf
+%{_mandir}/man1/%{name}*.1*
+%{_mandir}/man5/*.5*
 
 %files docker
 %{_bindir}/docker
@@ -633,6 +620,9 @@ exit 0
 %{_libexecdir}/cni/dnsname
 
 %changelog
+* Mon Jan 06 2020 Jindrich Novy <jnovy@redhat.com> - 2:1.7.0-0.24.dev.git9758a97
+- merge podman-manpages with podman package
+
 * Fri Jan 03 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:1.7.0-0.23.dev.git9758a97
 - autobuilt 9758a97
 
