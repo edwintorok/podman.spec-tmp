@@ -48,7 +48,7 @@ Epoch: 2
 Version: 1.7.1
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.1.dev.git%{shortcommit0}%{?dist}
+Release: 0.2.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -81,15 +81,14 @@ Requires: iptables
 Requires: nftables
 Requires: conmon
 Requires: %{name}-plugins = %{epoch}:%{version}-%{release}
+Requires: container-selinux
 %if 0%{?fedora}
-Recommends: container-selinux
 Recommends: libvarlink-util
 Recommends: slirp4netns >= 0.3.0-2
 Recommends: fuse-overlayfs >= 0.3-8
 Recommends: runc
 %else
 #### DO NOT REMOVE - NEEDED FOR CENTOS
-Requires: container-selinux
 Requires: slirp4netns >= 0.3.0-2
 Requires: crun
 Requires: runc
@@ -622,6 +621,9 @@ exit 0
 %{_libexecdir}/cni/dnsname
 
 %changelog
+* Tue Jan 07 2020 Jindrich Novy <jnovy@redhat.com> - 2:1.7.1-0.2.dev.gite362220
+- always require container-selinux (#1765818)
+
 * Mon Jan 06 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:1.7.1-0.1.dev.gite362220
 - bump to 1.7.1
 - autobuilt e362220
