@@ -48,7 +48,7 @@ Epoch: 2
 Version: 1.7.1
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.6.dev.git%{shortcommit0}%{?dist}
+Release: 0.7.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -81,7 +81,7 @@ Requires: iptables
 Requires: nftables
 Requires: conmon
 Requires: %{name}-plugins = %{epoch}:%{version}-%{release}
-Requires: container-selinux
+Requires:  (container-selinux if selinux-policy)
 %if 0%{?fedora}
 Recommends: libvarlink-util
 Recommends: slirp4netns >= 0.3.0-2
@@ -495,6 +495,11 @@ pushd dnsname-%{commit_plugins}
 %{__make} PREFIX=%{_prefix} DESTDIR=%{buildroot} install
 popd
 
+# do not include docker and podman-remote man pages in main package
+for file in `find %{buildroot}%{_mandir}/man[15] -type f | sed "s,%{buildroot},," | grep -v -e remote -e docker`; do
+    echo "$file*" >> podman.file-list
+done
+
 # source codes for building projects
 %if 0%{?with_devel}
 install -d -p %{buildroot}/%{gopath}/src/%{import_path}/
@@ -569,7 +574,7 @@ exit 0
 #define license tag if not already defined
 %{!?_licensedir:%global license %doc}
 
-%files
+%files -f podman.file-list
 %license LICENSE
 %doc README.md CONTRIBUTING.md pkg/hooks/README-hooks.md install.md code-of-conduct.md transfer.md
 %{_bindir}/%{name}
@@ -584,8 +589,6 @@ exit 0
 %{_userunitdir}/io.%{name}.service
 %{_userunitdir}/io.%{name}.socket
 %{_usr}/lib/tmpfiles.d/%{name}.conf
-%{_mandir}/man1/%{name}*.1*
-%{_mandir}/man5/*.5*
 
 %files docker
 %{_bindir}/docker
@@ -609,6 +612,8 @@ exit 0
 %files remote
 %license LICENSE
 %{_bindir}/%{name}-remote
+%{_mandir}/man1/%{name}-remote*.1*
+%{_mandir}/man5/%{name}-remote*.5*
 
 %files tests
 %license LICENSE
@@ -621,6 +626,10 @@ exit 0
 %{_libexecdir}/cni/dnsname
 
 %changelog
+* Wed Jan 08 2020 Jindrich Novy <jnovy@redhat.com> - 2:1.7.1-0.7.dev.git0b9dd1a
+- require container-selinux only when selinux-policy is installed and
+  move podman-remote man pages to dedicated package (#1765818)
+
 * Wed Jan 08 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:1.7.1-0.6.dev.git0b9dd1a
 - autobuilt 0b9dd1a
 
