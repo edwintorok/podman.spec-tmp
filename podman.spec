@@ -27,7 +27,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 0b9dd1a1a0e967e87c242c865cd244f90cb740e1
+%global commit0 27caffbb240725255485deaaecd548663adbf1fd
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global repo_plugins dnsname
@@ -48,7 +48,7 @@ Epoch: 2
 Version: 1.7.1
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.7.dev.git%{shortcommit0}%{?dist}
+Release: 0.8.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -626,6 +626,9 @@ exit 0
 %{_libexecdir}/cni/dnsname
 
 %changelog
+* Wed Jan 08 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:1.7.1-0.8.dev.git27caffb
+- autobuilt 27caffb
+
 * Wed Jan 08 2020 Jindrich Novy <jnovy@redhat.com> - 2:1.7.1-0.7.dev.git0b9dd1a
 - require container-selinux only when selinux-policy is installed and
   move podman-remote man pages to dedicated package (#1765818)
