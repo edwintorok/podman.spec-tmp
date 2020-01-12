@@ -27,7 +27,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 2d5fd7cc3718d27b35352e80c0c3296c5bb69c2f
+%global commit0 55dd73cf5830eb44128f5b580cee3fb1e74dbea6
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global repo_plugins dnsname
@@ -48,7 +48,7 @@ Epoch: 2
 Version: 1.7.1
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.17.dev.git%{shortcommit0}%{?dist}
+Release: 0.18.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -626,6 +626,9 @@ exit 0
 %{_libexecdir}/cni/dnsname
 
 %changelog
+* Sun Jan 12 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:1.7.1-0.18.dev.git55dd73c
+- autobuilt 55dd73c
+
 * Sat Jan 11 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:1.7.1-0.17.dev.git2d5fd7c
 - autobuilt 2d5fd7c
 
