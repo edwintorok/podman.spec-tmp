@@ -394,7 +394,7 @@ Summary: Tests for %{name}
 Requires: %{name} = %{epoch}:%{version}-%{release}
 Requires: bats
 Requires: jq
-Obsoletes: oci-systemd-hook
+Obsoletes: oci-systemd-hook <= 0.2.0-3
 
 %description tests
 %{summary}
@@ -593,6 +593,7 @@ exit 0
 %files docker
 %{_bindir}/docker
 %{_mandir}/man1/docker*.1*
+%{_usr}/lib/tmpfiles.d/%{name}-docker.conf
 
 %if 0%{?with_devel}
 %files -n libpod-devel -f devel.file-list
