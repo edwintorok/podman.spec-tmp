@@ -1,15 +1,15 @@
 %global with_devel 0
 %global with_bundled 1
-%global with_debug 1
 %global with_check 0
 %global with_unit_test 0
 
-%if 0%{?fedora}
+%if 0%{?fedora} || 0%{?centos} >= 8
 #### DO NOT REMOVE - NEEDED FOR CENTOS
 %bcond_without varlink
-%define gogenerate go generate
+%global with_debug 1
 %else
 %bcond_with varlink
+%global with_debug 0
 %endif
 
 %if 0%{?with_debug}
@@ -18,6 +18,11 @@
 %else
 %global debug_package %{nil}
 %endif
+
+%if ! 0%{?gobuild:1}
+%define gobuild(o:) GO111MODULE=off go build -buildmode pie -compiler gc -tags="rpm_crashtraceback ${BUILDTAGS:-}" -ldflags "${LDFLAGS:-} -B 0x$(head -c20 /dev/urandom|od -An -tx1|tr -d ' \\n') -extldflags '-Wl,-z,relro -Wl,-z,now -specs=/usr/lib/rpm/redhat/redhat-hardened-ld '" -a -v -x %{?**};
+%endif
+%define gogenerate go generate
 
 %global provider github
 %global provider_tld com
@@ -39,7 +44,7 @@
 
 # Used for comparing with latest upstream tag
 # to decide whether to autobuild (non-rawhide only)
-%global built_tag v1.8.0-rc1
+%define built_tag v1.8.0-rc1
 
 Name: podman
 %if 0%{?fedora}
@@ -57,13 +62,13 @@ Source1: %{git_plugins}/archive/%{commit_plugins}/%{repo_plugins}-%{shortcommit_
 Provides: %{name}-manpages = %{epoch}:%{version}-%{release}
 Obsoletes: %{name}-manpages < %{epoch}:%{version}-%{release}
 # If go_compiler is not set to 1, there is no virtual provide. Use golang instead.
-BuildRequires: %{?go_compiler:compiler(go-compiler)}%{!?go_compiler:golang}
+BuildRequires: golang
 BuildRequires: btrfs-progs-devel
 BuildRequires: glib2-devel
 BuildRequires: glibc-devel
 BuildRequires: glibc-static
 BuildRequires: git
-BuildRequires: golang-github-cpuguy83-md2man
+BuildRequires: go-md2man
 BuildRequires: gpgme-devel
 BuildRequires: libassuan-devel
 BuildRequires: libgpg-error-devel
@@ -74,7 +79,6 @@ BuildRequires: pkgconfig
 BuildRequires: make
 BuildRequires: systemd
 BuildRequires: systemd-devel
-Requires: crun >= 0.10.2-1
 Requires: containers-common
 Requires: containernetworking-plugins >= 0.7.5-1
 Requires: iptables
@@ -87,10 +91,10 @@ Recommends: libvarlink-util
 Recommends: slirp4netns >= 0.3.0-2
 Recommends: fuse-overlayfs >= 0.3-8
 Recommends: runc
+Requires: crun >= 0.10.2-1
 %else
 #### DO NOT REMOVE - NEEDED FOR CENTOS
 Requires: slirp4netns >= 0.3.0-2
-Requires: crun
 Requires: runc
 %endif
 
@@ -467,7 +471,9 @@ export GOPATH=$(pwd)/_build:$(pwd)
 popd
 
 %install
+%if 0%{?fedora}
 sed -s 's/^runtime[ =].*"runc/runtime = "crun/' libpod.conf  -i
+%endif
 sed -i 's/install.remote: podman-remote/install.remote:/' Makefile
 sed -i 's/install.bin: podman/install.bin:/' Makefile
 rm -rf docs/containers-mounts.conf.5.md
