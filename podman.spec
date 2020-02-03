@@ -49,6 +49,8 @@
 Name: podman
 %if 0%{?fedora}
 Epoch: 2
+%else
+Epoch: 0
 %endif
 Version: 1.8.0
 # Rawhide almost always ships unreleased builds,
