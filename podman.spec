@@ -63,7 +63,6 @@ Provides: %{name}-manpages = %{epoch}:%{version}-%{release}
 Obsoletes: %{name}-manpages < %{epoch}:%{version}-%{release}
 # If go_compiler is not set to 1, there is no virtual provide. Use golang instead.
 BuildRequires: golang
-BuildRequires: btrfs-progs-devel
 BuildRequires: glib2-devel
 BuildRequires: glibc-devel
 BuildRequires: glibc-static
@@ -74,7 +73,6 @@ BuildRequires: libassuan-devel
 BuildRequires: libgpg-error-devel
 BuildRequires: libseccomp-devel
 BuildRequires: libselinux-devel
-BuildRequires: ostree-devel
 BuildRequires: pkgconfig
 BuildRequires: make
 BuildRequires: systemd
@@ -87,6 +85,8 @@ Requires: conmon
 Requires: %{name}-plugins = %{epoch}:%{version}-%{release}
 Requires:  (container-selinux if selinux-policy)
 %if 0%{?fedora}
+BuildRequires: btrfs-progs-devel
+BuildRequires: ostree-devel
 Recommends: libvarlink-util
 Recommends: slirp4netns >= 0.3.0-2
 Recommends: fuse-overlayfs >= 0.3-8
@@ -450,12 +450,18 @@ ln -s vendor src
 
 # build %%{name}
 export BUILDTAGS="systemd varlink seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/ostree_tag.sh) $(hack/selinux_tag.sh)"
+%if 0%{?centos}
+export BUILDTAGS+="exclude_graphdriver_btrfs containers_image_ostree_stub"
+%endif
 %gobuild -o bin/%{name} %{import_path}/cmd/%{name}
 
 %if 0%{?fedora}
 #### DO NOT REMOVE - NEEDED FOR CENTOS
 # build %%{name}-remote
 export BUILDTAGS="remoteclient systemd varlink seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/ostree_tag.sh) $(hack/selinux_tag.sh)"
+%if 0%{?centos}
+export BUILDTAGS+="exclude_graphdriver_btrfs containers_image_ostree_stub"
+%endif
 %gobuild -o bin/%{name}-remote %{import_path}/cmd/%{name}
 %endif 
 
