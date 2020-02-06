@@ -55,7 +55,7 @@ Epoch: 0
 Version: 1.8.0
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.3.dev.git%{shortcommit0}%{?dist}
+Release: 0.4.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -93,7 +93,7 @@ Recommends: libvarlink-util
 Recommends: slirp4netns >= 0.3.0-2
 Recommends: fuse-overlayfs >= 0.3-8
 Recommends: runc
-Requires: crun >= 0.10.2-1
+Requires: crun >= 0.12.1-1
 %else
 #### DO NOT REMOVE - NEEDED FOR CENTOS
 Requires: slirp4netns >= 0.3.0-2
@@ -648,6 +648,9 @@ exit 0
 %{_libexecdir}/cni/dnsname
 
 %changelog
+* Thu Feb 06 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.8.0-0.4.dev.git5092c07
+- bump crun dependency
+
 * Wed Feb 05 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:1.8.0-0.3.dev.git5092c07
 - autobuilt 5092c07
 
