@@ -514,6 +514,13 @@ for file in `find %{buildroot}%{_mandir}/man[15] -type f | sed "s,%{buildroot},,
     echo "$file*" >> podman.file-list
 done
 
+# do not install remote manpages on centos7
+%if 0%{?centos} < 8
+rm -rf %{buildroot}%{_mandir}/man1/docker-remote.1
+rm -rf %{buildroot}%{_mandir}/man1/%{name}-remote.1
+rm -rf %{buildroot}%{_mandir}/man5/%{name}-remote.conf.5
+%endif
+
 # source codes for building projects
 %if 0%{?with_devel}
 install -d -p %{buildroot}/%{gopath}/src/%{import_path}/
