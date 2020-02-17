@@ -32,7 +32,7 @@
 %global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
 %global import_path %{provider_prefix}
 %global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 5092c078ec635c9f1598989b27ccf53369b3cf2b
+%global commit0 0bd29f89e9d26c9012c76e58050e1bdfd90faaf0
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global repo_plugins dnsname
@@ -44,7 +44,7 @@
 
 # Used for comparing with latest upstream tag
 # to decide whether to autobuild (non-rawhide only)
-%define built_tag v1.8.0-rc1
+%define built_tag v1.8.0
 
 Name: podman
 %if 0%{?fedora}
@@ -52,10 +52,10 @@ Epoch: 2
 %else
 Epoch: 0
 %endif
-Version: 1.8.0
+Version: 1.8.1
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.4.dev.git%{shortcommit0}%{?dist}
+Release: 0.1.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -597,7 +597,7 @@ exit 0
 
 %files -f podman.file-list
 %license LICENSE
-%doc README.md CONTRIBUTING.md pkg/hooks/README-hooks.md install.md code-of-conduct.md transfer.md
+%doc README.md CONTRIBUTING.md pkg/hooks/README-hooks.md install.md transfer.md
 %{_bindir}/%{name}
 %{_datadir}/bash-completion/completions/*
 # By "owning" the site-functions dir, we don't need to Require zsh
@@ -619,14 +619,14 @@ exit 0
 %if 0%{?with_devel}
 %files -n libpod-devel -f devel.file-list
 %license LICENSE
-%doc README.md CONTRIBUTING.md pkg/hooks/README-hooks.md install.md code-of-conduct.md transfer.md
+%doc README.md CONTRIBUTING.md pkg/hooks/README-hooks.md install.md transfer.md
 %dir %{gopath}/src/%{provider}.%{provider_tld}/%{project}
 %endif
 
 %if 0%{?with_unit_test} && 0%{?with_devel}
 %files unit-test-devel -f unit-test-devel.file-list
 %license LICENSE
-%doc README.md CONTRIBUTING.md pkg/hooks/README-hooks.md install.md code-of-conduct.md transfer.md
+%doc README.md CONTRIBUTING.md pkg/hooks/README-hooks.md install.md transfer.md
 %endif
 
 #### DO NOT REMOVE - NEEDED FOR CENTOS
@@ -634,8 +634,6 @@ exit 0
 %files remote
 %license LICENSE
 %{_bindir}/%{name}-remote
-%{_mandir}/man1/%{name}-remote*.1*
-%{_mandir}/man5/%{name}-remote*.5*
 
 %files tests
 %license LICENSE
@@ -648,6 +646,10 @@ exit 0
 %{_libexecdir}/cni/dnsname
 
 %changelog
+* Mon Feb 17 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.8.1-0.1.dev.git0bd29f8
+- bump to 1.8.1-dev
+- built commit 0bd29f8
+
 * Thu Feb 06 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.8.0-0.4.dev.git5092c07
 - bump crun dependency
 
