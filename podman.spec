@@ -458,15 +458,9 @@ export BUILDTAGS+="exclude_graphdriver_btrfs containers_image_ostree_stub"
 %endif
 %gobuild -o bin/%{name} %{import_path}/cmd/%{name}
 
-%if 0%{?fedora}
-#### DO NOT REMOVE - NEEDED FOR CENTOS
 # build %%{name}-remote
-export BUILDTAGS="remoteclient systemd varlink seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/ostree_tag.sh) $(hack/selinux_tag.sh)"
-%if 0%{?centos}
-export BUILDTAGS+="exclude_graphdriver_btrfs containers_image_ostree_stub"
-%endif
+export BUILDTAGS+=" remoteclient"
 %gobuild -o bin/%{name}-remote %{import_path}/cmd/%{name}
-%endif
 
 pushd dnsname-%{commit_plugins}
 mkdir _build
@@ -635,6 +629,8 @@ exit 0
 %files remote
 %license LICENSE
 %{_bindir}/%{name}-remote
+%{_datadir}/man/man1/%{name}-remote*.*
+%{_datadir}/man/man5/%{name}-remote*.*
 
 %files tests
 %license LICENSE
