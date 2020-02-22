@@ -55,7 +55,7 @@ Epoch: 0
 Version: 1.8.1
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.1.dev.git%{shortcommit0}%{?dist}
+Release: 0.2.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -643,6 +643,9 @@ exit 0
 %{_libexecdir}/cni/dnsname
 
 %changelog
+* Sat Feb 22 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.8.1-0.2.dev.git0bd29f8
+- bump release tag
+
 * Mon Feb 17 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.8.1-0.1.dev.git0bd29f8
 - bump to 1.8.1-dev
 - built commit 0bd29f8
