@@ -552,6 +552,13 @@ for file in $(find . -iname "*_test.go" | grep -v "vendor") ; do
 done
 %endif
 
+#TODO  Next release this section should be removed, since the make install will handle it
+# install service
+install -m 644 contrib/systemd/user/podman.socket %{buildroot}/%{_userunitdir}/podman.socket
+install -m 644 contrib/systemd/user/podman.service %{buildroot}/%{_userunitdir}/podman.service
+install -m 644 contrib/systemd/system/podman.socket %{buildroot}/%{_unitdir}/podman.socket
+install -m 644 contrib/systemd/system/podman.service %{buildroot}/%{_unitdir}/podman.service
+
 %if 0%{?with_devel}
 sort -u -o devel.file-list devel.file-list
 %endif
@@ -605,6 +612,10 @@ exit 0
 %{_userunitdir}/io.%{name}.service
 %{_userunitdir}/io.%{name}.socket
 %{_usr}/lib/tmpfiles.d/%{name}.conf
+%{_unitdir}/%{name}.service
+%{_unitdir}/%{name}.socket
+%{_userunitdir}/%{name}.service
+%{_userunitdir}/%{name}.socket
 
 %files docker
 %{_bindir}/docker
