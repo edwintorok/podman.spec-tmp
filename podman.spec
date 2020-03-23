@@ -55,7 +55,7 @@ Epoch: 0
 Version: 1.8.3
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.13.dev.git%{shortcommit0}%{?dist}
+Release: 0.14.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -654,6 +654,9 @@ exit 0
 %{_libexecdir}/cni/dnsname
 
 %changelog
+* Mon Mar 23 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.8.3-0.14.dev.gite34ec61
+- Add APIv2 service files
+
 * Mon Mar 23 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:1.8.3-0.13.dev.gite34ec61
 - autobuilt e34ec61
 
