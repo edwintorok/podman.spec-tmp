@@ -452,7 +452,7 @@ ln -s vendor src
 %gogenerate ./cmd/%{name}/varlink/...
 
 # build %%{name}
-export BUILDTAGS="systemd varlink seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/ostree_tag.sh) $(hack/selinux_tag.sh)"
+export BUILDTAGS="systemd varlink seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/selinux_tag.sh)"
 %if 0%{?centos}
 export BUILDTAGS+="exclude_graphdriver_btrfs containers_image_ostree_stub"
 %endif
