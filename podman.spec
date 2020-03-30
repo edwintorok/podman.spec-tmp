@@ -55,7 +55,7 @@ Epoch: 0
 Version: 1.8.3
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.49.dev.git%{shortcommit0}%{?dist}
+Release: 0.50.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -504,6 +504,11 @@ pushd dnsname-%{commit_plugins}
 %{__make} PREFIX=%{_prefix} DESTDIR=%{buildroot} install
 popd
 
+# install /etc/modules-load.d/podman.conf
+echo br_netfilter > %{name}.conf
+install -dp %{buildroot}%{_sysconfdir}/modules-load.d
+install -p -m 644 %{name}.conf %{buildroot}%{_sysconfdir}/modules-load.d/
+
 # do not include docker and podman-remote man pages in main package
 for file in `find %{buildroot}%{_mandir}/man[15] -type f | sed "s,%{buildroot},," | grep -v -e remote -e docker`; do
     echo "$file*" >> podman.file-list
@@ -597,7 +602,7 @@ exit 0
 #define license tag if not already defined
 %{!?_licensedir:%global license %doc}
 
-%files -f podman.file-list
+%files -f %{name}.file-list
 %license LICENSE
 %doc README.md CONTRIBUTING.md pkg/hooks/README-hooks.md install.md transfer.md
 %{_bindir}/%{name}
@@ -616,6 +621,7 @@ exit 0
 %{_unitdir}/%{name}.socket
 %{_userunitdir}/%{name}.service
 %{_userunitdir}/%{name}.socket
+%{_sysconfdir}/modules-load.d/%{name}.conf
 
 %files docker
 %{_bindir}/docker
@@ -654,6 +660,9 @@ exit 0
 %{_libexecdir}/cni/dnsname
 
 %changelog
+* Mon Mar 30 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:1.8.3-0.50.dev.git0fa01c8
+- Resolves: gh#5316
+
 * Mon Mar 30 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:1.8.3-0.49.dev.git0fa01c8
 - autobuilt 0fa01c8
 
