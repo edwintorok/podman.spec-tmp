@@ -449,7 +449,7 @@ mkdir -p src/%{provider}.%{provider_tld}/%{project}
 ln -s ../../../../ src/%{import_path}
 popd
 ln -s vendor src
-%gogenerate ./cmd/%{name}/varlink/...
+%gogenerate ./pkg/varlink/...
 
 # build %%{name}
 export BUILDTAGS="systemd varlink seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/selinux_tag.sh)"
