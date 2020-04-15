@@ -94,7 +94,7 @@ Recommends: libvarlink-util
 Recommends: slirp4netns >= 0.3.0-2
 Recommends: fuse-overlayfs >= 0.3-8
 Recommends: runc
-Requires: crun >= 0.12.1-1
+Requires: crun >= 0.13-2
 %else
 #### DO NOT REMOVE - NEEDED FOR CENTOS
 Requires: slirp4netns >= 0.3.0-2
