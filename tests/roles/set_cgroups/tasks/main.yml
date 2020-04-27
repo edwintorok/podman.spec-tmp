@@ -1,0 +1,61 @@
+---
+# Check the CURRENT cgroup level; we get this from /proc/cmdline
+- name: check current kernel options
+  shell: fgrep systemd.unified_cgroup_hierarchy=0 /proc/cmdline
+  register: result
+  ignore_errors: true
+
+- name: determine current cgroups | assume v2
+  set_fact: current_cgroups=2
+
+- name: determine current cgroups | looks like v1
+  set_fact: current_cgroups=1
+  when: result is succeeded
+
+- debug:
+    msg: "want: v{{ want_cgroups }}  actual: v{{ current_cgroups }}"
+
+# Update grubenv file to reflect the desired cgroup level
+- name: remove cgroup option from kernel flags
+  shell:
+    cmd: sed -i -e "s/^\(kernelopts=.*\)systemd\.unified_cgroup_hierarchy=.\(.*\)/\1\2/" /boot/grub2/grubenv
+    warn: false
+
+- name: add it with the desired value
+  shell:
+    cmd: sed -i -e "s/^\(kernelopts=.*\)/\1 systemd.unified_cgroup_hierarchy=0/" /boot/grub2/grubenv
+    warn: false
+  when: want_cgroups == 1
+
+# If want != have, reboot
+- name: reboot
+  reboot:
+    reboot_timeout: 900
+  register: back_again
+  ignore_errors: yes
+  when: want_cgroups|int != current_cgroups|int
+
+- name: wait and reconnect
+  wait_for_connection:
+    timeout: 900
+  register: back_again2
+  when: want_cgroups|int != current_cgroups|int and not back_again.changed
+
+- set_fact:
+    expected_fstype:
+      - none
+      - tmpfs
+      - cgroup2fs
+
+- name: confirm cgroups setting
+  shell: stat -f -c "%T" /sys/fs/cgroup
+  register: fstype
+
+- debug:
+    msg: "stat(/sys/fs/cgroup) = {{ fstype.stdout }}"
+
+- name: system cgroups is the expected type
+  assert:
+    that:
+      - fstype.stdout == expected_fstype[want_cgroups|int]
+    fail_msg: "stat(/sys/fs/cgroup) = {{ fstype.stdout }} (expected {{ expected_fstype[want_cgroups|int] }})"

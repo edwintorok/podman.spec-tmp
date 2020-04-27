@@ -1,0 +1,6 @@
+---
+- name: make sure rootless account exists
+  user: name={{ rootless_user }}
+
+- name: rootless account | enable linger
+  shell: loginctl enable-linger {{ rootless_user }}

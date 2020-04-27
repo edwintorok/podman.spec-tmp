@@ -1,22 +1,32 @@
 ---
 - hosts: localhost
+  tags:
+    - classic
+    - container
+  vars:
+  - artifacts: ./artifacts
+    rootless_user: testuser
   roles:
-    - role: standard-test-basic
-      tags:
-        - classic
-        - container
-      required_packages:
-        - bats
-        - podman
-        - podman-tests
-      tests:
-        - root-test:
-            dir: ./
-            run: ./test_podman.sh
-            timeout: 15m
-        - rootless-test:
-            # running the test with su doesn't create the directory for fedora user on /run/user/
-            # so create it manually
-            dir: ./
-            run: loginctl enable-linger fedora; su -c ${PWD}/test_podman.sh - fedora
-            timeout: 15m
+  - role: rootless_user_ready
+
+  tasks:
+  # At the start of a run, clean up state. Useful for test reruns.
+  - name: local artifacts directory exists
+    local_action: file path="{{ artifacts }}" state=directory
+
+  - name: remove stale log files
+    local_action: shell rm -f {{ artifacts }}/test*.log
+
+  - name: clear test results
+    local_action: command truncate --size=0 {{ artifacts }}/test.log
+
+  # These are the actual tests: set cgroups vN, then run root/rootless tests.
+  - name: set cgroups and run podman tests
+    include_tasks: test_podman_cgroups_vn.yml
+    loop: [ 2, 1 ]
+    loop_control:
+      loop_var: want_cgroups
+
+  # Postprocessing: check for FAIL or ERROR in any test, exit 1 if so
+  - name: check results
+    include_tasks: check_results.yml

@@ -1,0 +1,21 @@
+---
+# Copied from standard-test-basic
+- name: check results
+  local_action: shell egrep "^(FAIL|ERROR)" "{{ artifacts }}/test.log"
+  register: test_fails
+  # Never fail at this step. Just store result of tests.
+  failed_when: False
+
+- name: preserve results
+  set_fact:
+    role_result_failed: "{{ (test_fails.stdout|d|length > 0) or (test_fails.stderr|d|length > 0) }}"
+    role_result_msg: "{{ test_fails.stdout|d('tests failed.') }}"
+
+- name: display results
+  vars:
+    msg: |
+       Tests failed: {{ role_result_failed|d('Undefined') }}
+       Tests msg: {{ role_result_msg|d('None') }}
+  debug:
+    msg: "{{ msg.split('\n') }}"
+  failed_when: "role_result_failed|bool"

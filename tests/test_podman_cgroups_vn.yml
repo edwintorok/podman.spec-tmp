@@ -1,0 +1,19 @@
+---
+# Requires: 'want_cgroups' variable set to 1 or 2
+- include_role:
+    name: set_cgroups
+- include_role:
+    name: run_bats_tests
+  vars:
+    tests:
+    # Yes, this is horrible duplication, but trying to refactor in ansible
+    # yields even more horrible unreadable code. This is the lesser evil.
+    - name: podman root cgroupsv{{ want_cgroups }}
+      package: podman
+      environment:
+        PODMAN: /usr/bin/podman
+    - name: podman rootless cgroupsv{{ want_cgroups }}
+      package: podman
+      environment:
+        PODMAN: /usr/bin/podman
+      become: true
