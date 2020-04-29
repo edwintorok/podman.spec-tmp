@@ -85,20 +85,24 @@ Requires: iptables
 Requires: nftables
 Requires: conmon
 Requires: %{name}-plugins = %{epoch}:%{version}-%{release}
-Requires:  (container-selinux if selinux-policy)
 Obsoletes: oci-systemd-hook <= 0.2.0-3
 %if 0%{?fedora}
 BuildRequires: btrfs-progs-devel
 BuildRequires: ostree-devel
-Recommends: libvarlink-util
-Recommends: slirp4netns >= 0.3.0-2
 Recommends: fuse-overlayfs >= 0.3-8
-Recommends: runc
 Requires: crun >= 0.13-2
+%endif
+%if 0%{?fedora} || 0%{?centos} >= 8
+Recommends: catatonit
+Recommends: container-selinux
+Recommends: libvarlink-util
+Recommends: runc
+Recommends: slirp4netns >= 0.3.0-2
 %else
-#### DO NOT REMOVE - NEEDED FOR CENTOS
-Requires: slirp4netns >= 0.3.0-2
+Requires: catatonit
+Requires: container-selinux
 Requires: runc
+Requires: slirp4netns >= 0.3.0-2
 %endif
 
 # vendored libraries
