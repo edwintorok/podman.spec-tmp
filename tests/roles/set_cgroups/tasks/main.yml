@@ -28,18 +28,16 @@
   when: want_cgroups == 1
 
 # If want != have, reboot
-- name: reboot
-  reboot:
-    reboot_timeout: 900
-  register: back_again
-  ignore_errors: yes
+- name: reboot and wait
+  block:
+    - name: reboot
+      reboot:
+        reboot_timeout: 900
+      ignore_errors: yes
+    - name: wait and reconnect
+      wait_for_connection:
+        timeout: 900
   when: want_cgroups|int != current_cgroups|int
-
-- name: wait and reconnect
-  wait_for_connection:
-    timeout: 900
-  register: back_again2
-  when: want_cgroups|int != current_cgroups|int and not back_again.changed
 
 - set_fact:
     expected_fstype:
