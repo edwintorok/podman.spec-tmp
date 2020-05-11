@@ -55,7 +55,7 @@ Epoch: 0
 Version: 2.0.0
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.11.dev.git%{shortcommit0}%{?dist}
+Release: 0.12.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -658,6 +658,9 @@ exit 0
 %{_libexecdir}/cni/dnsname
 
 %changelog
+* Mon May 11 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:2.0.0-0.12.dev.git8857ba2
+- gating test fix attempt by Ed Santiago <santiago@redhat.com>
+
 * Mon May 11 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:2.0.0-0.11.dev.git8857ba2
 - do not modprobe br_netfilter
 
