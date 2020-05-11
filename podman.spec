@@ -55,7 +55,7 @@ Epoch: 0
 Version: 2.0.0
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.10.dev.git%{shortcommit0}%{?dist}
+Release: 0.11.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -508,11 +508,6 @@ pushd dnsname-%{commit_plugins}
 %{__make} PREFIX=%{_prefix} DESTDIR=%{buildroot} install
 popd
 
-# install /etc/modules-load.d/podman.conf
-echo br_netfilter > %{name}.conf
-install -dp %{buildroot}%{_sysconfdir}/modules-load.d
-install -p -m 644 %{name}.conf %{buildroot}%{_sysconfdir}/modules-load.d/
-
 # do not include docker and podman-remote man pages in main package
 for file in `find %{buildroot}%{_mandir}/man[15] -type f | sed "s,%{buildroot},," | grep -v -e remote -e docker`; do
     echo "$file*" >> podman.file-list
@@ -625,7 +620,6 @@ exit 0
 %{_unitdir}/%{name}.socket
 %{_userunitdir}/%{name}.service
 %{_userunitdir}/%{name}.socket
-%{_sysconfdir}/modules-load.d/%{name}.conf
 
 %files docker
 %{_bindir}/docker
@@ -664,6 +658,9 @@ exit 0
 %{_libexecdir}/cni/dnsname
 
 %changelog
+* Mon May 11 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:2.0.0-0.11.dev.git8857ba2
+- do not modprobe br_netfilter
+
 * Thu Apr 16 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:2.0.0-0.10.dev.git8857ba2
 - autobuilt 8857ba2
 
