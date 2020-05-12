@@ -46,18 +46,22 @@
     - summary
 
 # Collect all the one-line PASS/FAIL results in one file, test.log
+# Write the same thing, in a different format, to results.yml
+#   https://docs.fedoraproject.org/en-US/ci/standard-test-interface/
 - name: "{{ test.name }} | keep running tally of test results"
-  local_action: shell cat "{{ artifacts }}/test.{{ test_name_oneword }}.summary.log" >>"{{ artifacts }}/test.log"
+  local_action:
+    module: shell
+    cmd: |
+      cd {{ artifacts }}
+      cat "test.{{ test_name_oneword }}.summary.log" >>test.log
 
-# ...then delete the oneliner file, to keep things clean.
-- name: "{{ test.name }} | clean up status file"
-  local_action: file dest="{{ artifacts }}/test.{{ test_name_oneword }}.summary.log" state=absent
+      status=$(awk '{print $1}' <test.{{ test_name_oneword }}.summary.log | tr A-Z a-z)
+      echo "- test: {{ test.name }}"                        >>results.yml
+      echo "  result: $status"                              >>results.yml
+      echo "  logs: test.{{ test_name_oneword }}.bats.log"  >>results.yml
 
-# FIXME: do the same with results.yml:
-#  - test: {{ test.name }}
-#    result: pass or fail
-#    logs:
-#    - test.{{ test_name_oneword }}.bats.log
+      # delete the oneliner file, to keep artifacts dir clean
+      rm -f test.{{ test_name_oneword }}.summary.log
 
 - name: "{{ test.name }} | remove remote logs and helpers"
   file:
