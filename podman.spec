@@ -29,10 +29,9 @@
 %global project containers
 %global repo libpod
 # https://github.com/containers/libpod
-%global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
-%global import_path %{provider_prefix}
-%global git0 https://%{provider}.%{provider_tld}/%{project}/%{repo}
-%global commit0 8857ba20a0651e8fa71762da90d774e3aa290883
+%global import_path %{provider}.%{provider_tld}/%{project}/%{repo}
+%global git0 https://%{import_path}
+%global commit0 5b4e91db73a80f31f67b7c28832527e64b074b74
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global repo_plugins dnsname
@@ -55,7 +54,7 @@ Epoch: 0
 Version: 2.0.0
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.12.dev.git%{shortcommit0}%{?dist}
+Release: 0.13.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -463,8 +462,8 @@ export BUILDTAGS+="exclude_graphdriver_btrfs containers_image_ostree_stub"
 %gobuild -o bin/%{name} %{import_path}/cmd/%{name}
 
 # build %%{name}-remote
-export BUILDTAGS+=" remoteclient"
-%gobuild -o bin/%{name}-remote %{import_path}/cmd/%{name}
+#export BUILDTAGS+=" remoteclient"
+#%%gobuild -o bin/%%{name}-remote %%{import_path}/cmd/%%{name}
 
 pushd dnsname-%{commit_plugins}
 mkdir _build
@@ -481,21 +480,22 @@ popd
 %if 0%{?fedora}
 sed -s 's/^runtime[ =].*"runc/runtime = "crun/' libpod.conf  -i
 %endif
-sed -i 's/install.remote: podman-remote/install.remote:/' Makefile
-sed -i 's/install.bin: podman/install.bin:/' Makefile
 rm -rf docs/containers-mounts.conf.5.md
 
 install -dp %{buildroot}%{_unitdir}
 PODMAN_VERSION=%{version} %{__make} PREFIX=%{buildroot}%{_prefix} ETCDIR=%{buildroot}%{_sysconfdir} \
         install.bin \
-%if 0%{?fedora}
-        install.remote \
-%endif
         install.man \
         install.cni \
         install.systemd \
         install.completions \
         install.docker
+#%%if 0%%{?fedora}
+#install.remote \
+#%%endif
+
+rm %{buildroot}%{_mandir}/man1/*remote*
+rm %{buildroot}%{_mandir}/man5/*remote*
 
 mv pkg/hooks/README.md pkg/hooks/README-hooks.md
 
@@ -515,9 +515,9 @@ done
 
 # do not install remote manpages on centos7
 %if 0%{?centos} && 0%{?centos} < 8
-rm -rf %{buildroot}%{_mandir}/man1/docker-remote.1
-rm -rf %{buildroot}%{_mandir}/man1/%{name}-remote.1
-rm -rf %{buildroot}%{_mandir}/man5/%{name}-remote.conf.5
+#rm -rf %%{buildroot}%%{_mandir}/man1/docker-remote.1
+#rm -rf %%{buildroot}%%{_mandir}/man1/%%{name}-remote.1
+#rm -rf %%{buildroot}%%{_mandir}/man5/%%{name}-remote.conf.5
 %endif
 
 # source codes for building projects
@@ -641,11 +641,11 @@ exit 0
 
 #### DO NOT REMOVE - NEEDED FOR CENTOS
 %if 0%{?fedora}
-%files remote
-%license LICENSE
-%{_bindir}/%{name}-remote
-%{_datadir}/man/man1/%{name}-remote*.*
-%{_datadir}/man/man5/%{name}-remote*.*
+#%%files remote
+#%%license LICENSE
+#%%{_bindir}/%%{name}-remote
+#%%{_datadir}/man/man1/%%{name}-remote*.*
+#%%{_datadir}/man/man5/%%{name}-remote*.*
 
 %files tests
 %license LICENSE
@@ -658,6 +658,9 @@ exit 0
 %{_libexecdir}/cni/dnsname
 
 %changelog
+* Tue May 12 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:2.0.0-0.13.dev.git5b4e91d
+- disable remote package
+
 * Mon May 11 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:2.0.0-0.12.dev.git8857ba2
 - gating test fix attempt by Ed Santiago <santiago@redhat.com>
 
