@@ -15,10 +15,18 @@
 - debug:
     msg: "want: v{{ want_cgroups }}  actual: v{{ current_cgroups }}"
 
+- name: grubenv, pre-edit, cat
+  shell: cat /boot/grub2/grubenv
+  register: grubenv
+
+- name: grubenv, pre-edit, show
+  debug:
+    msg: "{{ grubenv.stdout_lines }}"
+
 # Update grubenv file to reflect the desired cgroup level
 - name: remove cgroup option from kernel flags
   shell:
-    cmd: sed -i -e "s/^\(kernelopts=.*\)systemd\.unified_cgroup_hierarchy=.\(.*\)/\1\2/" /boot/grub2/grubenv
+    cmd: sed -i -e "s/^\(kernelopts=.*\)systemd\.unified_cgroup_hierarchy=.\(.*\)/\1 \2/" /boot/grub2/grubenv
     warn: false
 
 - name: add it with the desired value
@@ -26,6 +34,14 @@
     cmd: sed -i -e "s/^\(kernelopts=.*\)/\1 systemd.unified_cgroup_hierarchy=0/" /boot/grub2/grubenv
     warn: false
   when: want_cgroups == 1
+
+- name: grubenv, post-edit, cat
+  shell: cat /boot/grub2/grubenv
+  register: grubenv
+
+- name: grubenv, post-edit, show
+  debug:
+    msg: "post: {{ grubenv.stdout_lines }}"
 
 # If want != have, reboot
 - name: reboot and wait
