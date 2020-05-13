@@ -477,9 +477,6 @@ export GOPATH=$(pwd)/_build:$(pwd)
 popd
 
 %install
-%if 0%{?fedora}
-sed -s 's/^runtime[ =].*"runc/runtime = "crun/' libpod.conf  -i
-%endif
 rm -rf docs/containers-mounts.conf.5.md
 
 install -dp %{buildroot}%{_unitdir}
@@ -610,7 +607,6 @@ exit 0
 %dir %{_datadir}/zsh/site-functions
 %{_datadir}/zsh/site-functions/_%{name}
 %config(noreplace) %{_sysconfdir}/cni/net.d/87-%{name}-bridge.conflist
-%{_datadir}/containers/%{repo}.conf
 %{_unitdir}/io.%{name}.service
 %{_unitdir}/io.%{name}.socket
 %{_userunitdir}/io.%{name}.service
