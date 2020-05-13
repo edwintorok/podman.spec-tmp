@@ -31,7 +31,7 @@
 # https://github.com/containers/libpod
 %global import_path %{provider}.%{provider_tld}/%{project}/%{repo}
 %global git0 https://%{import_path}
-%global commit0 d147b3ee027580dd7afdeb0fa04d990ae1d2ee91
+%global commit0 3c58e4fc76d35c098b039b407291b35f66c7cae1
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global repo_plugins dnsname
@@ -54,7 +54,7 @@ Epoch: 0
 Version: 2.0.0
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.17.dev.git%{shortcommit0}%{?dist}
+Release: 0.18.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -650,6 +650,9 @@ exit 0
 %{_libexecdir}/cni/dnsname
 
 %changelog
+* Wed May 13 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:2.0.0-0.18.dev.git3c58e4f
+- autobuilt 3c58e4f
+
 * Wed May 13 2020 Eduardo Santiago <santiago@redhat.com> - 2:2.0.0-0.17.dev.gitd147b3e
 - libpod.conf has been removed from the repo
 
