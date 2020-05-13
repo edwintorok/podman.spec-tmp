@@ -54,7 +54,7 @@ Epoch: 0
 Version: 2.0.0
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.16.dev.git%{shortcommit0}%{?dist}
+Release: 0.17.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -477,9 +477,6 @@ export GOPATH=$(pwd)/_build:$(pwd)
 popd
 
 %install
-%if 0%{?fedora}
-sed -s 's/^runtime[ =].*"runc/runtime = "crun/' libpod.conf  -i
-%endif
 rm -rf docs/containers-mounts.conf.5.md
 
 install -dp %{buildroot}%{_unitdir}
@@ -498,10 +495,6 @@ rm %{buildroot}%{_mandir}/man1/*remote*
 rm %{buildroot}%{_mandir}/man5/*remote*
 
 mv pkg/hooks/README.md pkg/hooks/README-hooks.md
-
-# install libpod.conf
-install -dp %{buildroot}%{_datadir}/containers
-install -p -m 644 %{repo}.conf %{buildroot}%{_datadir}/containers
 
 # install plugins
 pushd dnsname-%{commit_plugins}
@@ -610,7 +603,6 @@ exit 0
 %dir %{_datadir}/zsh/site-functions
 %{_datadir}/zsh/site-functions/_%{name}
 %config(noreplace) %{_sysconfdir}/cni/net.d/87-%{name}-bridge.conflist
-%{_datadir}/containers/%{repo}.conf
 %{_unitdir}/io.%{name}.service
 %{_unitdir}/io.%{name}.socket
 %{_userunitdir}/io.%{name}.service
@@ -658,6 +650,9 @@ exit 0
 %{_libexecdir}/cni/dnsname
 
 %changelog
+* Wed May 13 2020 Eduardo Santiago <santiago@redhat.com> - 2:2.0.0-0.17.dev.gitd147b3e
+- libpod.conf has been removed from the repo
+
 * Wed May 13 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:2.0.0-0.16.dev.gitd147b3e
 - autobuilt d147b3e
 
