@@ -71,3 +71,17 @@
     - test.bats.log
     - test.summary.log
     - helper.sh
+
+# AAAAARGH!
+#
+# Fedora gating tests are failing, because str-common-final/tasks/main.yml
+# tries to pull test.log and other logs from $remote_host:/tmp/artifacts .
+# Those don't exist, because I track status and artifacts locally, because
+# with the reboot I can't rely on /tmp being preserved.
+# I see no way to tell str-common-final to skip this step; so let's just
+# push logs over upon completion of each subtest.
+- name: keep remote artifacts synced
+  synchronize:
+    src:  "{{ artifacts }}/"
+    dest: "{{ remote_artifacts|d('/tmp/artifacts') }}/"
+    mode: push

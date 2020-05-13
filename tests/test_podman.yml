@@ -21,7 +21,7 @@
     local_action: command truncate --size=0 {{ artifacts }}/test.log
 
   - name: clear test results (results.yml)
-    local_action: copy content="requires:\n" dest={{ artifacts }}/results.yml
+    local_action: copy content="results:\n" dest={{ artifacts }}/results.yml
 
   # These are the actual tests: set cgroups vN, then run root/rootless tests.
   - name: set cgroups and run podman tests
