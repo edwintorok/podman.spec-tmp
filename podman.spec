@@ -54,7 +54,7 @@ Epoch: 0
 Version: 2.0.0
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.21.dev.git%{shortcommit0}%{?dist}
+Release: 0.22.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -83,13 +83,14 @@ Requires: containernetworking-plugins >= 0.7.5-1
 Requires: iptables
 Requires: nftables
 Requires: conmon
+Requires: oci-runtime
 Requires: %{name}-plugins = %{epoch}:%{version}-%{release}
 Obsoletes: oci-systemd-hook <= 0.2.0-3
 %if 0%{?fedora}
 BuildRequires: btrfs-progs-devel
 BuildRequires: ostree-devel
 Recommends: fuse-overlayfs >= 0.3-8
-Requires: crun >= 0.13-2
+Recommends: crun >= 0.13-2
 %endif
 %if 0%{?fedora} || 0%{?centos} >= 8
 Recommends: catatonit
@@ -650,6 +651,10 @@ exit 0
 %{_libexecdir}/cni/dnsname
 
 %changelog
+* Thu May 14 2020 Daniel J Walsh <dwalsh@redhat.com> - 2:2.0.0-0.22.dev.gitf2f0de4
+- Add requires for oci-runtime
+- Change crun to Recommends
+
 * Thu May 14 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:2.0.0-0.21.dev.gitf2f0de4
 - autobuilt f2f0de4
 
