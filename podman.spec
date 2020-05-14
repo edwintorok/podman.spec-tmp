@@ -31,7 +31,7 @@
 # https://github.com/containers/libpod
 %global import_path %{provider}.%{provider_tld}/%{project}/%{repo}
 %global git0 https://%{import_path}
-%global commit0 f2f0de430d7545d19ef9505d7f6d8ef46a0d36b9
+%global commit0 e35edb6cc51c55179126d2f0507bfdfdeb72052c
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global repo_plugins dnsname
@@ -54,7 +54,7 @@ Epoch: 0
 Version: 2.0.0
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.22.dev.git%{shortcommit0}%{?dist}
+Release: 0.23.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -651,6 +651,9 @@ exit 0
 %{_libexecdir}/cni/dnsname
 
 %changelog
+* Thu May 14 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:2.0.0-0.23.dev.gite35edb6
+- autobuilt e35edb6
+
 * Thu May 14 2020 Daniel J Walsh <dwalsh@redhat.com> - 2:2.0.0-0.22.dev.gitf2f0de4
 - Add requires for oci-runtime
 - Change crun to Recommends
