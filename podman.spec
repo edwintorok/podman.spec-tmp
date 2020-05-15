@@ -43,7 +43,7 @@
 
 # Used for comparing with latest upstream tag
 # to decide whether to autobuild (non-rawhide only)
-%define built_tag v1.9.0
+%define built_tag v1.9.2
 
 Name: podman
 %if 0%{?fedora}
@@ -79,10 +79,10 @@ BuildRequires: make
 BuildRequires: systemd
 BuildRequires: systemd-devel
 Requires: containers-common
-Requires: containernetworking-plugins >= 0.7.5-1
+Requires: containernetworking-plugins >= 0.8.6-1
 Requires: iptables
 Requires: nftables
-Requires: conmon
+Requires: conmon >= 2:2.0.16-1
 Requires: oci-runtime
 Requires: %{name}-plugins = %{epoch}:%{version}-%{release}
 Obsoletes: oci-systemd-hook <= 0.2.0-3
