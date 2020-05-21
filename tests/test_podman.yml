@@ -24,9 +24,18 @@
     local_action: copy content="results:\n" dest={{ artifacts }}/results.yml
 
   # These are the actual tests: set cgroups vN, then run root/rootless tests.
+  #
+  # FIXME FIXME FIXME: 2020-05-21: 'loop' should be '2, 1' but there's some
+  # nightmarish bug in CI wherein reboots hang forever. There's a bug open[1]
+  # but it seems dead. Without a working reboot, there's no way to test v1.
+  #  [1] https://redhat.service-now.com/surl.do?n=PNT0808530
+  # I'm leaving this as a 'loop' in (foolish? vain?) hope that the bug will
+  # be fixed. Let's revisit this after, say, 2020-08. If the bug persists
+  # then let's just revert the entire cgroups v1 change, and go back to
+  # using standard-test-basic.
   - name: set cgroups and run podman tests
     include_tasks: test_podman_cgroups_vn.yml
-    loop: [ 2, 1 ]
+    loop: [ 2 ]
     loop_control:
       loop_var: want_cgroups
 
