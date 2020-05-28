@@ -54,7 +54,7 @@ Epoch: 0
 Version: 2.0.0
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.blahblah
-Release: 0.81.dev.git%{shortcommit0}%{?dist}
+Release: 0.82.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -456,7 +456,7 @@ ln -s vendor src
 %gogenerate ./pkg/varlink/...
 
 # build %%{name}
-export BUILDTAGS="systemd varlink seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/selinux_tag.sh)"
+export BUILDTAGS="ABISupport systemd varlink seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/selinux_tag.sh)"
 %if 0%{?centos}
 export BUILDTAGS+="exclude_graphdriver_btrfs containers_image_ostree_stub"
 %endif
@@ -651,6 +651,9 @@ exit 0
 %{_libexecdir}/cni/dnsname
 
 %changelog
+* Thu May 28 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:2.0.0-0.82.dev.gite8818ce
+- use ABISupport buildtag for podman
+
 * Thu May 28 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:2.0.0-0.81.dev.gite8818ce
 - autobuilt e8818ce
 
