@@ -5,10 +5,8 @@
 
 %if 0%{?fedora} || 0%{?centos} >= 8
 #### DO NOT REMOVE - NEEDED FOR CENTOS
-%bcond_without varlink
 %global with_debug 1
 %else
-%bcond_with varlink
 %global with_debug 0
 %endif
 
@@ -95,7 +93,6 @@ Recommends: crun >= 0.13-2
 %if 0%{?fedora} || 0%{?centos} >= 8
 Recommends: catatonit
 Recommends: container-selinux
-Recommends: libvarlink-util
 Recommends: runc
 Recommends: slirp4netns >= 0.3.0-2
 %else
@@ -421,7 +418,7 @@ Remote client for managing %{name} containers.
 This experimental remote client is under heavy development. Please do not
 run %{name}-remote in production.
 
-%{name}-remote uses the varlink connection to connect to a %{name} client to
+%{name}-remote uses the version 2 API to connect to a %{name} client to
 manage pods, containers and container images. %{name}-remote supports ssh
 connections as well.
 %endif
@@ -453,10 +450,9 @@ mkdir -p src/%{provider}.%{provider_tld}/%{project}
 ln -s ../../../../ src/%{import_path}
 popd
 ln -s vendor src
-%gogenerate ./pkg/varlink/...
 
 # build %%{name}
-export BUILDTAGS="ABISupport systemd varlink seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/selinux_tag.sh)"
+export BUILDTAGS="ABISupport systemd seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/selinux_tag.sh)"
 %if 0%{?centos}
 export BUILDTAGS+="exclude_graphdriver_btrfs containers_image_ostree_stub"
 %endif
