@@ -403,6 +403,7 @@ Requires: %{name} = %{epoch}:%{version}-%{release}
 Requires: bats
 Requires: jq
 Requires: skopeo
+Requires: nmap-ncat
 
 %description tests
 %{summary}
