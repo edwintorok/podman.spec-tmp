@@ -50,8 +50,10 @@ Epoch: 2
 Epoch: 0
 %endif
 Version: 2.0.0
+# RELEASE TAG SHOULD ALWAYS BEGIN WITH A NUMBER
+# N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
-# so release tag should be of the form 0.N.blahblah
+# so release tag should be of the form 0.N.foo
 Release: 0.141.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
