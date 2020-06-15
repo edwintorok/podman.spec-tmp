@@ -637,6 +637,7 @@ exit 0
 %doc dnsname-%{commit_plugins}/{README.md,README_PODMAN.md}
 %{_libexecdir}/cni/dnsname
 
+# rhcontainerbot account currently managed by lsm5
 %changelog
 * Mon Jun 15 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:2.0.0-0.141.dev.gitc2690c2
 - autobuilt c2690c2
