@@ -29,7 +29,7 @@
 # https://github.com/containers/libpod
 %global import_path %{provider}.%{provider_tld}/%{project}/%{repo}
 %global git0 https://%{import_path}
-%global commit0 a2661b1c25e280282d101f24ce478305622da11f
+%global commit0 33a60276135b7d74f3a10b39d8d69c836a05766e
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global repo_plugins dnsname
@@ -54,7 +54,7 @@ Version: 2.0.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.169.dev.git%{shortcommit0}%{?dist}
+Release: 0.170.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -639,6 +639,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Fri Jun 19 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:2.0.0-0.170.dev.git33a6027
+- autobuilt 33a6027
+
 * Thu Jun 18 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:2.0.0-0.169.dev.gita2661b1
 - autobuilt a2661b1
 
