@@ -44,7 +44,7 @@
 
 # Used for comparing with latest upstream tag
 # to decide whether to autobuild (non-rawhide only)
-%define built_tag v2.0.0-rc7
+%define built_tag v2.0.0
 
 Name: podman
 %if 0%{?fedora}
