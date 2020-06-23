@@ -29,6 +29,9 @@
 # https://github.com/containers/libpod
 %global import_path %{provider}.%{provider_tld}/%{project}/%{repo}
 %global git0 https://%{import_path}
+# To build a random user's fork/commit, comment out above line,
+# uncomment below line and replace the placeholders and commit0 below with the right info
+#%%global git0 https://github.com/$GITHUB_USER/$GITHUB_USER_REPO
 %global commit0 73514b1465fe2f79b82d017cdb11d587d6f7df3d
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
@@ -54,7 +57,7 @@ Version: 2.1.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.11.dev.git%{shortcommit0}%{?dist}
+Release: 0.13.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -455,15 +458,15 @@ popd
 ln -s vendor src
 
 # build %%{name}
-export BUILDTAGS="ABISupport systemd seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/selinux_tag.sh)"
+export BUILDTAGS="systemd seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/selinux_tag.sh)"
 %if 0%{?centos}
 export BUILDTAGS+="exclude_graphdriver_btrfs containers_image_ostree_stub"
 %endif
 %gobuild -o bin/%{name} %{import_path}/cmd/%{name}
 
 # build %%{name}-remote
-#export BUILDTAGS+=" remoteclient"
-#%%gobuild -o bin/%%{name}-remote %%{import_path}/cmd/%%{name}
+export BUILDTAGS+=" remoteclient"
+%gobuild -o bin/%{name}-remote %{import_path}/cmd/%{name}
 
 pushd dnsname-%{commit_plugins}
 mkdir _build
@@ -476,23 +479,22 @@ export GOPATH=$(pwd)/_build:$(pwd)
 %gobuild -o bin/dnsname %{import_path_plugins}/plugins/meta/dnsname
 popd
 
+%{__make} docs
+
 %install
 rm -rf docs/containers-mounts.conf.5.md
 
 install -dp %{buildroot}%{_unitdir}
 PODMAN_VERSION=%{version} %{__make} PREFIX=%{buildroot}%{_prefix} ETCDIR=%{buildroot}%{_sysconfdir} \
-        install.bin \
-        install.man \
+        install.bin-nobuild \
+        install.man-nobuild \
         install.cni \
         install.systemd \
         install.completions \
-        install.docker
-#%%if 0%%{?fedora}
-#install.remote \
-#%%endif
-
-rm %{buildroot}%{_mandir}/man1/*remote*
-rm %{buildroot}%{_mandir}/man5/*remote*
+        install.docker \
+%if 0%{?fedora}
+        install.remote-nobuild \
+%endif
 
 mv pkg/hooks/README.md pkg/hooks/README-hooks.md
 
@@ -508,9 +510,9 @@ done
 
 # do not install remote manpages on centos7
 %if 0%{?centos} && 0%{?centos} < 8
-#rm -rf %%{buildroot}%%{_mandir}/man1/docker-remote.1
-#rm -rf %%{buildroot}%%{_mandir}/man1/%%{name}-remote.1
-#rm -rf %%{buildroot}%%{_mandir}/man5/%%{name}-remote.conf.5
+rm -rf %{buildroot}%{_mandir}/man1/docker-remote.1
+rm -rf %{buildroot}%{_mandir}/man1/%{name}-remote.1
+rm -rf %{buildroot}%{_mandir}/man5/%{name}-remote.conf.5
 %endif
 
 # source codes for building projects
@@ -621,10 +623,10 @@ exit 0
 
 #### DO NOT REMOVE - NEEDED FOR CENTOS
 %if 0%{?fedora}
-#%%files remote
-#%%license LICENSE
-#%%{_bindir}/%%{name}-remote
-#%%{_datadir}/man/man1/%%{name}-remote*.*
+%files remote
+%license LICENSE
+%{_bindir}/%{name}-remote
+%{_mandir}/man1/%{name}-remote*.*
 #%%{_datadir}/man/man5/%%{name}-remote*.*
 
 %files tests
@@ -639,6 +641,12 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Tue Jun 23 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:2.1.0-0.13.dev.git73514b1
+- re-enable remote package
+
+* Tue Jun 23 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:2.1.0-0.12.dev.git9ec0e10
+- scratch build for rishi
+
 * Tue Jun 23 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:2.1.0-0.11.dev.git73514b1
 - autobuilt 73514b1
 
