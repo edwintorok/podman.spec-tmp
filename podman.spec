@@ -57,7 +57,7 @@ Version: 2.1.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.13.dev.git%{shortcommit0}%{?dist}
+Release: 0.12.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -641,11 +641,8 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
-* Tue Jun 23 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:2.1.0-0.13.dev.git73514b1
+* Tue Jun 23 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:2.1.0-0.12.dev.git73514b1
 - re-enable remote package
-
-* Tue Jun 23 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:2.1.0-0.12.dev.git9ec0e10
-- scratch build for rishi
 
 * Tue Jun 23 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:2.1.0-0.11.dev.git73514b1
 - autobuilt 73514b1
