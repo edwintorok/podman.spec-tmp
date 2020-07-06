@@ -57,7 +57,7 @@ Version: 2.1.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.50.dev.git%{shortcommit0}%{?dist}
+Release: 0.51.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -93,7 +93,7 @@ Obsoletes: oci-systemd-hook <= 0.2.0-3
 BuildRequires: btrfs-progs-devel
 BuildRequires: ostree-devel
 Recommends: fuse-overlayfs >= 0.3-8
-Recommends: crun >= 0.13-2
+Recommends: crun >= 0.14-2
 %endif
 %if 0%{?fedora} || 0%{?centos} >= 8
 Recommends: catatonit
@@ -641,6 +641,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Mon Jul 06 2020 Eduardo Santiago <santiago@redhat.com> - 2:2.1.0-0.51.dev.git4351e33
+- bump crun dependency to 0.14, needed for --sdnotify option
+
 * Mon Jul 06 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:2.1.0-0.50.dev.git4351e33
 - autobuilt 4351e33
 
