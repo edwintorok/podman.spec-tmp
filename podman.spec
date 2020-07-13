@@ -441,7 +441,7 @@ is removed from the network, it will remove the entry from the hosts
 file.  Each CNI network will have its own dnsmasq instance.
 
 %prep
-%autosetup -Sgit -n %{repo}-%{commit0}
+%autosetup -Sgit -n %{name}-%{commit0}
 
 # untar dnsname
 tar zxf %{SOURCE1}
