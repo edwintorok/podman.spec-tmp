@@ -25,7 +25,7 @@
 %global provider github
 %global provider_tld com
 %global project containers
-%global repo libpod
+%global repo %{name}
 # https://github.com/containers/libpod
 %global import_path %{provider}.%{provider_tld}/%{project}/%{repo}
 %global git0 https://%{import_path}
@@ -61,7 +61,7 @@ Release: 0.123.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
-Source0: %{git0}/archive/%{commit0}/%{repo}-%{shortcommit0}.tar.gz
+Source0: %{git0}/archive/%{commit0}/%{name}-%{shortcommit0}.tar.gz
 Source1: %{git_plugins}/archive/%{commit_plugins}/%{repo_plugins}-%{shortcommit_plugins}.tar.gz
 Provides: %{name}-manpages = %{epoch}:%{version}-%{release}
 Obsoletes: %{name}-manpages < %{epoch}:%{version}-%{release}
