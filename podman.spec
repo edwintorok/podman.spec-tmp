@@ -57,7 +57,7 @@ Version: 2.1.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.152.dev.git%{shortcommit0}%{?dist}
+Release: 0.153.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -598,8 +598,12 @@ exit 0
 %dir %{_datadir}/zsh/site-functions
 %{_datadir}/zsh/site-functions/_%{name}
 %config(noreplace) %{_sysconfdir}/cni/net.d/87-%{name}-bridge.conflist
+%{_unitdir}/%{name}-auto-update.service
+%{_unitdir}/%{name}-auto-update.timer
 %{_unitdir}/%{name}.service
 %{_unitdir}/%{name}.socket
+%{_userunitdir}/%{name}-auto-update.service
+%{_userunitdir}/%{name}-auto-update.timer
 %{_userunitdir}/%{name}.service
 %{_userunitdir}/%{name}.socket
 
@@ -641,6 +645,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Mon Aug  3 2020 Peter Oliver <rpm@mavit.org.uk> - 2:2.1.0-0.153.dev.git1709335
+- Include podman-auto-update systemd service and timer.
+
 * Tue Aug 04 14:10:21 GMT 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:2.1.0-0.152.dev.gitd4cf3c5
 - autobuilt d4cf3c5
 
