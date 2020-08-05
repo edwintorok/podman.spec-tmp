@@ -57,7 +57,7 @@ Version: 2.1.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.158.dev.git%{shortcommit0}%{?dist}
+Release: 0.159.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -409,6 +409,8 @@ Requires: bats
 Requires: jq
 Requires: skopeo
 Requires: nmap-ncat
+Requires: httpd-tools
+Requires: openssl
 
 %description tests
 %{summary}
@@ -645,6 +647,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Wed Aug 05 2020 Eduardo Santiago <santiago@redhat.com> - 2:2.1.0-0.159.dev.git7a7c8e9
+- add openssl, httpd-tools requirements to podman-tests
+
 * Wed Aug 05 09:10:26 GMT 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:2.1.0-0.158.dev.git7a7c8e9
 - autobuilt 7a7c8e9
 
