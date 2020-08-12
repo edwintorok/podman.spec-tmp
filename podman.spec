@@ -460,7 +460,7 @@ popd
 ln -s vendor src
 
 # build %%{name}
-export BUILDTAGS="systemd seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/selinux_tag.sh)"
+export BUILDTAGS="seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/selinux_tag.sh) $(hack/systemd_tag.sh)"
 %if 0%{?centos}
 export BUILDTAGS+=" containers_image_ostree_stub"
 %endif
