@@ -467,7 +467,7 @@ export BUILDTAGS+=" containers_image_ostree_stub"
 %gobuild -o bin/%{name} %{import_path}/cmd/%{name}
 
 # build %%{name}-remote
-export BUILDTAGS+=" remoteclient"
+export BUILDTAGS+=" exclude_graphdriver_btrfs btrfs_noversion remoteclient"
 %gobuild -o bin/%{name}-remote %{import_path}/cmd/%{name}
 
 pushd dnsname-%{commit_plugins}
