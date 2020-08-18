@@ -411,6 +411,7 @@ Requires: skopeo
 Requires: nmap-ncat
 Requires: httpd-tools
 Requires: openssl
+Requires: socat
 
 %description tests
 %{summary}
