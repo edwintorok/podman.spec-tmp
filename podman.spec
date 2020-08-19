@@ -465,6 +465,10 @@ export BUILDTAGS="seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installe
 %if 0%{?centos}
 export BUILDTAGS+=" containers_image_ostree_stub"
 %endif
+
+# build date. FIXME: Makefile uses '/v2/libpod', that doesn't work here?
+LDFLAGS="-X %{import_path}/libpod/define.buildInfo=$(date +%s)"
+
 %gobuild -o bin/%{name} %{import_path}/cmd/%{name}
 
 # build %%{name}-remote
