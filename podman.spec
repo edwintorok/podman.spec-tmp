@@ -26,7 +26,7 @@
 %global provider_tld com
 %global project containers
 %global repo %{name}
-# https://github.com/containers/libpod
+# https://github.com/containers/%%{name}
 %global import_path %{provider}.%{provider_tld}/%{project}/%{repo}
 %global git0 https://%{import_path}
 # To build a random user's fork/commit, comment out above line,
@@ -36,7 +36,7 @@
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global repo_plugins dnsname
-# https://github.com/containers/libpod
+# https://github.com/containers/dnsname
 %global import_path_plugins %%{provider}.%{provider_tld}/%{project}/%{repo_plugins}
 %global git_plugins https://%{import_path_plugins}
 %global commit_plugins f5af33dedcfc5e707e5560baa4a72f8d96a968fe
@@ -108,106 +108,67 @@ Requires: slirp4netns >= 0.3.0-2
 %endif
 
 # vendored libraries
-# awk '{print "Provides: bundled(golang("$1")) = "$2}' vendor.conf | sort
-# [thanks to Carl George <carl@george.computer> for containerd.spec]
-Provides: bundled(golang(github.com/Azure/go-ansiterm)) = 19f72df4d05d31cbe1c56bfc8045c96babff6c7e
-Provides: bundled(golang(github.com/blang/semver)) = v3.5.0
-Provides: bundled(golang(github.com/boltdb/bolt)) = master
-Provides: bundled(golang(github.com/buger/goterm)) = 2f8dfbc7dbbff5dd1d391ed91482c24df243b2d3
-Provides: bundled(golang(github.com/BurntSushi/toml)) = v0.2.0
-Provides: bundled(golang(github.com/containerd/cgroups)) = 58556f5ad8448d99a6f7bea69ea4bdb7747cfeb0
-Provides: bundled(golang(github.com/containerd/continuity)) = master
-#Provides: bundled(golang(github.com/containernetworking/cni)) = v0.7.0-alpha1
-Provides: bundled(golang(github.com/containernetworking/plugins)) = 1562a1e60ed101aacc5e08ed9dbeba8e9f3d4ec1
-Provides: bundled(golang(github.com/containers/image)) = 85d7559d44fd71f30e46e43d809bfbf88d11d916
-Provides: bundled(golang(github.com/containers/psgo)) = 5dde6da0bc8831b35243a847625bcf18183bd1ee
-Provides: bundled(golang(github.com/containers/storage)) = 243c4cd616afdf06b4a975f18c4db083d26b1641
-Provides: bundled(golang(github.com/coreos/go-iptables)) = 25d087f3cffd9aedc0c2b7eff25f23cbf3c20fe1
-Provides: bundled(golang(github.com/coreos/go-systemd)) = v14
-Provides: bundled(golang(github.com/cri-o/ocicni)) = master
-Provides: bundled(golang(github.com/cyphar/filepath-securejoin)) = v0.2.1
-Provides: bundled(golang(github.com/davecgh/go-spew)) = v1.1.0
-Provides: bundled(golang(github.com/docker/distribution)) = 7a8efe719e55bbfaff7bc5718cdf0ed51ca821df
-Provides: bundled(golang(github.com/docker/docker)) = 86f080cff0914e9694068ed78d503701667c4c00
-Provides: bundled(golang(github.com/docker/docker-credential-helpers)) = d68f9aeca33f5fd3f08eeae5e9d175edf4e731d1
-Provides: bundled(golang(github.com/docker/go-connections)) = 3ede32e2033de7505e6500d6c868c2b9ed9f169d
-Provides: bundled(golang(github.com/docker/go-units)) = v0.3.2
-Provides: bundled(golang(github.com/docker/libtrust)) = aabc10ec26b754e797f9028f4589c5b7bd90dc20
-Provides: bundled(golang(github.com/docker/spdystream)) = ed496381df8283605c435b86d4fdd6f4f20b8c6e
-Provides: bundled(golang(github.com/fatih/camelcase)) = f6a740d52f961c60348ebb109adde9f4635d7540
-Provides: bundled(golang(github.com/fsnotify/fsnotify)) = 7d7316ed6e1ed2de075aab8dfc76de5d158d66e1
-Provides: bundled(golang(github.com/fsouza/go-dockerclient)) = master
-Provides: bundled(golang(github.com/ghodss/yaml)) = 04f313413ffd65ce25f2541bfd2b2ceec5c0908c
-Provides: bundled(golang(github.com/godbus/dbus)) = a389bdde4dd695d414e47b755e95e72b7826432c
-Provides: bundled(golang(github.com/gogo/protobuf)) = c0656edd0d9eab7c66d1eb0c568f9039345796f7
-Provides: bundled(golang(github.com/golang/glog)) = 23def4e6c14b4da8ac2ed8007337bc5eb5007998
-Provides: bundled(golang(github.com/golang/groupcache)) = b710c8433bd175204919eb38776e944233235d03
-Provides: bundled(golang(github.com/golang/protobuf)) = 4bd1920723d7b7c925de087aa32e2187708897f7
-Provides: bundled(golang(github.com/googleapis/gnostic)) = 0c5108395e2debce0d731cf0287ddf7242066aba
-Provides: bundled(golang(github.com/google/gofuzz)) = 44d81051d367757e1c7c6a5a86423ece9afcf63c
-Provides: bundled(golang(github.com/gorilla/context)) = v1.1
-Provides: bundled(golang(github.com/gorilla/mux)) = v1.3.0
-Provides: bundled(golang(github.com/hashicorp/errwrap)) = 7554cd9344cec97297fa6649b055a8c98c2a1e55
-Provides: bundled(golang(github.com/hashicorp/golang-lru)) = 0a025b7e63adc15a622f29b0b2c4c3848243bbf6
-Provides: bundled(golang(github.com/hashicorp/go-multierror)) = 83588e72410abfbe4df460eeb6f30841ae47d4c4
-Provides: bundled(golang(github.com/imdario/mergo)) = 0.2.2
-Provides: bundled(golang(github.com/json-iterator/go)) = 1.0.0
-Provides: bundled(golang(github.com/kr/pty)) = v1.0.0
-Provides: bundled(golang(github.com/mailru/easyjson)) = 03f2033d19d5860aef995fe360ac7d395cd8ce65
-Provides: bundled(golang(github.com/mattn/go-runewidth)) = v0.0.1
-Provides: bundled(golang(github.com/Microsoft/go-winio)) = 78439966b38d69bf38227fbf57ac8a6fee70f69a
-Provides: bundled(golang(github.com/Microsoft/hcsshim)) = 43f9725307998e09f2e3816c2c0c36dc98f0c982
-Provides: bundled(golang(github.com/mistifyio/go-zfs)) = v2.1.1
-Provides: bundled(golang(github.com/mrunalp/fileutils)) = master
-Provides: bundled(golang(github.com/mtrmac/gpgme)) = b2432428689ca58c2b8e8dea9449d3295cf96fc9
-Provides: bundled(golang(github.com/Nvveen/Gotty)) = master
-#Provides: bundled(golang(github.com/opencontainers/go-digest)) = v1.0.0-rc0
-Provides: bundled(golang(github.com/opencontainers/image-spec)) = v1.0.0
-Provides: bundled(golang(github.com/opencontainers/runc)) = b4e2ecb452d9ee4381137cc0a7e6715b96bed6de
-Provides: bundled(golang(github.com/opencontainers/runtime-spec)) = d810dbc60d8c5aeeb3d054bd1132fab2121968ce
-Provides: bundled(golang(github.com/opencontainers/runtime-tools)) = master
-Provides: bundled(golang(github.com/opencontainers/selinux)) = b6fa367ed7f534f9ba25391cc2d467085dbb445a
-Provides: bundled(golang(github.com/openshift/imagebuilder)) = master
-Provides: bundled(golang(github.com/ostreedev/ostree-go)) = master
-Provides: bundled(golang(github.com/pkg/errors)) = v0.8.0
-Provides: bundled(golang(github.com/pmezard/go-difflib)) = 792786c7400a136282c1664665ae0a8db921c6c2
-Provides: bundled(golang(github.com/pquerna/ffjson)) = d49c2bc1aa135aad0c6f4fc2056623ec78f5d5ac
-Provides: bundled(golang(github.com/projectatomic/buildah)) = af5bbde0180026ae87b7fc81c2dc124aa73ec959
-Provides: bundled(golang(github.com/seccomp/containers-golang)) = master
-Provides: bundled(golang(github.com/seccomp/libseccomp-golang)) = v0.9.0
-Provides: bundled(golang(github.com/sirupsen/logrus)) = v1.0.0
-Provides: bundled(golang(github.com/spf13/pflag)) = 9ff6c6923cfffbcd502984b8e0c80539a94968b7
-Provides: bundled(golang(github.com/stretchr/testify)) = 4d4bfba8f1d1027c4fdbe371823030df51419987
-Provides: bundled(golang(github.com/syndtr/gocapability)) = e7cb7fa329f456b3855136a2642b197bad7366ba
-Provides: bundled(golang(github.com/tchap/go-patricia)) = v2.2.6
-Provides: bundled(golang(github.com/ulikunitz/xz)) = v0.5.4
-Provides: bundled(golang(github.com/ulule/deepcopier)) = master
-Provides: bundled(golang(github.com/urfave/cli)) = 934abfb2f102315b5794e15ebc7949e4ca253920
-Provides: bundled(golang(github.com/varlink/go)) = master
-Provides: bundled(golang(github.com/vbatts/tar-split)) = v0.10.2
-Provides: bundled(golang(github.com/vishvananda/netlink)) = master
-Provides: bundled(golang(github.com/vishvananda/netns)) = master
-Provides: bundled(golang(github.com/xeipuuv/gojsonpointer)) = master
-Provides: bundled(golang(github.com/xeipuuv/gojsonreference)) = master
-Provides: bundled(golang(github.com/xeipuuv/gojsonschema)) = master
-Provides: bundled(golang(golang.org/x/crypto)) = 81e90905daefcd6fd217b62423c0908922eadb30
-Provides: bundled(golang(golang.org/x/net)) = c427ad74c6d7a814201695e9ffde0c5d400a7674
-Provides: bundled(golang(golang.org/x/sys)) = master
-Provides: bundled(golang(golang.org/x/text)) = f72d8390a633d5dfb0cc84043294db9f6c935756
-Provides: bundled(golang(golang.org/x/time)) = f51c12702a4d776e4c1fa9b0fabab841babae631
-Provides: bundled(golang(google.golang.org/grpc)) = v1.0.4
-Provides: bundled(golang(gopkg.in/cheggaaa/pb.v1)) = v1.0.7
-Provides: bundled(golang(gopkg.in/inf.v0)) = v0.9.0
-Provides: bundled(golang(gopkg.in/mgo.v2)) = v2
-Provides: bundled(golang(gopkg.in/square/go-jose.v2)) = v2.1.3
-Provides: bundled(golang(gopkg.in/yaml.v2)) = v2
-Provides: bundled(golang(k8s.io/api)) = 5ce4aa0bf2f097f6021127b3d879eeda82026be8
-Provides: bundled(golang(k8s.io/apiextensions-apiserver)) = 1b31e26d82f1ec2e945c560790e98f34bb5f2e63
-Provides: bundled(golang(k8s.io/apimachinery)) = 616b23029fa3dc3e0ccefd47963f5651a6543d94
-Provides: bundled(golang(k8s.io/apiserver)) = 4d1163080139f1f9094baf8a3a6099e85e1867f6
-Provides: bundled(golang(k8s.io/client-go)) = 7cd1d3291b7d9b1e2d54d4b69eb65995eaf8888e
-Provides: bundled(golang(k8s.io/kube-openapi)) = 275e2ce91dec4c05a4094a7b1daee5560b555ac9
-Provides: bundled(golang(k8s.io/utils)) = 258e2a2fa64568210fbd6267cf1d8fd87c3cb86e
+# awk '{print "Provides: bundled(golang("$1")) = "$2}' go.mod | sort
+Provides: bundled(golang(github.com/BurntSushi/toml)) = v0.3.1
+Provides: bundled(golang(github.com/blang/semver)) = v3.5.1+incompatible
+Provides: bundled(golang(github.com/buger/goterm)) = v0.0.0-20181115115552-c206103e1f37
+Provides: bundled(golang(github.com/checkpoint-restore/go-criu)) = v0.0.0-20190109184317-bdb7599cd87b
+Provides: bundled(golang(github.com/codahale/hdrhistogram)) = v0.0.0-20161010025455-3a0bb77429bd
+Provides: bundled(golang(github.com/containernetworking/cni)) = v0.8.0
+Provides: bundled(golang(github.com/containernetworking/plugins)) = v0.8.7
+Provides: bundled(golang(github.com/containers/buildah)) = v1.15.1-0.20200813183340-0a8dc1f8064c
+Provides: bundled(golang(github.com/containers/common)) = v0.20.3-0.20200827091701-a550d6a98aa3
+Provides: bundled(golang(github.com/containers/conmon)) = v2.0.20+incompatible
+Provides: bundled(golang(github.com/containers/image/v5)) = v5.5.2
+Provides: bundled(golang(github.com/containers/psgo)) = v1.5.1
+Provides: bundled(golang(github.com/containers/storage)) = v1.23.2
+Provides: bundled(golang(github.com/coreos/go-systemd/v22)) = v22.1.0
+Provides: bundled(golang(github.com/cri-o/ocicni)) = v0.2.0
+Provides: bundled(golang(github.com/cyphar/filepath-securejoin)) = v0.2.2
+Provides: bundled(golang(github.com/davecgh/go-spew)) = v1.1.1
+Provides: bundled(golang(github.com/docker/distribution)) = v2.7.1+incompatible
+Provides: bundled(golang(github.com/docker/docker)) = v1.4.2-0.20191219165747-a9416c67da9f
+Provides: bundled(golang(github.com/docker/go-connections)) = v0.4.0
+Provides: bundled(golang(github.com/docker/go-units)) = v0.4.0
+Provides: bundled(golang(github.com/fsnotify/fsnotify)) = v1.4.9
+Provides: bundled(golang(github.com/ghodss/yaml)) = v1.0.0
+Provides: bundled(golang(github.com/godbus/dbus/v5)) = v5.0.3
+Provides: bundled(golang(github.com/google/shlex)) = v0.0.0-20181106134648-c34317bd91bf
+Provides: bundled(golang(github.com/google/uuid)) = v1.1.2
+Provides: bundled(golang(github.com/gorilla/mux)) = v1.7.4
+Provides: bundled(golang(github.com/gorilla/schema)) = v1.2.0
+Provides: bundled(golang(github.com/hashicorp/go-multierror)) = v1.1.0
+Provides: bundled(golang(github.com/hpcloud/tail)) = v1.0.0
+Provides: bundled(golang(github.com/json-iterator/go)) = v1.1.10
+Provides: bundled(golang(github.com/mrunalp/fileutils)) = v0.0.0-20171103030105-7d4729fb3618
+Provides: bundled(golang(github.com/onsi/ginkgo)) = v1.14.0
+Provides: bundled(golang(github.com/onsi/gomega)) = v1.10.1
+Provides: bundled(golang(github.com/opencontainers/go-digest)) = v1.0.0
+Provides: bundled(golang(github.com/opencontainers/image-spec)) = v1.0.2-0.20190823105129-775207bd45b6
+Provides: bundled(golang(github.com/opencontainers/runc)) = v1.0.0-rc91.0.20200708210054-ce54a9d4d79b
+Provides: bundled(golang(github.com/opencontainers/runtime-spec)) = v1.0.3-0.20200817204227-f9c09b4ea1df
+Provides: bundled(golang(github.com/opencontainers/runtime-tools)) = v0.9.0
+Provides: bundled(golang(github.com/opencontainers/selinux)) = v1.6.0
+Provides: bundled(golang(github.com/opentracing/opentracing-go)) = v1.2.0
+Provides: bundled(golang(github.com/pkg/errors)) = v0.9.1
+Provides: bundled(golang(github.com/pmezard/go-difflib)) = v1.0.0
+Provides: bundled(golang(github.com/rootless-containers/rootlesskit)) = v0.10.0
+Provides: bundled(golang(github.com/sirupsen/logrus)) = v1.6.0
+Provides: bundled(golang(github.com/spf13/cobra)) = v0.0.7
+Provides: bundled(golang(github.com/spf13/pflag)) = v1.0.5
+Provides: bundled(golang(github.com/stretchr/testify)) = v1.6.1
+Provides: bundled(golang(github.com/syndtr/gocapability)) = v0.0.0-20180916011248-d98352740cb2
+Provides: bundled(golang(github.com/uber/jaeger-client-go)) = v2.25.0+incompatible
+Provides: bundled(golang(github.com/uber/jaeger-lib)) = v2.2.0+incompatible
+Provides: bundled(golang(github.com/varlink/go)) = v0.0.0-20190502142041-0f1d566d194b
+Provides: bundled(golang(github.com/vishvananda/netlink)) = v1.1.0
+Provides: bundled(golang(go.etcd.io/bbolt)) = v1.3.5
+Provides: bundled(golang(golang.org/x/crypto)) = v0.0.0-20200622213623-75b288015ac9
+Provides: bundled(golang(golang.org/x/net)) = v0.0.0-20200707034311-ab3426394381
+Provides: bundled(golang(golang.org/x/sync)) = v0.0.0-20200317015054-43a5402ce75a
+Provides: bundled(golang(golang.org/x/sys)) = v0.0.0-20200728102440-3e129f6d46b1
+Provides: bundled(golang(k8s.io/api)) = v0.18.8
+Provides: bundled(golang(k8s.io/apimachinery)) = v0.19.0
 
 %description
 %{name} (Pod Manager) is a fully featured container engine that is a simple
@@ -243,7 +204,7 @@ pages and %{name}.
 %package devel
 Summary: Library for applications looking to use Container Pods
 BuildArch: noarch
-Provides: %{repo}-devel = %{epoch}:%{version}-%{release}
+Provides: libpod-devel = %{epoch}:%{version}-%{release}
 
 %if 0%{?with_check} && ! 0%{?with_bundled}
 BuildRequires: golang(github.com/BurntSushi/toml)
@@ -354,17 +315,17 @@ Requires: golang(k8s.io/kubernetes/pkg/kubelet/container)
 Provides: golang(%{import_path}/cmd/%{name}/docker) = %{epoch}:%{version}-%{release}
 Provides: golang(%{import_path}/cmd/%{name}/formats) = %{epoch}:%{version}-%{release}
 Provides: golang(%{import_path}/libkpod) = %{epoch}:%{version}-%{release}
-Provides: golang(%{import_path}/libpod) = %{epoch}:%{version}-%{release}
-Provides: golang(%{import_path}/libpod/common) = %{epoch}:%{version}-%{release}
-Provides: golang(%{import_path}/libpod/driver) = %{epoch}:%{version}-%{release}
-Provides: golang(%{import_path}/libpod/layers) = %{epoch}:%{version}-%{release}
+Provides: golang(%{import_path}/%{name}) = %{epoch}:%{version}-%{release}
+Provides: golang(%{import_path}/%{name}/common) = %{epoch}:%{version}-%{release}
+Provides: golang(%{import_path}/%{name}/driver) = %{epoch}:%{version}-%{release}
+Provides: golang(%{import_path}/%{name}/layers) = %{epoch}:%{version}-%{release}
 Provides: golang(%{import_path}/pkg/annotations) = %{epoch}:%{version}-%{release}
 Provides: golang(%{import_path}/pkg/chrootuser) = %{epoch}:%{version}-%{release}
 Provides: golang(%{import_path}/pkg/registrar) = %{epoch}:%{version}-%{release}
 Provides: golang(%{import_path}/pkg/storage) = %{epoch}:%{version}-%{release}
 Provides: golang(%{import_path}/utils) = %{epoch}:%{version}-%{release}
 
-%description -n libpod-devel
+%description devel
 %{summary}
 
 This package contains library source intended for
