@@ -39,7 +39,7 @@
 # https://github.com/containers/dnsname
 %global import_path_plugins %%{provider}.%{provider_tld}/%{project}/%{repo_plugins}
 %global git_plugins https://%{import_path_plugins}
-%global commit_plugins f5af33dedcfc5e707e5560baa4a72f8d96a968fe
+%global commit_plugins 8a6a8a4e1e609aaeb1f57f7e7a1c8523cd373040
 %global shortcommit_plugins %(c=%{commit_plugins}; echo ${c:0:7})
 
 # Used for comparing with latest upstream tag
@@ -57,7 +57,7 @@ Version: 2.1.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.270.dev.git%{shortcommit0}%{?dist}
+Release: 0.271.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -373,6 +373,7 @@ Requires: nmap-ncat
 Requires: httpd-tools
 Requires: openssl
 Requires: socat
+Requires: dnsmasq
 
 %description tests
 %{summary}
@@ -613,6 +614,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Wed Sep 16 14:13:39 UTC 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:2.1.0-0.271.dev.gitacf86ef
+- bump dnsname plugin commit and dependency on dnsmasq
+
 * Wed Sep 16 14:13:39 UTC 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:2.1.0-0.270.dev.gitacf86ef
 - autobuilt acf86ef
 
