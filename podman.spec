@@ -57,7 +57,7 @@ Version: 2.1.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.271.dev.git%{shortcommit0}%{?dist}
+Release: 0.272.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -373,7 +373,6 @@ Requires: nmap-ncat
 Requires: httpd-tools
 Requires: openssl
 Requires: socat
-Requires: dnsmasq
 
 %description tests
 %{summary}
@@ -396,6 +395,7 @@ connections as well.
 
 %package plugins
 Summary: Plugins for %{name}
+Requires: dnsmasq
 
 %description plugins
 This plugin sets up the use of dnsmasq on a given CNI network so
@@ -614,6 +614,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Wed Sep 16 10:55:24 EDT 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:2.1.0-0.272.dev.gitacf86ef
+- fix dependencies for podman-plugins
+
 * Wed Sep 16 14:13:39 UTC 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:2.1.0-0.271.dev.gitacf86ef
 - bump dnsname plugin commit and dependency on dnsmasq
 
