@@ -3,7 +3,7 @@
 %global with_check 0
 %global with_unit_test 0
 
-%if 0%{?fedora} || 0%{?centos} >= 8
+%if 0%{?fedora} || 0%{?centos} >= 8 || 0%{?eln}
 #### DO NOT REMOVE - NEEDED FOR CENTOS
 %global with_debug 1
 %else
@@ -57,7 +57,7 @@ Version: 2.1.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.279.dev.git%{shortcommit0}%{?dist}
+Release: 0.280.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -89,13 +89,13 @@ Requires: conmon >= 2:2.0.16-1
 Requires: oci-runtime
 Requires: %{name}-plugins = %{epoch}:%{version}-%{release}
 Obsoletes: oci-systemd-hook <= 0.2.0-3
-%if 0%{?fedora}
+%if 0%{?fedora} || 0%{?eln}
 BuildRequires: btrfs-progs-devel
 BuildRequires: ostree-devel
 Recommends: fuse-overlayfs >= 0.3-8
 Recommends: crun >= 0.14-2
 %endif
-%if 0%{?fedora} || 0%{?centos} >= 8
+%if 0%{?fedora} || 0%{?centos} >= 8 || 0%{?eln}
 Recommends: catatonit
 Recommends: container-selinux
 Recommends: runc
@@ -361,7 +361,7 @@ This package contains unit tests for project
 providing packages with %{import_path} prefix.
 %endif
 
-%if 0%{?fedora}
+%if 0%{?fedora} || 0%{?eln}
 %package tests
 Summary: Tests for %{name}
 
@@ -461,7 +461,7 @@ PODMAN_VERSION=%{version} %{__make} PREFIX=%{buildroot}%{_prefix} ETCDIR=%{build
         install.systemd \
         install.completions \
         install.docker \
-%if 0%{?fedora}
+%if 0%{?fedora} || 0%{?eln}
         install.remote-nobuild \
 %endif
 
@@ -595,7 +595,7 @@ exit 0
 %endif
 
 #### DO NOT REMOVE - NEEDED FOR CENTOS
-%if 0%{?fedora}
+%if 0%{?fedora} || 0%{?eln}
 %files remote
 %license LICENSE
 %{_bindir}/%{name}-remote
@@ -614,6 +614,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Thu Sep 17 2020 Merlin Mathesius <mmathesi@redhat.com> - 2:2.1.0-0.280.dev.git1a929c7
+- Minor conditional updates to enable building for ELN
+
 * Thu Sep 17 21:13:18 UTC 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:2.1.0-0.279.dev.gitf84f441
 - autobuilt f84f441
 
