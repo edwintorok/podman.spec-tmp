@@ -87,7 +87,7 @@ Requires: iptables
 Requires: nftables
 Requires: conmon >= 2:2.0.16-1
 Requires: oci-runtime
-Requires: %{name}-plugins = %{epoch}:%{version}-%{release}
+Recommends: %{name}-plugins = %{epoch}:%{version}-%{release}
 Obsoletes: oci-systemd-hook <= 0.2.0-3
 %if 0%{?fedora} || 0%{?eln}
 BuildRequires: btrfs-progs-devel
