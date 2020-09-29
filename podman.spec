@@ -693,7 +693,7 @@ exit 0
 * Wed Sep 16 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:2.1.0-0.273.dev.git8d7e795
 - autobuilt 8d7e795
 
-* Wed Sep 16 10:55:24 EDT 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:2.1.0-0.272.dev.gitacf86ef
+* Wed Sep 16 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:2.1.0-0.272.dev.gitacf86ef
 - fix dependencies for podman-plugins
 
 * Wed Sep 16 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:2.1.0-0.271.dev.gitacf86ef
