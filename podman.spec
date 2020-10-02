@@ -97,7 +97,7 @@ Recommends: crun >= 0.14-2
 %endif
 %if 0%{?fedora} || 0%{?centos} >= 8 || 0%{?eln}
 Recommends: catatonit
-Recommends: container-selinux
+Requires: (container-selinux if selinux-policy)
 Recommends: runc
 Recommends: slirp4netns >= 0.3.0-2
 %else
