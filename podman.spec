@@ -3,7 +3,7 @@
 %global with_check 0
 %global with_unit_test 0
 
-%if 0%{?fedora} || 0%{?centos} >= 8 || 0%{?eln}
+%if 0%{?fedora} || 0%{?centos} >= 8 || 0%{?rhel}
 #### DO NOT REMOVE - NEEDED FOR CENTOS
 %global with_debug 1
 %else
@@ -57,7 +57,7 @@ Version: 2.2.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.28.dev.git%{shortcommit0}%{?dist}
+Release: 0.29.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -89,15 +89,15 @@ Requires: conmon >= 2:2.0.16-1
 Requires: oci-runtime
 Recommends: %{name}-plugins = %{epoch}:%{version}-%{release}
 Obsoletes: oci-systemd-hook <= 0.2.0-3
-%if 0%{?fedora} && ! 0%{?eln}
+%if 0%{?fedora} && ! 0%{?rhel}
 BuildRequires: btrfs-progs-devel
 %endif
-%if 0%{?fedora} || 0%{?eln}
+%if 0%{?fedora} || 0%{?rhel}
 BuildRequires: ostree-devel
 Recommends: fuse-overlayfs >= 0.3-8
 Recommends: crun >= 0.14-2
 %endif
-%if 0%{?fedora} || 0%{?centos} >= 8 || 0%{?eln}
+%if 0%{?fedora} || 0%{?centos} >= 8 || 0%{?rhel}
 Recommends: catatonit
 Requires: (container-selinux if selinux-policy)
 Recommends: runc
@@ -363,7 +363,7 @@ This package contains unit tests for project
 providing packages with %{import_path} prefix.
 %endif
 
-%if 0%{?fedora} || 0%{?eln}
+%if 0%{?fedora} || 0%{?rhel}
 %package tests
 Summary: Tests for %{name}
 
@@ -463,7 +463,7 @@ PODMAN_VERSION=%{version} %{__make} PREFIX=%{buildroot}%{_prefix} ETCDIR=%{build
         install.systemd \
         install.completions \
         install.docker \
-%if 0%{?fedora} || 0%{?eln}
+%if 0%{?fedora} || 0%{?rhel}
         install.remote-nobuild \
 %endif
 
@@ -597,7 +597,7 @@ exit 0
 %endif
 
 #### DO NOT REMOVE - NEEDED FOR CENTOS
-%if 0%{?fedora} || 0%{?eln}
+%if 0%{?fedora} || 0%{?rhel}
 %files remote
 %license LICENSE
 %{_bindir}/%{name}-remote
@@ -616,6 +616,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Mon Oct 12 2020 Jindrich Novy <jnovy@redhat.com> - 2:2.2.0-0.29.dev.git212011f
+- use %%rhel instead of %%eln, thanks to Adam Samalik for noticing
+
 * Mon Oct 12 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:2.2.0-0.28.dev.git212011f
 - autobuilt 212011f
 
