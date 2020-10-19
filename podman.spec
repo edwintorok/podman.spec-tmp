@@ -375,6 +375,7 @@ Requires: nmap-ncat
 Requires: httpd-tools
 Requires: openssl
 Requires: socat
+Requires: buildah
 
 %description tests
 %{summary}
