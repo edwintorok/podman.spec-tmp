@@ -1134,7 +1134,7 @@ exit 0
 * Wed Aug 05 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:2.1.0-0.154.dev.git807efd6
 - autobuilt 807efd6
 
-* Mon Aug  3 2020 Peter Oliver <rpm@mavit.org.uk> - 2:2.1.0-0.153.dev.git1709335
+* Tue Aug 04 2020 Peter Oliver <rpm@mavit.org.uk> - 2:2.1.0-0.153.dev.git1709335
 - Include podman-auto-update systemd service and timer.
 
 * Tue Aug 04 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:2.1.0-0.152.dev.gitd4cf3c5
