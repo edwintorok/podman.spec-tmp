@@ -57,7 +57,7 @@ Version: 2.2.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.43.dev.git%{shortcommit0}%{?dist}
+Release: 0.44.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -578,6 +578,7 @@ exit 0
 %{_userunitdir}/%{name}-auto-update.timer
 %{_userunitdir}/%{name}.service
 %{_userunitdir}/%{name}.socket
+%{_usr}/lib/tmpfiles.d/%{name}.conf
 
 %files docker
 %{_bindir}/docker
@@ -617,6 +618,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Wed Nov 11 2020 Eduardo Santiago <santiago@redhat.com> - 2:2.2.0-0.44.dev.gite443c01
+- distribute newly-added /usr/lib/tmpfiles.d/podman.conf
+
 * Wed Nov 11 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:2.2.0-0.43.dev.gite443c01
 - autobuilt e443c01
 
