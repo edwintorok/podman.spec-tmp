@@ -57,7 +57,7 @@ Version: 2.2.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.48.dev.git%{shortcommit0}%{?dist}
+Release: 0.49.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -569,6 +569,10 @@ exit 0
 # By "owning" the site-functions dir, we don't need to Require zsh
 %dir %{_datadir}/zsh/site-functions
 %{_datadir}/zsh/site-functions/_%{name}
+%{_datadir}/zsh/site-functions/_%{name}-remote
+%dir %{_datadir}/fish/vendor_completions.d
+%{_datadir}/fish/vendor_completions.d/%{name}.fish
+%{_datadir}/fish/vendor_completions.d/%{name}-remote.fish
 %config(noreplace) %{_sysconfdir}/cni/net.d/87-%{name}-bridge.conflist
 %{_unitdir}/%{name}-auto-update.service
 %{_unitdir}/%{name}-auto-update.timer
@@ -618,6 +622,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Sun Nov 15 2020 Eduardo Santiago <santiago@redhat.com> - 2:2.2.0-0.49.dev.git3920756
+- package new zsh and fish completion files
+
 * Sun Nov 15 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:2.2.0-0.48.dev.git3920756
 - autobuilt 3920756
 
