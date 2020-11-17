@@ -57,7 +57,7 @@ Version: 2.2.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.50.dev.git%{shortcommit0}%{?dist}
+Release: 0.51.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -565,14 +565,12 @@ exit 0
 %license LICENSE
 %doc README.md CONTRIBUTING.md pkg/hooks/README-hooks.md install.md transfer.md
 %{_bindir}/%{name}
-%{_datadir}/bash-completion/completions/*
+%{_datadir}/bash-completion/completions/%{name}
 # By "owning" the site-functions dir, we don't need to Require zsh
 %dir %{_datadir}/zsh/site-functions
 %{_datadir}/zsh/site-functions/_%{name}
-%{_datadir}/zsh/site-functions/_%{name}-remote
 %dir %{_datadir}/fish/vendor_completions.d
 %{_datadir}/fish/vendor_completions.d/%{name}.fish
-%{_datadir}/fish/vendor_completions.d/%{name}-remote.fish
 %config(noreplace) %{_sysconfdir}/cni/net.d/87-%{name}-bridge.conflist
 %{_unitdir}/%{name}-auto-update.service
 %{_unitdir}/%{name}-auto-update.timer
@@ -608,6 +606,11 @@ exit 0
 %license LICENSE
 %{_bindir}/%{name}-remote
 %{_mandir}/man1/%{name}-remote*.*
+%{_datadir}/bash-completion/completions/%{name}-remote
+%dir %{_datadir}/fish/vendor_completions.d
+%{_datadir}/fish/vendor_completions.d/%{name}-remote.fish
+%dir %{_datadir}/zsh/site-functions
+%{_datadir}/zsh/site-functions/_%{name}-remote
 #%%{_datadir}/man/man5/%%{name}-remote*.*
 
 %files tests
@@ -622,6 +625,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Tue Nov 17 2020 Eduardo Santiago <santiago@redhat.com> - 2:2.2.0-0.51.dev.git42ec4cf
+- completion files: be smarter, package -remote files only with -remote
+
 * Tue Nov 17 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:2.2.0-0.50.dev.git42ec4cf
 - autobuilt 42ec4cf
 
