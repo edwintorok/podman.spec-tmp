@@ -57,7 +57,7 @@ Version: 2.2.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.52.dev.git%{shortcommit0}%{?dist}
+Release: 0.53.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -410,7 +410,7 @@ file.  Each CNI network will have its own dnsmasq instance.
 
 %prep
 %autosetup -Sgit -n %{name}-%{commit0}
-rm -rf docs/containers-mounts.conf.5.md
+rm -f docs/source/markdown/containers-mounts.conf.5.md
 
 # untar dnsname
 tar zxf %{SOURCE1}
@@ -624,6 +624,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Tue Nov 17 2020 Eduardo Santiago <santiago@redhat.com> - 2:2.2.0-0.53.dev.git42ec4cf
+- slight correction to the path of the containers-mounts source file
+
 * Tue Nov 17 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:2.2.0-0.52.dev.git42ec4cf
 - containers-mounts.conf.5 in containers-common
 
