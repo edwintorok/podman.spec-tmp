@@ -32,7 +32,7 @@
 # To build a random user's fork/commit, comment out above line,
 # uncomment below line and replace the placeholders and commit0 below with the right info
 #%%global git0 https://github.com/$GITHUB_USER/$GITHUB_USER_REPO
-%global commit0 286d356db03a2511722155022c19855f8aee73cf
+%global commit0 70f91fb96d11adb86be955e8a39f9c9096d48638
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global repo_plugins dnsname
@@ -44,7 +44,7 @@
 
 # Used for comparing with latest upstream tag
 # to decide whether to autobuild (non-rawhide only)
-%define built_tag v2.1.1
+%define built_tag v2.2.0-rc1
 
 Name: podman
 %if 0%{?fedora}
@@ -57,7 +57,7 @@ Version: 2.2.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.55.dev.git%{shortcommit0}%{?dist}
+Release: 0.56.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -624,6 +624,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Thu Nov 19 2020 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:2.2.0-0.56.dev.git70f91fb
+- autobuilt 70f91fb
+
 * Wed Nov 18 2020 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:2.2.0-0.55.dev.git286d356
 - bump dnsname to v1.1.0, commit a9c2a10
 
