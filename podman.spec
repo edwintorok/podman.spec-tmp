@@ -20,7 +20,6 @@
 %if ! 0%{?gobuild:1}
 %define gobuild(o:) GO111MODULE=off go build -buildmode pie -compiler gc -tags="rpm_crashtraceback ${BUILDTAGS:-}" -ldflags "${LDFLAGS:-} -B 0x$(head -c20 /dev/urandom|od -An -tx1|tr -d ' \\n') -extldflags '-Wl,-z,relro -Wl,-z,now -specs=/usr/lib/rpm/redhat/redhat-hardened-ld '" -a -v -x %{?**};
 %endif
-%define gogenerate go generate
 
 %global provider github
 %global provider_tld com
@@ -66,6 +65,7 @@ Source1: %{git_plugins}/archive/%{commit_plugins}/%{repo_plugins}-%{shortcommit_
 Provides: %{name}-manpages = %{epoch}:%{version}-%{release}
 Obsoletes: %{name}-manpages < %{epoch}:%{version}-%{release}
 # If go_compiler is not set to 1, there is no virtual provide. Use golang instead.
+BuildRequires: gcc
 BuildRequires: golang
 BuildRequires: glib2-devel
 BuildRequires: glibc-devel
@@ -418,6 +418,9 @@ tar zxf %{SOURCE1}
 %build
 export GO111MODULE=off
 export GOPATH=$(pwd)/_build:$(pwd)
+export CGO_CFLAGS="-O2 -ffat-lto-objects -fexceptions -g -grecord-gcc-switches -pipe -Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1 -fstack-protector-strong -m64 -mtune=generic -fasynchronous-unwind-tables -fstack-clash-protection -fcf-protection -D_GNU_SOURCE -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64"
+# These extra flags present in %%{optflags} skipped for now as they break the build
+#export CGO_CFLAGS="$CGO_CFLAGS -flto=auto -Wp,D_GLIBCXX_ASSERTIONS -specs=/usr/lib/rpm/redhat/redhat-annobin-cc1"
 
 mkdir _build
 pushd _build
