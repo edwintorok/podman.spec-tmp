@@ -70,7 +70,7 @@ BuildRequires: golang
 BuildRequires: glib2-devel
 BuildRequires: glibc-devel
 BuildRequires: glibc-static
-BuildRequires: git
+BuildRequires: git-core
 BuildRequires: go-md2man
 BuildRequires: gpgme-devel
 BuildRequires: libassuan-devel
