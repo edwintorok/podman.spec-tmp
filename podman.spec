@@ -31,7 +31,7 @@
 # To build a random user's fork/commit, comment out above line,
 # uncomment below line and replace the placeholders and commit0 below with the right info
 #%%global git0 https://github.com/$GITHUB_USER/$GITHUB_USER_REPO
-%global commit0 397aae32b9ae219eda190cde65b18e4361427932
+%global commit0 9600ea6bef8000b0c45407409124c7df21050493
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global repo_plugins dnsname
@@ -56,7 +56,7 @@ Version: 3.1.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.55.dev.git%{shortcommit0}%{?dist}
+Release: 0.56.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -633,6 +633,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Sat Feb 27 2021 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:3.1.0-0.56.dev.git9600ea6
+- autobuilt 9600ea6
+
 * Fri Feb 26 2021 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:3.1.0-0.55.dev.git397aae3
 - autobuilt 397aae3
 
