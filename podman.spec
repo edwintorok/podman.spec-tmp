@@ -31,7 +31,7 @@
 # To build a random user's fork/commit, comment out above line,
 # uncomment below line and replace the placeholders and commit0 below with the right info
 #%%global git0 https://github.com/$GITHUB_USER/$GITHUB_USER_REPO
-%global commit0 426178a49991106ffe222f12cc42409ae78dd257
+%global commit0 87e20560ac885c541784af1341098ce8e1e7a940
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global repo_plugins dnsname
@@ -56,7 +56,7 @@ Version: 3.1.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.64.dev.git%{shortcommit0}%{?dist}
+Release: 0.65.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -411,6 +411,7 @@ file.  Each CNI network will have its own dnsmasq instance.
 %prep
 %autosetup -Sgit -n %{name}-%{commit0}
 rm -f docs/source/markdown/containers-mounts.conf.5.md
+sed -i 's/install.docker-docs: docker-docs/install.docker-docs-nobuild:/' Makefile
 
 # untar dnsname
 tar zxf %{SOURCE1}
@@ -461,7 +462,7 @@ export GOPATH=$(pwd)/_build:$(pwd)
 %gobuild -o bin/dnsname %{import_path_plugins}/plugins/meta/dnsname
 popd
 
-%{__make} docs
+%{__make} docs docker-docs
 
 %install
 install -dp %{buildroot}%{_unitdir}
@@ -472,6 +473,7 @@ PODMAN_VERSION=%{version} %{__make} PREFIX=%{buildroot}%{_prefix} ETCDIR=%{build
         install.systemd \
         install.completions \
         install.docker \
+        install.docker-docs-nobuild \
 %if 0%{?fedora} || 0%{?rhel}
         install.remote-nobuild \
 %endif
@@ -633,6 +635,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Wed Mar 03 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:3.1.0-0.65.dev.git87e2056
+- built 87e2056
+
 * Tue Mar 02 2021 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:3.1.0-0.64.dev.git426178a
 - autobuilt 426178a
 
