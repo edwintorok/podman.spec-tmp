@@ -42,8 +42,10 @@
 %global shortcommit_plugins %(c=%{commit_plugins}; echo ${c:0:7})
 
 # Used for comparing with latest upstream tag
-# to decide whether to autobuild (non-rawhide only)
+# to decide whether to autobuild and set download url (non-rawhide only)
 %define built_tag v3.0.1
+%define built_tag_strip %(b=%{built_tag}; echo ${b:1})
+%define download_url %{git0}/archive/%{built_tag}.tar.gz
 
 Name: podman
 %if 0%{?fedora}
