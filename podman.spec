@@ -411,7 +411,6 @@ file.  Each CNI network will have its own dnsmasq instance.
 %prep
 %autosetup -Sgit -n %{name}-%{commit0}
 rm -f docs/source/markdown/containers-mounts.conf.5.md
-sed -i 's/install.docker-docs: docker-docs/install.docker-docs-nobuild:/' Makefile
 
 # untar dnsname
 tar zxf %{SOURCE1}
