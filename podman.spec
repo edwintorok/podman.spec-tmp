@@ -413,6 +413,7 @@ file.  Each CNI network will have its own dnsmasq instance.
 %prep
 %autosetup -Sgit -n %{name}-%{commit0}
 rm -f docs/source/markdown/containers-mounts.conf.5.md
+sed -i 's/id128StringMax := C.ulong/id128StringMax := C.size_t/' vendor/github.com/coreos/go-systemd/v22/sdjournal/journal.go
 
 # untar dnsname
 tar zxf %{SOURCE1}
