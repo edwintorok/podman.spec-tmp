@@ -58,15 +58,17 @@ Version: 3.1.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.101.dev.git%{shortcommit0}%{?dist}
+Release: 0.102.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
 Source0: %{git0}/archive/%{commit0}/%{name}-%{shortcommit0}.tar.gz
 Source1: %{git_plugins}/archive/%{commit_plugins}/%{repo_plugins}-%{shortcommit_plugins}.tar.gz
 Provides: %{name}-manpages = %{epoch}:%{version}-%{release}
-Obsoletes: %{name}-manpages < %{epoch}:%{version}-%{release}
 # If go_compiler is not set to 1, there is no virtual provide. Use golang instead.
+%if 0%{?fedora} && ! 0%{?rhel}
+BuildRequires: btrfs-progs-devel
+%endif
 BuildRequires: gcc
 BuildRequires: golang
 BuildRequires: glib2-devel
@@ -81,35 +83,22 @@ BuildRequires: libseccomp-devel
 BuildRequires: libselinux-devel
 BuildRequires: pkgconfig
 BuildRequires: make
+BuildRequires: ostree-devel
 BuildRequires: systemd
 BuildRequires: systemd-devel
+Requires: conmon >= 2:2.0.16-1
 Requires: containers-common
 Requires: containernetworking-plugins >= 0.8.6-1
+Requires: crun >= 0.18-5
 Requires: iptables
 Requires: nftables
-Requires: conmon >= 2:2.0.16-1
-Requires: oci-runtime
 Recommends: %{name}-plugins = %{epoch}:%{version}-%{release}
-Obsoletes: oci-systemd-hook <= 0.2.0-3
-%if 0%{?fedora} && ! 0%{?rhel}
-BuildRequires: btrfs-progs-devel
-%endif
-%if 0%{?fedora} || 0%{?rhel}
-BuildRequires: ostree-devel
 Recommends: fuse-overlayfs >= 0.3-8
-Recommends: crun >= 0.18-4
-%endif
-%if 0%{?fedora} || 0%{?centos} >= 8 || 0%{?rhel}
 Recommends: catatonit
 Requires: (container-selinux if selinux-policy)
-Recommends: runc
 Recommends: slirp4netns >= 0.3.0-2
-%else
-Requires: catatonit
-Requires: container-selinux
-Requires: runc
-Requires: slirp4netns >= 0.3.0-2
-%endif
+Obsoletes: %{name}-manpages < %{epoch}:%{version}-%{release}
+Obsoletes: oci-systemd-hook <= 0.2.0-3
 
 # vendored libraries
 # awk '{print "Provides: bundled(golang("$1")) = "$2}' go.mod | sort
@@ -637,6 +626,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Mon Apr 05 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:3.1.0-0.102.dev.git259004f
+- adjust dependencies
+
 * Mon Mar 29 2021 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:3.1.0-0.101.dev.git259004f
 - autobuilt 259004f
 
