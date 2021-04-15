@@ -58,7 +58,7 @@ Version: 3.2.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.1.dev.git%{shortcommit0}%{?dist}
+Release: 0.2.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -87,15 +87,13 @@ BuildRequires: ostree-devel
 BuildRequires: systemd
 BuildRequires: systemd-devel
 Requires: conmon >= 2:2.0.16-1
-Requires: containers-common
+Requires: containers-common >= 4:1-17
 Requires: containernetworking-plugins >= 0.8.6-1
-Requires: crun >= 0.18-5
 Requires: iptables
 Requires: nftables
 Recommends: %{name}-plugins = %{epoch}:%{version}-%{release}
 Recommends: fuse-overlayfs >= 0.3-8
 Recommends: catatonit
-Requires: (container-selinux if selinux-policy)
 Recommends: slirp4netns >= 0.3.0-2
 Obsoletes: %{name}-manpages < %{epoch}:%{version}-%{release}
 Obsoletes: oci-systemd-hook <= 0.2.0-3
@@ -626,6 +624,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Thu Apr 15 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:3.2.0-0.2.dev.git373f15f
+- container-selinux and crun dependencies moved to containers-common
+
 * Thu Apr 15 2021 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:3.2.0-0.1.dev.git373f15f
 - bump to 3.2.0
 - autobuilt 373f15f
