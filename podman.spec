@@ -31,7 +31,7 @@
 # To build a random user's fork/commit, comment out above line,
 # uncomment below line and replace the placeholders and commit0 below with the right info
 #%%global git0 https://github.com/$GITHUB_USER/$GITHUB_USER_REPO
-%global commit0 373f15f617db6731c58776c1766a4cf2c74b22b9
+%global commit0 35b62ef19f307fb365eb7a8734e456160f7b22a8
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global repo_plugins dnsname
@@ -58,7 +58,7 @@ Version: 3.2.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.2.dev.git%{shortcommit0}%{?dist}
+Release: 0.3.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -86,17 +86,13 @@ BuildRequires: make
 BuildRequires: ostree-devel
 BuildRequires: systemd
 BuildRequires: systemd-devel
-Requires: conmon >= 2:2.0.16-1
+Requires: conmon >= 2:2.0.28-0.1
 Requires: containers-common >= 4:1-17
-Requires: containernetworking-plugins >= 0.8.6-1
+Requires: containernetworking-plugins >= 0.9.1-1
 Requires: iptables
 Requires: nftables
 Recommends: %{name}-plugins = %{epoch}:%{version}-%{release}
-Recommends: fuse-overlayfs >= 0.3-8
 Recommends: catatonit
-Recommends: slirp4netns >= 0.3.0-2
-Obsoletes: %{name}-manpages < %{epoch}:%{version}-%{release}
-Obsoletes: oci-systemd-hook <= 0.2.0-3
 
 # vendored libraries
 # awk '{print "Provides: bundled(golang("$1")) = "$2}' go.mod | sort
@@ -624,6 +620,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Fri Apr 16 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:3.2.0-0.3.dev.git35b62ef
+- slirp4netns and fuse-overlayfs deps are in containers-common
+
 * Thu Apr 15 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 2:3.2.0-0.2.dev.git373f15f
 - container-selinux and crun dependencies moved to containers-common
 
