@@ -31,7 +31,7 @@
 # To build a random user's fork/commit, comment out above line,
 # uncomment below line and replace the placeholders and commit0 below with the right info
 #%%global git0 https://github.com/$GITHUB_USER/$GITHUB_USER_REPO
-%global commit0 cf2c3a1f13710014892804aacf855cd6b001a5ea
+%global commit0 476c76f580d5cd092ff958765af36857b2a68d6c
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 %global repo_plugins dnsname
@@ -43,7 +43,7 @@
 
 # Used for comparing with latest upstream tag
 # to decide whether to autobuild and set download url (non-rawhide only)
-%define built_tag v3.1.1
+%define built_tag v3.1.2
 %define built_tag_strip %(b=%{built_tag}; echo ${b:1})
 %define download_url %{git0}/archive/%{built_tag}.tar.gz
 
@@ -58,7 +58,7 @@ Version: 3.2.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.4.dev.git%{shortcommit0}%{?dist}
+Release: 0.5.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -620,6 +620,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Mon Apr 26 2021 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:3.2.0-0.5.dev.git476c76f
+- autobuilt 476c76f
+
 * Tue Apr 20 2021 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:3.2.0-0.4.dev.gitcf2c3a1
 - autobuilt cf2c3a1
 
