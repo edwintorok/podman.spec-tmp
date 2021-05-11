@@ -49,7 +49,7 @@
 
 Name: podman
 %if 0%{?fedora}
-Epoch: 2
+Epoch: 3
 %else
 Epoch: 0
 %endif
@@ -58,7 +58,7 @@ Version: 3.2.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.16.dev.git%{shortcommit0}%{?dist}
+Release: 0.17.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -620,6 +620,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Tue May 11 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:3.2.0-0.17.dev.git57b6425
+- bump epoch to account for bad v3.2.0-rc1 in stable
+
 * Tue May 11 2021 RH Container Bot <rhcontainerbot@fedoraproject.org> - 2:3.2.0-0.16.dev.git57b6425
 - autobuilt 57b6425
 
