@@ -58,7 +58,7 @@ Version: 3.2.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.19.dev.git%{shortcommit0}%{?dist}
+Release: 0.20.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -93,6 +93,7 @@ Requires: iptables
 Requires: nftables
 Recommends: %{name}-plugins = %{epoch}:%{version}-%{release}
 Recommends: catatonit
+Suggests: qemu-user-static
 
 # vendored libraries
 # awk '{print "Provides: bundled(golang("$1")) = "$2}' go.mod | sort
@@ -620,6 +621,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Thu May 13 2021 Daniel J Walsh <dwalsh@redhat.com> - 3:3.2.0-0.20.dev.git4dc52f6
+- Add suggests qemu-user-static
+
 * Thu May 13 2021 RH Container Bot <rhcontainerbot@fedoraproject.org> - 3:3.2.0-0.19.dev.git4dc52f6
 - autobuilt 4dc52f6
 
