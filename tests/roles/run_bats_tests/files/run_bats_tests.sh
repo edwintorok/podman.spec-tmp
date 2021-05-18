@@ -25,6 +25,7 @@ exec &> >(tee -a $FULL_LOG)
 
 # Log program versions
 echo "Packages:"
+echo "  Kernel: $(uname -r)"
 rpm -qa |\
     egrep 'podman|conmon|crun|runc|iptable|slirp|systemd|container-selinux' |\
     sort |\
