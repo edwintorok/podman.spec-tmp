@@ -5,7 +5,8 @@
 
 %if 0%{?fedora} || 0%{?centos} >= 8 || 0%{?rhel}
 #### DO NOT REMOVE - NEEDED FOR CENTOS
-%global with_debug 1
+# disable debuginfo temporarily to get a successful build past gating issues
+%global with_debug 0
 %else
 %global with_debug 0
 %endif
@@ -58,7 +59,7 @@ Version: 3.2.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.26.dev.git%{shortcommit0}%{?dist}
+Release: 0.27.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -621,6 +622,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Tue May 18 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:3.2.0-0.27.dev.git353f04b
+- disable debuginfo temporarily to get a successful build past gating issues
+
 * Tue May 18 2021 RH Container Bot <rhcontainerbot@fedoraproject.org> - 3:3.2.0-0.26.dev.git353f04b
 - autobuilt 353f04b
 
