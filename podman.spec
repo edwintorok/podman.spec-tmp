@@ -3,13 +3,8 @@
 %global with_check 0
 %global with_unit_test 0
 
-%if 0%{?fedora} || 0%{?centos} >= 8 || 0%{?rhel}
-#### DO NOT REMOVE - NEEDED FOR CENTOS
 # disable debuginfo temporarily to get a successful build past gating issues
 %global with_debug 0
-%else
-%global with_debug 0
-%endif
 
 %if 0%{?with_debug}
 %global _find_debuginfo_dwz_opts %{nil}
