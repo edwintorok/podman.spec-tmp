@@ -68,7 +68,7 @@ Version: 3.3.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.1.dev.git%{shortcommit0}%{?dist}
+Release: 0.2.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -652,6 +652,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Tue Jun 08 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:3.3.0-0.2.dev.git9a3a732
+- include podman-machine-cni in podman-plugins subpackage
+
 * Tue Jun 08 2021 RH Container Bot <rhcontainerbot@fedoraproject.org> - 3:3.3.0-0.1.dev.git9a3a732
 - bump to 3.3.0
 - autobuilt 9a3a732
