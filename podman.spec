@@ -35,12 +35,21 @@
 %global commit0 9a3a7327fdafaac66c99130a6729e4bcde8df0b0
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
+# dnsname
 %global repo_plugins dnsname
 # https://github.com/containers/dnsname
-%global import_path_plugins %%{provider}.%{provider_tld}/%{project}/%{repo_plugins}
+%global import_path_plugins %{provider}.%{provider_tld}/%{project}/%{repo_plugins}
 %global git_plugins https://%{import_path_plugins}
 %global commit_plugins c654c95366ac5f309ca3e5727c9b858864247328
 %global shortcommit_plugins %(c=%{commit_plugins}; echo ${c:0:7})
+
+# podman-machine-cni
+%global repo_mcni  %{name}-machine-cni
+# https://github.com/containers/podman-machine-cni
+%global import_path_mcni %{provider}.%{provider_tld}/%{project}/%{repo_mcni}
+%global git_mcni https://%{import_path_mcni}
+%global commit_mcni afab2d8047bc0bd963d570686770eeb0c2e5a396
+%global shortcommit_mcni %(c=%{commit_mcni}; echo ${c:0:7})
 
 # Used for comparing with latest upstream tag
 # to decide whether to autobuild and set download url (non-rawhide only)
@@ -65,6 +74,7 @@ License: ASL 2.0
 URL: https://%{name}.io/
 Source0: %{git0}/archive/%{commit0}/%{name}-%{shortcommit0}.tar.gz
 Source1: %{git_plugins}/archive/%{commit_plugins}/%{repo_plugins}-%{shortcommit_plugins}.tar.gz
+Source2: %{git_mcni}/archive/%{commit_mcni}/%{repo_mcni}-%{shortcommit_mcni}.tar.gz
 Provides: %{name}-manpages = %{epoch}:%{version}-%{release}
 # If go_compiler is not set to 1, there is no virtual provide. Use golang instead.
 %if 0%{?fedora} && ! 0%{?rhel}
@@ -89,7 +99,7 @@ BuildRequires: systemd
 BuildRequires: systemd-devel
 Requires: conmon >= 2:2.0.28-0.1
 Requires: containers-common >= 4:1-19
-Requires: containernetworking-plugins >= 0.9.1-1
+Requires: containernetworking-plugins >= 1.0.0-15.1
 Requires: iptables
 Requires: nftables
 Recommends: %{name}-plugins = %{epoch}:%{version}-%{release}
@@ -403,6 +413,9 @@ sed -i 's/id128StringMax := C.ulong/id128StringMax := C.size_t/' vendor/github.c
 # untar dnsname
 tar zxf %{SOURCE1}
 
+# untar %%{name}-machine-cni
+tar zxf %{SOURCE2}
+
 %build
 export GO111MODULE=off
 export GOPATH=$(pwd)/_build:$(pwd)
@@ -449,6 +462,17 @@ export GOPATH=$(pwd)/_build:$(pwd)
 %gobuild -o bin/dnsname %{import_path_plugins}/plugins/meta/dnsname
 popd
 
+pushd %{name}-machine-cni-%{commit_mcni}
+mkdir _build
+pushd _build
+mkdir -p src/%{provider}.%{provider_tld}/%{project}
+ln -s ../../../../ src/%{import_path_mcni}
+popd
+ln -s vendor src
+export GOPATH=$(pwd)/_build:$(pwd)
+%gobuild -o bin/%{name}-machine %{import_path_mcni}/plugins/meta/%{name}-machine
+popd
+
 %{__make} docs docker-docs
 
 %install
@@ -467,8 +491,13 @@ PODMAN_VERSION=%{version} %{__make} PREFIX=%{buildroot}%{_prefix} ETCDIR=%{build
 
 mv pkg/hooks/README.md pkg/hooks/README-hooks.md
 
-# install plugins
+# install dnsname plugin
 pushd dnsname-%{commit_plugins}
+%{__make} PREFIX=%{_prefix} DESTDIR=%{buildroot} install
+popd
+
+# install machine-cni plugin
+pushd %{name}-machine-cni-%{commit_mcni}
 %{__make} PREFIX=%{_prefix} DESTDIR=%{buildroot} install
 popd
 
@@ -619,6 +648,7 @@ exit 0
 %license dnsname-%{commit_plugins}/LICENSE
 %doc dnsname-%{commit_plugins}/{README.md,README_PODMAN.md}
 %{_libexecdir}/cni/dnsname
+%{_libexecdir}/cni/%{name}-machine
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
