@@ -4,7 +4,7 @@
 %global with_unit_test 0
 
 # disable debuginfo temporarily to get a successful build past gating issues
-%global with_debug 0
+%global with_debug 1
 
 %if 0%{?with_debug}
 %global _find_debuginfo_dwz_opts %{nil}
@@ -63,7 +63,7 @@ Version: 3.3.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.7.dev.git%{shortcommit0}%{?dist}
+Release: 0.8.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -82,6 +82,7 @@ BuildRequires: glibc-devel
 BuildRequires: glibc-static
 BuildRequires: git-core
 BuildRequires: go-md2man
+BuildRequires: go-rpm-macros
 BuildRequires: gpgme-devel
 BuildRequires: libassuan-devel
 BuildRequires: libgpg-error-devel
@@ -647,6 +648,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Mon Jun 14 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:3.3.0-0.8.dev.gite549ca5
+- BR: go-rpm-macros to re-enable debuginfo
+
 * Sun Jun 13 2021 RH Container Bot <rhcontainerbot@fedoraproject.org> - 3:3.3.0-0.7.dev.gite549ca5
 - autobuilt e549ca5
 
