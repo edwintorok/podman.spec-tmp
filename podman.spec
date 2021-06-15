@@ -27,7 +27,7 @@
 # To build a random user's fork/commit, comment out above line,
 # uncomment below line and replace the placeholders and commit0 below with the right info
 #%%global git0 https://github.com/$GITHUB_USER/$GITHUB_USER_REPO
-%global commit0 e549ca5078b60defca91c724305cac8929b8ff0f
+%global commit0 e2f51eeb0693eda026fa509a9decfbdd7e0b74a8
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 # dnsname
@@ -48,7 +48,7 @@
 
 # Used for comparing with latest upstream tag
 # to decide whether to autobuild and set download url (non-rawhide only)
-%define built_tag v3.2.0
+%define built_tag v3.2.1
 %define built_tag_strip %(b=%{built_tag}; echo ${b:1})
 %define download_url %{git0}/archive/%{built_tag}.tar.gz
 
@@ -63,7 +63,7 @@ Version: 3.3.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.8.dev.git%{shortcommit0}%{?dist}
+Release: 0.9.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -648,6 +648,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Tue Jun 15 2021 RH Container Bot <rhcontainerbot@fedoraproject.org> - 3:3.3.0-0.9.dev.gite2f51ee
+- autobuilt e2f51ee
+
 * Mon Jun 14 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:3.3.0-0.8.dev.gite549ca5
 - BR: go-rpm-macros to re-enable debuginfo
 
