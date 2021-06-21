@@ -1,14 +1,20 @@
 --- !Policy
 product_versions:
   - fedora-*
-decision_context: bodhi_update_push_stable
+decision_contexts:
+  - bodhi_update_push_stable
+  - bodhi_update_push_testing
 subject_type: koji_build
 rules:
   - !PassingTestCaseRule {test_case_name: fedora-ci.koji-build.tier0.functional}
 --- !Policy
 product_versions:
-  - fedora-*
-decision_context: bodhi_update_push_testing
-subject_type: koji_build
+  - fedora-33
+  - fedora-34
+decision_contexts:
+  - bodhi_update_push_stable
+  - bodhi_update_push_testing
+subject_type: bodhi_update
 rules:
-  - !PassingTestCaseRule {test_case_name: fedora-ci.koji-build.tier0.functional}
+  - !PassingTestCaseRule {test_case_name: update.podman}
+  - !PassingTestCaseRule {test_case_name: update.podman_client}
