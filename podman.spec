@@ -598,10 +598,12 @@ exit 0
 %{_unitdir}/%{name}-auto-update.timer
 %{_unitdir}/%{name}.service
 %{_unitdir}/%{name}.socket
+%{_unitdir}/%{name}-restart.service
 %{_userunitdir}/%{name}-auto-update.service
 %{_userunitdir}/%{name}-auto-update.timer
 %{_userunitdir}/%{name}.service
 %{_userunitdir}/%{name}.socket
+%{_userunitdir}/%{name}-restart.service
 %{_usr}/lib/tmpfiles.d/%{name}.conf
 
 %files docker
