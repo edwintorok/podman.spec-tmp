@@ -27,7 +27,7 @@
 # To build a random user's fork/commit, comment out above line,
 # uncomment below line and replace the placeholders and commit0 below with the right info
 #%%global git0 https://github.com/$GITHUB_USER/$GITHUB_USER_REPO
-%global commit0 fc34f35e3f984c8a76136227168b3f8b65b15101
+%global commit0 599b7d746a6ccad6ebbd70abb72be30bead094a6
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 # dnsname
@@ -48,7 +48,7 @@
 
 # Used for comparing with latest upstream tag
 # to decide whether to autobuild and set download url (non-rawhide only)
-%define built_tag v3.2.1
+%define built_tag v3.2.2
 %define built_tag_strip %(b=%{built_tag}; echo ${b:1})
 %define download_url %{git0}/archive/%{built_tag}.tar.gz
 
@@ -63,7 +63,7 @@ Version: 3.3.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.19.dev.git%{shortcommit0}%{?dist}
+Release: 0.20.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -476,7 +476,6 @@ install -dp %{buildroot}%{_unitdir}
 PODMAN_VERSION=%{version} %{__make} PREFIX=%{buildroot}%{_prefix} ETCDIR=%{buildroot}%{_sysconfdir} \
         install.bin-nobuild \
         install.man-nobuild \
-        install.cni \
         install.systemd \
         install.completions \
         install.docker \
@@ -593,7 +592,6 @@ exit 0
 %{_datadir}/zsh/site-functions/_%{name}
 %dir %{_datadir}/fish/vendor_completions.d
 %{_datadir}/fish/vendor_completions.d/%{name}.fish
-%config(noreplace) %{_sysconfdir}/cni/net.d/87-%{name}-bridge.conflist
 %{_unitdir}/%{name}-auto-update.service
 %{_unitdir}/%{name}-auto-update.timer
 %{_unitdir}/%{name}.service
@@ -635,7 +633,6 @@ exit 0
 %{_datadir}/fish/vendor_completions.d/%{name}-remote.fish
 %dir %{_datadir}/zsh/site-functions
 %{_datadir}/zsh/site-functions/_%{name}-remote
-#%%{_datadir}/man/man5/%%{name}-remote*.*
 
 %files tests
 %license LICENSE
@@ -645,11 +642,16 @@ exit 0
 %files plugins
 %license dnsname-%{commit_plugins}/LICENSE
 %doc dnsname-%{commit_plugins}/{README.md,README_PODMAN.md}
+%dir %{_libexecdir}/cni
 %{_libexecdir}/cni/dnsname
 %{_libexecdir}/cni/%{name}-machine
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Tue Jun 29 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:3.3.0-0.20.dev.git599b7d7
+- remove /etc/sysconfdir/cni/net.d/87-podman-bridge.conflist
+- bodhi will not be ignored for this one so cut us some slack ;)
+
 * Thu Jun 24 2021 RH Container Bot <rhcontainerbot@fedoraproject.org> - 3:3.3.0-0.19.dev.gitfc34f35
 - autobuilt fc34f35
 
