@@ -94,7 +94,7 @@ BuildRequires: ostree-devel
 BuildRequires: systemd
 BuildRequires: systemd-devel
 Requires: conmon >= 2:2.0.28-0.1
-Requires: containers-common >= 4:1-20
+Requires: containers-common >= 4:1-21
 Requires: containernetworking-plugins >= 1.0.0-15.1
 Requires: iptables
 Requires: nftables
