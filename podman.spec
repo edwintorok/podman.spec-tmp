@@ -27,7 +27,7 @@
 # To build a random user's fork/commit, comment out above line,
 # uncomment below line and replace the placeholders and commit0 below with the right info
 #%%global git0 https://github.com/$GITHUB_USER/$GITHUB_USER_REPO
-%global commit0 599b7d746a6ccad6ebbd70abb72be30bead094a6
+%global commit0 d32e56658aec5246c3a5dc4d2156918d4f3031a7
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 # dnsname
@@ -46,11 +46,8 @@
 %global commit_mcni afab2d8047bc0bd963d570686770eeb0c2e5a396
 %global shortcommit_mcni %(c=%{commit_mcni}; echo ${c:0:7})
 
-# Used for comparing with latest upstream tag
-# to decide whether to autobuild and set download url (non-rawhide only)
-%define built_tag v3.2.2
+%define built_tag v3.2.3
 %define built_tag_strip %(b=%{built_tag}; echo ${b:1})
-%define download_url %{git0}/archive/%{built_tag}.tar.gz
 
 Name: podman
 %if 0%{?fedora}
@@ -63,7 +60,7 @@ Version: 3.3.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.22.dev.git%{shortcommit0}%{?dist}
+Release: 0.23.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -417,13 +414,10 @@ export GO111MODULE=off
 export GOPATH=$(pwd)/_build:$(pwd)
 export CGO_CFLAGS='-O2 -g -grecord-gcc-switches -pipe -Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1 -ffat-lto-objects -fexceptions -fasynchronous-unwind-tables -fstack-protector-strong -fstack-clash-protection -D_GNU_SOURCE -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64'
 %ifarch x86_64
-export CGO_CFLAGS="$CGO_CFLAGS -m64 -mtune=generic"
-%if 0%{?fedora} || 0%{?centos} >= 8
-export CGO_CFLAGS="$CGO_CFLAGS -fcf-protection"
-%endif
+export CGO_CFLAGS+=" -m64 -mtune=generic -fcf-protection=full"
 %endif
 # These extra flags present in %%{optflags} have been skipped for now as they break the build
-#export CGO_CFLAGS="$CGO_CFLAGS -flto=auto -Wp,D_GLIBCXX_ASSERTIONS -specs=/usr/lib/rpm/redhat/redhat-annobin-cc1"
+#export CGO_CFLAGS+=" -flto=auto -Wp,D_GLIBCXX_ASSERTIONS -specs=/usr/lib/rpm/redhat/redhat-annobin-cc1"
 
 mkdir _build
 pushd _build
@@ -648,6 +642,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Fri Jul 16 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:3.3.0-0.23.dev.gitd32e566
+- Resolves: #1969264, #1982881 - Security fix for CVE-2021-3602
+
 * Wed Jul 14 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:3.3.0-0.22.dev.git599b7d7
 - rebuild with gating.yaml changes
 
