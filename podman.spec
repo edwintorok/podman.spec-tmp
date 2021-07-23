@@ -60,7 +60,7 @@ Version: 3.3.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.23.dev.git%{shortcommit0}%{?dist}
+Release: 0.24.dev.git%{shortcommit0}%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -642,6 +642,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Fri Jul 23 2021 Fedora Release Engineering <releng@fedoraproject.org> - 3:3.3.0-0.24.dev.gitd32e566
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
+
 * Fri Jul 16 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:3.3.0-0.23.dev.gitd32e566
 - Resolves: #1969264, #1982881 - Security fix for CVE-2021-3602
 
