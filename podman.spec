@@ -3,7 +3,6 @@
 %global with_check 0
 %global with_unit_test 0
 
-# disable debuginfo temporarily to get a successful build past gating issues
 %global with_debug 1
 
 %if 0%{?with_debug}
@@ -27,8 +26,8 @@
 # To build a random user's fork/commit, comment out above line,
 # uncomment below line and replace the placeholders and commit0 below with the right info
 #%%global git0 https://github.com/$GITHUB_USER/$GITHUB_USER_REPO
-%global commit0 d32e56658aec5246c3a5dc4d2156918d4f3031a7
-%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
+#%%global commit0 d32e56658aec5246c3a5dc4d2156918d4f3031a7
+#%%global shortcommit0 %%(c=%%{commit0}; echo ${c:0:7})
 
 # dnsname
 %global repo_plugins dnsname
@@ -46,7 +45,7 @@
 %global commit_mcni afab2d8047bc0bd963d570686770eeb0c2e5a396
 %global shortcommit_mcni %(c=%{commit_mcni}; echo ${c:0:7})
 
-%define built_tag v3.2.3
+%define built_tag v3.3.0-rc1
 %define built_tag_strip %(b=%{built_tag}; echo ${b:1})
 
 Name: podman
@@ -60,11 +59,11 @@ Version: 3.3.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.25.dev.git%{shortcommit0}%{?dist}
+Release: 0.26.rc1%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
-Source0: %{git0}/archive/%{commit0}/%{name}-%{shortcommit0}.tar.gz
+Source0: %{git0}/archive/%{built_tag}.tar.gz
 Source1: %{git_plugins}/archive/%{commit_plugins}/%{repo_plugins}-%{shortcommit_plugins}.tar.gz
 Source2: %{git_mcni}/archive/%{commit_mcni}/%{repo_mcni}-%{shortcommit_mcni}.tar.gz
 Provides: %{name}-manpages = %{epoch}:%{version}-%{release}
@@ -399,9 +398,7 @@ is removed from the network, it will remove the entry from the hosts
 file.  Each CNI network will have its own dnsmasq instance.
 
 %prep
-%autosetup -Sgit -n %{name}-%{commit0}
-rm -f docs/source/markdown/containers-mounts.conf.5.md
-sed -i 's/id128StringMax := C.ulong/id128StringMax := C.size_t/' vendor/github.com/coreos/go-systemd/v22/sdjournal/journal.go
+%autosetup -Sgit -n %{name}-%{built_tag_strip}
 
 # untar dnsname
 tar zxf %{SOURCE1}
@@ -569,10 +566,6 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 install -d -p %{buildroot}/%{_datadir}/%{name}/test/system
 cp -pav test/system %{buildroot}/%{_datadir}/%{name}/test/
 
-%triggerpostun -- %{name} < 1.1
-%{_bindir}/%{name} system renumber
-exit 0
-
 #define license tag if not already defined
 %{!?_licensedir:%global license %doc}
 
@@ -642,6 +635,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Tue Aug 03 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:3.3.0-0.26.rc1
+- Bump to v3.3.0-rc1
+
 * Mon Aug 02 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:3.3.0-0.25.dev.gitd32e566
 - Resolves: #1983596, #1987739 - Security fix for CVE-2021-34558
 
