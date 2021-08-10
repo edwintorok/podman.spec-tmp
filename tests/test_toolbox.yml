@@ -1,0 +1,10 @@
+---
+- include_role:
+    name: run_bats_tests
+  vars:
+    tests:
+    - name: toolbox
+      package: toolbox
+      become: true
+      environment:
+        XDG_RUNTIME_DIR: /run/user/{{ rootless_uid }}

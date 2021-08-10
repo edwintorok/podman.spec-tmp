@@ -39,6 +39,9 @@
     loop_control:
       loop_var: want_cgroups
 
+  - name: test toolbox
+    include_tasks: test_toolbox.yml
+
   # Postprocessing: check for FAIL or ERROR in any test, exit 1 if so
   - name: check results
     include_tasks: check_results.yml
