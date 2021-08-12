@@ -45,8 +45,8 @@
 %global commit_mcni afab2d8047bc0bd963d570686770eeb0c2e5a396
 %global shortcommit_mcni %(c=%{commit_mcni}; echo ${c:0:7})
 
-%define built_tag v3.3.0-rc1
-%define built_tag_strip %(b=%{built_tag}; echo ${b:1})
+%global built_tag v3.3.0-rc1
+%global built_tag_strip %(b=%{built_tag}; echo ${b:1})
 
 Name: podman
 %if 0%{?fedora}
