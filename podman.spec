@@ -34,7 +34,7 @@
 # https://github.com/containers/dnsname
 %global import_path_plugins %{provider}.%{provider_tld}/%{project}/%{repo_plugins}
 %global git_plugins https://%{import_path_plugins}
-%global commit_plugins c654c95366ac5f309ca3e5727c9b858864247328
+%global commit_plugins dc59f285546a0b0d8b8f20033e1637ea82587840
 %global shortcommit_plugins %(c=%{commit_plugins}; echo ${c:0:7})
 
 # podman-machine-cni
@@ -45,7 +45,15 @@
 %global commit_mcni afab2d8047bc0bd963d570686770eeb0c2e5a396
 %global shortcommit_mcni %(c=%{commit_mcni}; echo ${c:0:7})
 
-%global built_tag v3.3.0-rc1
+# gvproxy
+%global repo_gvproxy gvisor-tap-vsock
+# https://github.com/containers/gvisor-tap-vsock
+%global import_path_gvproxy %%{provider}.%{provider_tld}/%{project}/%{repo_gvproxy}
+%global git_gvproxy https://%{import_path_gvproxy}
+%global commit_gvproxy 27590a075d79b4ac0554749f2be31a22a4baa27a
+%global shortcommit_gvproxy %(c=%{commit_gvproxy}; echo ${c:0:7})
+
+%global built_tag v3.3.0-rc2
 %global built_tag_strip %(b=%{built_tag}; echo ${b:1})
 
 Name: podman
@@ -59,13 +67,14 @@ Version: 3.3.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.26.rc1%{?dist}
+Release: 0.27.rc2%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
 Source0: %{git0}/archive/%{built_tag}.tar.gz
 Source1: %{git_plugins}/archive/%{commit_plugins}/%{repo_plugins}-%{shortcommit_plugins}.tar.gz
 Source2: %{git_mcni}/archive/%{commit_mcni}/%{repo_mcni}-%{shortcommit_mcni}.tar.gz
+Source3: %{git_gvproxy}/archive/%{commit_gvproxy}/%{repo_gvproxy}-%{shortcommit_gvproxy}.tar.gz
 Provides: %{name}-manpages = %{epoch}:%{version}-%{release}
 # If go_compiler is not set to 1, there is no virtual provide. Use golang instead.
 %if 0%{?fedora} && ! 0%{?rhel}
@@ -388,6 +397,7 @@ connections as well.
 %package plugins
 Summary: Plugins for %{name}
 Requires: dnsmasq
+Recommends: %{name}-gvproxy = %{epoch}:%{version}-%{release}
 
 %description plugins
 This plugin sets up the use of dnsmasq on a given CNI network so
@@ -397,6 +407,15 @@ that dnsmasq will read in.  Similarly, when a pod
 is removed from the network, it will remove the entry from the hosts
 file.  Each CNI network will have its own dnsmasq instance.
 
+%package gvproxy
+Summary: Go replacement for libslirp and VPNKit
+
+%description gvproxy
+A replacement for libslirp and VPNKit, written in pure Go.
+It is based on the network stack of gVisor. Compared to libslirp,
+gvisor-tap-vsock brings a configurable DNS server and
+dynamic port forwarding.
+
 %prep
 %autosetup -Sgit -n %{name}-%{built_tag_strip}
 
@@ -405,6 +424,9 @@ tar zxf %{SOURCE1}
 
 # untar %%{name}-machine-cni
 tar zxf %{SOURCE2}
+
+# untar %%{name}-gvproxy
+tar zxf %{SOURCE3}
 
 %build
 export GO111MODULE=off
@@ -438,7 +460,7 @@ LDFLAGS="-X %{import_path}/libpod/define.buildInfo=$(date +%s)"
 export BUILDTAGS+=" exclude_graphdriver_btrfs btrfs_noversion remote"
 %gobuild -o bin/%{name}-remote %{import_path}/cmd/%{name}
 
-pushd dnsname-%{commit_plugins}
+pushd %{repo_plugins}-%{commit_plugins}
 mkdir _build
 pushd _build
 mkdir -p src/%{provider}.%{provider_tld}/%{project}
@@ -449,7 +471,7 @@ export GOPATH=$(pwd)/_build:$(pwd)
 %gobuild -o bin/dnsname %{import_path_plugins}/plugins/meta/dnsname
 popd
 
-pushd %{name}-machine-cni-%{commit_mcni}
+pushd %{repo_mcni}-%{commit_mcni}
 mkdir _build
 pushd _build
 mkdir -p src/%{provider}.%{provider_tld}/%{project}
@@ -458,6 +480,17 @@ popd
 ln -s vendor src
 export GOPATH=$(pwd)/_build:$(pwd)
 %gobuild -o bin/%{name}-machine %{import_path_mcni}/plugins/meta/%{name}-machine
+popd
+
+pushd %{repo_gvproxy}-%{commit_gvproxy}
+mkdir _build
+pushd _build
+mkdir -p src/%{provider}.%{provider_tld}/%{project}
+ln -s ../../../../ src/%{import_path_gvproxy}
+popd
+ln -s vendor src
+export GOPATH=$(pwd)/_build:$(pwd)
+%gobuild -o bin/%{name}-gvproxy %{import_path_gvproxy}/cmd/gvproxy
 popd
 
 %{__make} docs docker-docs
@@ -478,13 +511,19 @@ PODMAN_VERSION=%{version} %{__make} PREFIX=%{buildroot}%{_prefix} ETCDIR=%{build
 mv pkg/hooks/README.md pkg/hooks/README-hooks.md
 
 # install dnsname plugin
-pushd dnsname-%{commit_plugins}
+pushd %{repo_plugins}-%{commit_plugins}
 %{__make} PREFIX=%{_prefix} DESTDIR=%{buildroot} install
 popd
 
 # install machine-cni plugin
-pushd %{name}-machine-cni-%{commit_mcni}
+pushd %{repo_mcni}-%{commit_mcni}
 %{__make} PREFIX=%{_prefix} DESTDIR=%{buildroot} install
+popd
+
+# install gvproxy
+pushd %{repo_gvproxy}-%{commit_gvproxy}
+install -dp %{buildroot}%{_libexecdir}/%{name}
+install -p -m0755 bin/%{name}-gvproxy %{buildroot}%{_libexecdir}/%{name}
 popd
 
 # do not include docker and podman-remote man pages in main package
@@ -627,14 +666,25 @@ cp -pav test/system %{buildroot}/%{_datadir}/%{name}/test/
 %endif
 
 %files plugins
-%license dnsname-%{commit_plugins}/LICENSE
-%doc dnsname-%{commit_plugins}/{README.md,README_PODMAN.md}
+%license %{repo_plugins}-%{commit_plugins}/LICENSE
+%doc %{repo_plugins}-%{commit_plugins}/{README.md,README_PODMAN.md}
 %dir %{_libexecdir}/cni
 %{_libexecdir}/cni/dnsname
 %{_libexecdir}/cni/%{name}-machine
 
+%files gvproxy
+%license %{repo_gvproxy}-%{commit_gvproxy}/LICENSE
+%doc %{repo_gvproxy}-%{commit_gvproxy}/README.md
+%dir %{_libexecdir}/%{name}
+%{_libexecdir}/%{name}/%{name}-gvproxy
+
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Mon Aug 16 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:3.3.0-0.27.rc2
+- Bump to v3.3.0-rc2
+- Include podman-gvproxy subpackage which provides
+/usr/libexecdir/podman/podman-gvproxy
+
 * Tue Aug 03 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:3.3.0-0.26.rc1
 - Bump to v3.3.0-rc1
 
