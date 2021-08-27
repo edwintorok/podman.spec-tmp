@@ -67,7 +67,7 @@ Version: 3.3.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -490,7 +490,7 @@ ln -s ../../../../ src/%{import_path_gvproxy}
 popd
 ln -s vendor src
 export GOPATH=$(pwd)/_build:$(pwd)
-%gobuild -o bin/%{name}-gvproxy %{import_path_gvproxy}/cmd/gvproxy
+%gobuild -o bin/gvproxy %{import_path_gvproxy}/cmd/gvproxy
 popd
 
 %{__make} docs docker-docs
@@ -523,7 +523,7 @@ popd
 # install gvproxy
 pushd %{repo_gvproxy}-%{commit_gvproxy}
 install -dp %{buildroot}%{_libexecdir}/%{name}
-install -p -m0755 bin/%{name}-gvproxy %{buildroot}%{_libexecdir}/%{name}
+install -p -m0755 bin/gvproxy %{buildroot}%{_libexecdir}/%{name}
 popd
 
 # do not include docker and podman-remote man pages in main package
@@ -676,10 +676,13 @@ cp -pav test/system %{buildroot}/%{_datadir}/%{name}/test/
 %license %{repo_gvproxy}-%{commit_gvproxy}/LICENSE
 %doc %{repo_gvproxy}-%{commit_gvproxy}/README.md
 %dir %{_libexecdir}/%{name}
-%{_libexecdir}/%{name}/%{name}-gvproxy
+%{_libexecdir}/%{name}/gvproxy
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Fri Aug 27 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:3.3.0-2
+- update gvproxy binary name
+
 * Fri Aug 20 2021 RH Container Bot <rhcontainerbot@fedoraproject.org> - 3:3.3.0-1
 - autobuilt v3.3.0
 
