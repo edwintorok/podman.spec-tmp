@@ -34,7 +34,7 @@
 # https://github.com/containers/dnsname
 %global import_path_plugins %{provider}.%{provider_tld}/%{project}/%{repo_plugins}
 %global git_plugins https://%{import_path_plugins}
-%global commit_plugins dc59f285546a0b0d8b8f20033e1637ea82587840
+%global commit_plugins 18822f9a4fb35d1349eb256f4cd2bfd372474d84
 %global shortcommit_plugins %(c=%{commit_plugins}; echo ${c:0:7})
 
 # podman-machine-cni
@@ -42,7 +42,7 @@
 # https://github.com/containers/podman-machine-cni
 %global import_path_mcni %{provider}.%{provider_tld}/%{project}/%{repo_mcni}
 %global git_mcni https://%{import_path_mcni}
-%global commit_mcni afab2d8047bc0bd963d570686770eeb0c2e5a396
+%global commit_mcni 0749884b8d1a455c68da30789e37811ec0809d51
 %global shortcommit_mcni %(c=%{commit_mcni}; echo ${c:0:7})
 
 # gvproxy
