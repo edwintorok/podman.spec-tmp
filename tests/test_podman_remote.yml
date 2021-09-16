@@ -1,0 +1,17 @@
+---
+- name: "podman-remote | install"
+  dnf: name="podman-remote" state=installed
+
+- include_role:
+    name: run_bats_tests
+  vars:
+    tests:
+      - name: podman-remote root
+        package: podman
+        environment:
+          PODMAN: /usr/bin/podman-remote
+      - name: podman-remote rootless
+        package: podman
+        environment:
+          PODMAN: /usr/bin/podman-remote
+        become: true

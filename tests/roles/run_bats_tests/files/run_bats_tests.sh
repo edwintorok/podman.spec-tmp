@@ -43,9 +43,18 @@ if ! cd $testdir; then
     exit 0
 fi
 
+if [[ $PODMAN =~ remote ]]; then
+    ${PODMAN%%-remote} system service -t0 &>/dev/null &
+    PODMAN_SERVER_PID=$!
+fi
+
 echo "\$ bats ."
 bats .
 rc=$?
+
+if [[ -n "$PODMAN_SERVER_PID" ]]; then
+    kill $PODMAN_SERVER_PID
+fi
 
 echo $divider
 echo "bats completed with status $rc"

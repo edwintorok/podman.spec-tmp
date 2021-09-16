@@ -39,6 +39,9 @@
     loop_control:
       loop_var: want_cgroups
 
+  - name: test podman-remote
+    include_tasks: test_podman_remote.yml
+
   - name: test toolbox
     include_tasks: test_toolbox.yml
 
