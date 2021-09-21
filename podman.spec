@@ -67,7 +67,7 @@ Version: 3.4.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.1.rc1%{?dist}
+Release: 0.2.rc1%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -680,6 +680,9 @@ cp -pav test/system %{buildroot}/%{_datadir}/%{name}/test/
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Tue Sep 21 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:3.4.0-0.2.rc1
+- rebuild for podman-remote gating tests
+
 * Thu Sep 16 2021 RH Container Bot <rhcontainerbot@fedoraproject.org> - 3:3.4.0-0.1.rc1
 - autobuilt v3.4.0-rc1
 
