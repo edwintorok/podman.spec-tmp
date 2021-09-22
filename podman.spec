@@ -67,7 +67,7 @@ Version: 3.4.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.2.rc1%{?dist}
+Release: 0.3.rc1%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -98,7 +98,7 @@ BuildRequires: make
 BuildRequires: ostree-devel
 BuildRequires: systemd
 BuildRequires: systemd-devel
-Requires: conmon >= 2:2.0.28-0.1
+Requires: conmon >= 2:2.0.30-1
 Requires: containers-common >= 4:1-21
 Requires: containernetworking-plugins >= 1.0.0-15.1
 Requires: iptables
@@ -680,6 +680,9 @@ cp -pav test/system %{buildroot}/%{_datadir}/%{name}/test/
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Wed Sep 22 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:3.4.0-0.3.rc1
+- Requires: conmon >= 2:2.0.30 for remote gating tests
+
 * Tue Sep 21 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:3.4.0-0.2.rc1
 - rebuild for podman-remote gating tests
 
