@@ -67,7 +67,7 @@ Version: 3.4.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.5.rc1%{?dist}
+Release: 0.6.rc1%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -93,6 +93,7 @@ BuildRequires: libassuan-devel
 BuildRequires: libgpg-error-devel
 BuildRequires: libseccomp-devel
 BuildRequires: libselinux-devel
+BuildRequires: shadow-utils-subid-devel
 BuildRequires: pkgconfig
 BuildRequires: make
 BuildRequires: ostree-devel
@@ -678,11 +679,15 @@ cp -pav test/system %{buildroot}/%{_datadir}/%{name}/test/
 %dir %{_libexecdir}/%{name}
 %{_libexecdir}/%{name}/gvproxy
 
-%post
+%triggerpostun -- %{name} <= 3.2
 rm -f %{_sharedstatedir}/containers/storage/libpod/defaultCNINetExists
+exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Thu Sep 23 2021 Daniel J Walsh <dwalsh@redhat.com> - 3:3.4.0-0.6.rc1
+- Add shadow-utils-subid-devel requirement
+
 * Thu Sep 23 2021 Daniel J Walsh <dwalsh@redhat.com> - 3:3.4.0-0.5.rc1
 - rm -f /var/lib/containers/storage/libpod/defaultCNINetExists in post
 
