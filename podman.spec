@@ -67,7 +67,7 @@ Version: 3.4.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.8.rc2%{?dist}
+Release: 0.9.rc2%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -95,6 +95,7 @@ BuildRequires: libseccomp-devel
 BuildRequires: libselinux-devel
 %if 0%{?fedora} >= 35
 BuildRequires: shadow-utils-subid-devel
+Requires: shadow-utils-subid
 %endif
 BuildRequires: pkgconfig
 BuildRequires: make
@@ -687,6 +688,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Fri Sep 24 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:3.4.0-0.9.rc2
+- depend on shadow-utils-subid for f35 and higher
+
 * Fri Sep 24 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:3.4.0-0.8.rc2
 - bump release to stay ahead of older fedoras
 
