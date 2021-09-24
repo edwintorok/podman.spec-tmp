@@ -104,6 +104,7 @@ Requires: containers-common >= 4:1-21
 Requires: containernetworking-plugins >= 1.0.0-15.1
 Requires: iptables
 Requires: nftables
+Requires: shadow-utils-subid
 Recommends: %{name}-plugins = %{epoch}:%{version}-%{release}
 Recommends: catatonit
 Suggests: qemu-user-static
