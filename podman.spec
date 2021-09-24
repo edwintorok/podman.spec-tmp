@@ -93,7 +93,9 @@ BuildRequires: libassuan-devel
 BuildRequires: libgpg-error-devel
 BuildRequires: libseccomp-devel
 BuildRequires: libselinux-devel
+%if 0%{?fedora} >= 35
 BuildRequires: shadow-utils-subid-devel
+%endif
 BuildRequires: pkgconfig
 BuildRequires: make
 BuildRequires: ostree-devel
