@@ -67,7 +67,7 @@ Version: 3.4.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.10.rc2%{?dist}
+Release: 0.11.rc2%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -102,7 +102,7 @@ BuildRequires: ostree-devel
 BuildRequires: systemd
 BuildRequires: systemd-devel
 Requires: conmon >= 2:2.0.30-2
-Requires: containers-common >= 4:1-21
+Requires: containers-common >= 4:1-30
 Requires: containernetworking-plugins >= 1.0.0-15.1
 Requires: iptables
 Requires: nftables
@@ -690,6 +690,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Mon Sep 27 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:3.4.0-0.11.rc2
+- bump containers-common dep
+
 * Fri Sep 24 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:3.4.0-0.10.rc2
 - build with libsubid buildtag
 
