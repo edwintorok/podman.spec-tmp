@@ -76,7 +76,6 @@ Source1: %{git_plugins}/archive/%{commit_plugins}/%{repo_plugins}-%{shortcommit_
 Source2: %{git_mcni}/archive/%{commit_mcni}/%{repo_mcni}-%{shortcommit_mcni}.tar.gz
 Source3: %{git_gvproxy}/archive/%{commit_gvproxy}/%{repo_gvproxy}-%{shortcommit_gvproxy}.tar.gz
 Provides: %{name}-manpages = %{epoch}:%{version}-%{release}
-# If go_compiler is not set to 1, there is no virtual provide. Use golang instead.
 %if 0%{?fedora} && ! 0%{?rhel}
 BuildRequires: btrfs-progs-devel
 %endif
@@ -453,9 +452,6 @@ export BUILDTAGS="seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installe
 %if 0%{?fedora} >= 35
 export BUILDTAGS+=" $(hack/libsubid_tag.sh)"
 %endif
-%if 0%{?centos}
-export BUILDTAGS+=" containers_image_ostree_stub"
-%endif
 
 # build date. FIXME: Makefile uses '/v2/libpod', that doesn't work here?
 LDFLAGS="-X %{import_path}/libpod/define.buildInfo=$(date +%s)"
@@ -537,14 +533,7 @@ for file in `find %{buildroot}%{_mandir}/man[15] -type f | sed "s,%{buildroot},,
     echo "$file*" >> podman.file-list
 done
 
-# do not install remote manpages on centos7
-%if 0%{?centos} && 0%{?centos} < 8
-rm -rf %{buildroot}%{_mandir}/man1/docker-remote.1
-rm -rf %{buildroot}%{_mandir}/man1/%{name}-remote.1
-rm -rf %{buildroot}%{_mandir}/man5/%{name}-remote.conf.5
-%endif
-
-# source codes for building projects
+# source code for building projects
 %if 0%{?with_devel}
 install -d -p %{buildroot}/%{gopath}/src/%{import_path}/
 
