@@ -67,7 +67,7 @@ Version: 3.4.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -431,14 +431,18 @@ tar zxf %{SOURCE2}
 tar zxf %{SOURCE3}
 
 %build
+%set_build_flags
 export GO111MODULE=off
 export GOPATH=$(pwd)/_build:$(pwd)
-export CGO_CFLAGS='-O2 -g -grecord-gcc-switches -pipe -Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1 -ffat-lto-objects -fexceptions -fasynchronous-unwind-tables -fstack-protector-strong -fstack-clash-protection -D_GNU_SOURCE -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64'
+export CGO_CFLAGS=$CFLAGS
+# These extra flags present in $CFLAGS have been skipped for now as they break the build
+CGO_CFLAGS=$(echo $CGO_CFLAGS | sed 's/-flto=auto//g')
+CGO_CFLAGS=$(echo $CGO_CFLAGS | sed 's/-Wp,D_GLIBCXX_ASSERTIONS//g')
+CGO_CFLAGS=$(echo $CGO_CFLAGS | sed 's/-specs=\/usr\/lib\/rpm\/redhat\/redhat-annobin-cc1//g')
+
 %ifarch x86_64
 export CGO_CFLAGS+=" -m64 -mtune=generic -fcf-protection=full"
 %endif
-# These extra flags present in %%{optflags} have been skipped for now as they break the build
-#export CGO_CFLAGS+=" -flto=auto -Wp,D_GLIBCXX_ASSERTIONS -specs=/usr/lib/rpm/redhat/redhat-annobin-cc1"
 
 mkdir _build
 pushd _build
@@ -679,6 +683,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Fri Oct 01 2021 Timm Bäder <tbaeder@redhat.com> - 3:3.4.0-2
+- Remove individual flags from $CFLAGS instead of hardcoding all flags
+
 * Thu Sep 30 2021 RH Container Bot <rhcontainerbot@fedoraproject.org> - 3:3.4.0-1
 - autobuilt v3.4.0
 
