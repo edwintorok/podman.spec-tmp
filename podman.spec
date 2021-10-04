@@ -67,7 +67,7 @@ Version: 3.4.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -75,6 +75,7 @@ Source0: %{git0}/archive/%{built_tag}.tar.gz
 Source1: %{git_plugins}/archive/%{commit_plugins}/%{repo_plugins}-%{shortcommit_plugins}.tar.gz
 Source2: %{git_mcni}/archive/%{commit_mcni}/%{repo_mcni}-%{shortcommit_mcni}.tar.gz
 Source3: %{git_gvproxy}/archive/%{commit_gvproxy}/%{repo_gvproxy}-%{shortcommit_gvproxy}.tar.gz
+Patch0: gating-test.patch
 Provides: %{name}-manpages = %{epoch}:%{version}-%{release}
 %if 0%{?fedora} && ! 0%{?rhel}
 BuildRequires: btrfs-progs-devel
@@ -683,6 +684,10 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Mon Oct 04 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:3.4.0-3
+- Gating tests: fix permissions error
+- From: Ed Santiago <santiago@redhat.com>
+
 * Fri Oct 01 2021 Timm Bäder <tbaeder@redhat.com> - 3:3.4.0-2
 - Remove individual flags from $CFLAGS instead of hardcoding all flags
 
