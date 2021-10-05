@@ -67,10 +67,11 @@ Version: 3.4.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
+ExclusiveArch: %{golang_arches}
 Source0: %{git0}/archive/%{built_tag}.tar.gz
 Source1: %{git_plugins}/archive/%{commit_plugins}/%{repo_plugins}-%{shortcommit_plugins}.tar.gz
 Source2: %{git_mcni}/archive/%{commit_mcni}/%{repo_mcni}-%{shortcommit_mcni}.tar.gz
@@ -684,6 +685,10 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Tue Oct 05 2021 Stephen Gallagher <sgallagh@redhat.com> - 3:3.4.0-4
+- Drop i686 support for RHEL >= 9
+- RHEL 9 does not have i686 support for golang
+
 * Mon Oct 04 2021 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:3.4.0-3
 - Gating tests: fix permissions error
 - From: Ed Santiago <santiago@redhat.com>
