@@ -76,7 +76,6 @@ Source0: %{git0}/archive/%{built_tag}.tar.gz
 Source1: %{git_plugins}/archive/%{commit_plugins}/%{repo_plugins}-%{shortcommit_plugins}.tar.gz
 Source2: %{git_mcni}/archive/%{commit_mcni}/%{repo_mcni}-%{shortcommit_mcni}.tar.gz
 Source3: %{git_gvproxy}/archive/%{commit_gvproxy}/%{repo_gvproxy}-%{shortcommit_gvproxy}.tar.gz
-Patch0: gating-test.patch
 Provides: %{name}-manpages = %{epoch}:%{version}-%{release}
 %if 0%{?fedora} && ! 0%{?rhel}
 BuildRequires: btrfs-progs-devel
