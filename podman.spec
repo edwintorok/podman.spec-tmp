@@ -377,6 +377,7 @@ Requires: httpd-tools
 Requires: openssl
 Requires: socat
 Requires: buildah
+Requires: gnupg
 
 %description tests
 %{summary}
