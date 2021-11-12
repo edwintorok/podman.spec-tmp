@@ -50,7 +50,7 @@
 # https://github.com/containers/gvisor-tap-vsock
 %global import_path_gvproxy %%{provider}.%{provider_tld}/%{project}/%{repo_gvproxy}
 %global git_gvproxy https://%{import_path_gvproxy}
-%global commit_gvproxy 27590a075d79b4ac0554749f2be31a22a4baa27a
+%global commit_gvproxy 4ee84d66bd86668f011733d8873989b5862bcd07
 %global shortcommit_gvproxy %(c=%{commit_gvproxy}; echo ${c:0:7})
 
 %global built_tag v3.4.1
