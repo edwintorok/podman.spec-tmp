@@ -53,7 +53,7 @@
 %global commit_gvproxy 4ee84d66bd86668f011733d8873989b5862bcd07
 %global shortcommit_gvproxy %(c=%{commit_gvproxy}; echo ${c:0:7})
 
-%global built_tag v3.4.2
+%global built_tag v3.4.3
 %global built_tag_strip %(b=%{built_tag}; echo ${b:1})
 
 Name: podman
@@ -62,7 +62,7 @@ Epoch: 3
 %else
 Epoch: 0
 %endif
-Version: 3.4.2
+Version: 3.4.3
 # RELEASE TAG SHOULD ALWAYS BEGIN WITH A NUMBER
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
@@ -685,6 +685,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Tue Dec 07 2021 RH Container Bot <rhcontainerbot@fedoraproject.org> - 3:3.4.3-1
+- autobuilt v3.4.3
+
 * Fri Nov 12 2021 RH Container Bot <rhcontainerbot@fedoraproject.org> - 3:3.4.2-1
 - autobuilt v3.4.2
 
