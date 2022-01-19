@@ -37,14 +37,6 @@
 %global commit_plugins 18822f9a4fb35d1349eb256f4cd2bfd372474d84
 %global shortcommit_plugins %(c=%{commit_plugins}; echo ${c:0:7})
 
-# podman-machine-cni
-%global repo_mcni  %{name}-machine-cni
-# https://github.com/containers/podman-machine-cni
-%global import_path_mcni %{provider}.%{provider_tld}/%{project}/%{repo_mcni}
-%global git_mcni https://%{import_path_mcni}
-%global commit_mcni 0749884b8d1a455c68da30789e37811ec0809d51
-%global shortcommit_mcni %(c=%{commit_mcni}; echo ${c:0:7})
-
 # gvproxy
 %global repo_gvproxy gvisor-tap-vsock
 # https://github.com/containers/gvisor-tap-vsock
@@ -74,8 +66,7 @@ URL: https://%{name}.io/
 ExclusiveArch: %{golang_arches}
 Source0: %{git0}/archive/%{built_tag}.tar.gz
 Source1: %{git_plugins}/archive/%{commit_plugins}/%{repo_plugins}-%{shortcommit_plugins}.tar.gz
-Source2: %{git_mcni}/archive/%{commit_mcni}/%{repo_mcni}-%{shortcommit_mcni}.tar.gz
-Source3: %{git_gvproxy}/archive/%{commit_gvproxy}/%{repo_gvproxy}-%{shortcommit_gvproxy}.tar.gz
+Source2: %{git_gvproxy}/archive/%{commit_gvproxy}/%{repo_gvproxy}-%{shortcommit_gvproxy}.tar.gz
 Provides: %{name}-manpages = %{epoch}:%{version}-%{release}
 %if 0%{?fedora} && ! 0%{?rhel}
 BuildRequires: btrfs-progs-devel
@@ -422,15 +413,13 @@ dynamic port forwarding.
 
 %prep
 %autosetup -Sgit -n %{name}-%{built_tag_strip}
+sed -i 's;@@PODMAN@@\;$(BINDIR);@@PODMAN@@\;%{_bindir};' Makefile
 
 # untar dnsname
 tar zxf %{SOURCE1}
 
-# untar %%{name}-machine-cni
-tar zxf %{SOURCE2}
-
 # untar %%{name}-gvproxy
-tar zxf %{SOURCE3}
+tar zxf %{SOURCE2}
 
 %build
 %set_build_flags
@@ -453,14 +442,17 @@ ln -s ../../../../ src/%{import_path}
 popd
 ln -s vendor src
 
+# build date. FIXME: Makefile uses '/v2/libpod', that doesn't work here?
+LDFLAGS="-X %{import_path}/libpod/define.buildInfo=$(date +%s)"
+
+# build rootlessport first
+%gobuild -o bin/rootlessport %{import_path}/cmd/rootlessport
+
 # build %%{name}
 export BUILDTAGS="seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/selinux_tag.sh) $(hack/systemd_tag.sh)"
 %if 0%{?fedora} >= 35
 export BUILDTAGS+=" $(hack/libsubid_tag.sh)"
 %endif
-
-# build date. FIXME: Makefile uses '/v2/libpod', that doesn't work here?
-LDFLAGS="-X %{import_path}/libpod/define.buildInfo=$(date +%s)"
 
 %gobuild -o bin/%{name} %{import_path}/cmd/%{name}
 
@@ -479,17 +471,6 @@ export GOPATH=$(pwd)/_build:$(pwd)
 %gobuild -o bin/dnsname %{import_path_plugins}/plugins/meta/dnsname
 popd
 
-pushd %{repo_mcni}-%{commit_mcni}
-mkdir _build
-pushd _build
-mkdir -p src/%{provider}.%{provider_tld}/%{project}
-ln -s ../../../../ src/%{import_path_mcni}
-popd
-ln -s vendor src
-export GOPATH=$(pwd)/_build:$(pwd)
-%gobuild -o bin/%{name}-machine %{import_path_mcni}/plugins/meta/%{name}-machine
-popd
-
 pushd %{repo_gvproxy}-%{commit_gvproxy}
 mkdir _build
 pushd _build
@@ -506,25 +487,18 @@ popd
 %install
 install -dp %{buildroot}%{_unitdir}
 PODMAN_VERSION=%{version} %{__make} PREFIX=%{buildroot}%{_prefix} ETCDIR=%{buildroot}%{_sysconfdir} \
-        install.bin-nobuild \
-        install.man-nobuild \
-        install.systemd \
-        install.completions \
-        install.docker \
-        install.docker-docs-nobuild \
-%if 0%{?fedora} || 0%{?rhel}
-        install.remote-nobuild \
-%endif
+       install.bin-nobuild \
+       install.man-nobuild \
+       install.systemd \
+       install.completions \
+       install.docker \
+       install.docker-docs-nobuild \
+       install.remote-nobuild \
 
 mv pkg/hooks/README.md pkg/hooks/README-hooks.md
 
 # install dnsname plugin
 pushd %{repo_plugins}-%{commit_plugins}
-%{__make} PREFIX=%{_prefix} DESTDIR=%{buildroot} install
-popd
-
-# install machine-cni plugin
-pushd %{repo_mcni}-%{commit_mcni}
 %{__make} PREFIX=%{_prefix} DESTDIR=%{buildroot} install
 popd
 
@@ -613,23 +587,18 @@ cp -pav test/system %{buildroot}/%{_datadir}/%{name}/test/
 %license LICENSE
 %doc README.md CONTRIBUTING.md pkg/hooks/README-hooks.md install.md transfer.md
 %{_bindir}/%{name}
+%dir %{_libexecdir}/%{name}
+%{_libexecdir}/%{name}/rootlessport
 %{_datadir}/bash-completion/completions/%{name}
 # By "owning" the site-functions dir, we don't need to Require zsh
 %dir %{_datadir}/zsh/site-functions
 %{_datadir}/zsh/site-functions/_%{name}
 %dir %{_datadir}/fish/vendor_completions.d
 %{_datadir}/fish/vendor_completions.d/%{name}.fish
-%{_unitdir}/%{name}-auto-update.service
-%{_unitdir}/%{name}-auto-update.timer
-%{_unitdir}/%{name}.service
-%{_unitdir}/%{name}.socket
-%{_unitdir}/%{name}-restart.service
-%{_userunitdir}/%{name}-auto-update.service
-%{_userunitdir}/%{name}-auto-update.timer
-%{_userunitdir}/%{name}.service
-%{_userunitdir}/%{name}.socket
-%{_userunitdir}/%{name}-restart.service
+%{_unitdir}/%{name}*
+%{_userunitdir}/%{name}*
 %{_usr}/lib/tmpfiles.d/%{name}.conf
+%{_mandir}/man5/docker*.5.gz
 
 %files docker
 %{_bindir}/docker
@@ -671,7 +640,6 @@ cp -pav test/system %{buildroot}/%{_datadir}/%{name}/test/
 %doc %{repo_plugins}-%{commit_plugins}/{README.md,README_PODMAN.md}
 %dir %{_libexecdir}/cni
 %{_libexecdir}/cni/dnsname
-%{_libexecdir}/cni/%{name}-machine
 
 %files gvproxy
 %license %{repo_gvproxy}-%{commit_gvproxy}/LICENSE
