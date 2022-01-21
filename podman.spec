@@ -45,7 +45,7 @@
 %global commit_gvproxy 4ee84d66bd86668f011733d8873989b5862bcd07
 %global shortcommit_gvproxy %(c=%{commit_gvproxy}; echo ${c:0:7})
 
-%global built_tag v4.0.0-rc1
+%global built_tag v4.0.0-rc2
 %global built_tag_strip %(b=%{built_tag}; echo ${b:1})
 
 Name: podman
@@ -59,7 +59,7 @@ Version: 4.0.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.1.rc1%{?dist}
+Release: 0.2.rc2%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -653,6 +653,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Fri Jan 21 2022 RH Container Bot <rhcontainerbot@fedoraproject.org> - 3:4.0.0-0.2.rc2
+- autobuilt v4.0.0-rc2
+
 * Mon Jan 10 2022 RH Container Bot <rhcontainerbot@fedoraproject.org> - 3:4.0.0-0.1.rc1
 - autobuilt v4.0.0-rc1
 
