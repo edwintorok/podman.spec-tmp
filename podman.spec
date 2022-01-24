@@ -77,7 +77,11 @@ BuildRequires: glib2-devel
 BuildRequires: glibc-devel
 BuildRequires: glibc-static
 BuildRequires: git-core
+%if 0%{?fedora}
 BuildRequires: go-md2man
+%else
+BuildRequires: golang-github-cpuguy83-md2man
+%endif
 BuildRequires: go-rpm-macros
 BuildRequires: gpgme-devel
 BuildRequires: libassuan-devel
