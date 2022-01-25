@@ -491,13 +491,13 @@ popd
 %install
 install -dp %{buildroot}%{_unitdir}
 PODMAN_VERSION=%{version} %{__make} PREFIX=%{buildroot}%{_prefix} ETCDIR=%{buildroot}%{_sysconfdir} \
-       install.bin-nobuild \
-       install.man-nobuild \
+       install.bin \
+       install.man \
        install.systemd \
        install.completions \
        install.docker \
-       install.docker-docs-nobuild \
-       install.remote-nobuild \
+       install.docker-docs \
+       install.remote \
 
 mv pkg/hooks/README.md pkg/hooks/README-hooks.md
 
