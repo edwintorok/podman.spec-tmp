@@ -45,7 +45,7 @@
 %global commit_gvproxy 4ee84d66bd86668f011733d8873989b5862bcd07
 %global shortcommit_gvproxy %(c=%{commit_gvproxy}; echo ${c:0:7})
 
-%global built_tag v4.0.0-rc2
+%global built_tag v4.0.0-rc3
 %global built_tag_strip %(b=%{built_tag}; echo ${b:1})
 
 Name: podman
@@ -59,7 +59,7 @@ Version: 4.0.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.2.rc2%{?dist}
+Release: 0.3.rc3%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: https://%{name}.io/
@@ -93,7 +93,7 @@ BuildRequires: ostree-devel
 BuildRequires: systemd
 BuildRequires: systemd-devel
 Requires: conmon >= 2:2.0.30-2
-Requires: containers-common >= 4:1-30
+Requires: containers-common >= 4:1-46
 Requires: containernetworking-plugins >= 1.0.0-15.1
 Requires: iptables
 Requires: nftables
@@ -487,13 +487,13 @@ popd
 %install
 install -dp %{buildroot}%{_unitdir}
 PODMAN_VERSION=%{version} %{__make} PREFIX=%{buildroot}%{_prefix} ETCDIR=%{buildroot}%{_sysconfdir} \
-       install.bin-nobuild \
-       install.man-nobuild \
+       install.bin \
+       install.man \
        install.systemd \
        install.completions \
        install.docker \
-       install.docker-docs-nobuild \
-       install.remote-nobuild \
+       install.docker-docs \
+       install.remote \
 
 mv pkg/hooks/README.md pkg/hooks/README-hooks.md
 
@@ -553,6 +553,8 @@ done
 sort -u -o devel.file-list devel.file-list
 %endif
 
+rm -f %{buildroot}%{_mandir}/man5/docker*.5
+
 %check
 %if 0%{?with_check} && 0%{?with_unit_test} && 0%{?with_devel}
 %if ! 0%{?with_bundled}
@@ -597,8 +599,7 @@ cp -pav test/system %{buildroot}/%{_datadir}/%{name}/test/
 %{_datadir}/fish/vendor_completions.d/%{name}.fish
 %{_unitdir}/%{name}*
 %{_userunitdir}/%{name}*
-%{_usr}/lib/tmpfiles.d/%{name}.conf
-%{_mandir}/man5/docker*.5.gz
+%{_tmpfilesdir}/%{name}.conf
 
 %files docker
 %{_bindir}/docker
@@ -653,6 +654,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Mon Jan 31 2022 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:4.0.0-0.3.rc3
+- bump to v4.0.0-rc3
+
 * Fri Jan 21 2022 RH Container Bot <rhcontainerbot@fedoraproject.org> - 3:4.0.0-0.2.rc2
 - autobuilt v4.0.0-rc2
 
