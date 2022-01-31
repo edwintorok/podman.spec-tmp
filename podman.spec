@@ -1,8 +1,3 @@
-%global with_devel 0
-%global with_bundled 1
-%global with_check 0
-%global with_unit_test 0
-
 %global with_debug 1
 
 %if 0%{?with_debug}
@@ -10,10 +5,6 @@
 %global _dwz_low_mem_die_limit 0
 %else
 %global debug_package %{nil}
-%endif
-
-%if ! 0%{?gobuild:1}
-%define gobuild(o:) GO111MODULE=off go build -buildmode pie -compiler gc -tags="rpm_crashtraceback ${BUILDTAGS:-}" -ldflags "${LDFLAGS:-} -B 0x$(head -c20 /dev/urandom|od -An -tx1|tr -d ' \\n') -extldflags '-Wl,-z,relro -Wl,-z,now -specs=/usr/lib/rpm/redhat/redhat-hardened-ld '" -a -v -x %{?**};
 %endif
 
 %global provider github
@@ -61,7 +52,7 @@ Version: 4.0.0
 # so release tag should be of the form 0.N.foo
 Release: 0.3.rc3%{?dist}
 Summary: Manage Pods, Containers and Container Images
-License: ASL 2.0
+License: ASL 2.0 and BSD and ISC and MIT
 URL: https://%{name}.io/
 ExclusiveArch: %{golang_arches}
 Source0: %{git0}/archive/%{built_tag}.tar.gz
@@ -102,67 +93,68 @@ Recommends: catatonit
 Suggests: qemu-user-static
 
 # vendored libraries
-# awk '{print "Provides: bundled(golang("$1")) = "$2}' go.mod | sort
-Provides: bundled(golang(github.com/BurntSushi/toml)) = v0.3.1
-#Provides: bundled(golang(github.com/blang/semver)) = v3.5.1+incompatible
-#Provides: bundled(golang(github.com/buger/goterm)) = v0.0.0-20181115115552-c206103e1f37
-#Provides: bundled(golang(github.com/checkpoint-restore/go-criu)) = v0.0.0-20190109184317-bdb7599cd87b
-#Provides: bundled(golang(github.com/codahale/hdrhistogram)) = v0.0.0-20161010025455-3a0bb77429bd
-Provides: bundled(golang(github.com/containernetworking/cni)) = v0.8.0
-Provides: bundled(golang(github.com/containernetworking/plugins)) = v0.8.7
-#Provides: bundled(golang(github.com/containers/buildah)) = v1.15.1-0.20200813183340-0a8dc1f8064c
-#Provides: bundled(golang(github.com/containers/common)) = v0.20.3-0.20200827091701-a550d6a98aa3
-#Provides: bundled(golang(github.com/containers/conmon)) = v2.0.20+incompatible
-Provides: bundled(golang(github.com/containers/image/v5)) = v5.5.2
-Provides: bundled(golang(github.com/containers/psgo)) = v1.5.1
-Provides: bundled(golang(github.com/containers/storage)) = v1.23.2
-Provides: bundled(golang(github.com/coreos/go-systemd/v22)) = v22.1.0
-Provides: bundled(golang(github.com/cri-o/ocicni)) = v0.2.0
-Provides: bundled(golang(github.com/cyphar/filepath-securejoin)) = v0.2.2
-Provides: bundled(golang(github.com/davecgh/go-spew)) = v1.1.1
+Provides: bundled(golang(github.com/BurntSushi/toml)) = v1.0.0
+Provides: bundled(golang(github.com/blang/semver)) = v3.5.1+incompatible
+Provides: bundled(golang(github.com/buger/goterm)) = v1.0.1
+Provides: bundled(golang(github.com/checkpoint_restore/checkpointctl)) = v0.0.0_20211204171957_54b4ebfdb681
+Provides: bundled(golang(github.com/checkpoint_restore/go_criu/v5)) = v5.3.0
+Provides: bundled(golang(github.com/container_orchestrated_devices/container_device_interface)) = v0.0.0_20220111162300_46367ec063fd
+Provides: bundled(golang(github.com/containernetworking/cni)) = v1.0.1
+Provides: bundled(golang(github.com/containernetworking/plugins)) = v1.0.1
+Provides: bundled(golang(github.com/containers/buildah)) = v1.24.0
+Provides: bundled(golang(github.com/containers/common)) = v0.47.1
+Provides: bundled(golang(github.com/containers/conmon)) = v2.0.20+incompatible
+Provides: bundled(golang(github.com/containers/image/v5)) = v5.19.0
+Provides: bundled(golang(github.com/containers/ocicrypt)) = v1.1.2
+Provides: bundled(golang(github.com/containers/psgo)) = v1.7.2
+Provides: bundled(golang(github.com/containers/storage)) = v1.38.1
+Provides: bundled(golang(github.com/coreos/go_systemd/v22)) = v22.3.2
+Provides: bundled(golang(github.com/coreos/stream_metadata_go)) = v0.0.0_20210225230131_70edb9eb47b3
+Provides: bundled(golang(github.com/cyphar/filepath_securejoin)) = v0.2.3
+Provides: bundled(golang(github.com/davecgh/go_spew)) = v1.1.1
+Provides: bundled(golang(github.com/digitalocean/go_qemu)) = v0.0.0_20210326154740_ac9e0b687001
 Provides: bundled(golang(github.com/docker/distribution)) = v2.7.1+incompatible
-#Provides: bundled(golang(github.com/docker/docker)) = v1.4.2-0.20191219165747-a9416c67da9f
-Provides: bundled(golang(github.com/docker/go-connections)) = v0.4.0
-Provides: bundled(golang(github.com/docker/go-units)) = v0.4.0
-Provides: bundled(golang(github.com/fsnotify/fsnotify)) = v1.4.9
+Provides: bundled(golang(github.com/docker/docker)) = v20.10.12+incompatible
+Provides: bundled(golang(github.com/docker/go_connections)) = v0.4.0
+Provides: bundled(golang(github.com/docker/go_plugins_helpers)) = v0.0.0_20211224144127_6eecb7beb651
+Provides: bundled(golang(github.com/docker/go_units)) = v0.4.0
+Provides: bundled(golang(github.com/dtylman/scp)) = v0.0.0_20181017070807_f3000a34aef4
+Provides: bundled(golang(github.com/fsnotify/fsnotify)) = v1.5.1
 Provides: bundled(golang(github.com/ghodss/yaml)) = v1.0.0
-Provides: bundled(golang(github.com/godbus/dbus/v5)) = v5.0.3
-#Provides: bundled(golang(github.com/google/shlex)) = v0.0.0-20181106134648-c34317bd91bf
-Provides: bundled(golang(github.com/google/uuid)) = v1.1.2
-Provides: bundled(golang(github.com/gorilla/mux)) = v1.7.4
+Provides: bundled(golang(github.com/godbus/dbus/v5)) = v5.0.6
+Provides: bundled(golang(github.com/google/shlex)) = v0.0.0_20191202100458_e7afc7fbc510
+Provides: bundled(golang(github.com/google/uuid)) = v1.3.0
+Provides: bundled(golang(github.com/gorilla/handlers)) = v1.5.1
+Provides: bundled(golang(github.com/gorilla/mux)) = v1.8.0
 Provides: bundled(golang(github.com/gorilla/schema)) = v1.2.0
-Provides: bundled(golang(github.com/hashicorp/go-multierror)) = v1.1.0
+Provides: bundled(golang(github.com/hashicorp/go_multierror)) = v1.1.1
 Provides: bundled(golang(github.com/hpcloud/tail)) = v1.0.0
-Provides: bundled(golang(github.com/json-iterator/go)) = v1.1.10
-#Provides: bundled(golang(github.com/mrunalp/fileutils)) = v0.0.0-20171103030105-7d4729fb3618
-Provides: bundled(golang(github.com/onsi/ginkgo)) = v1.14.0
-Provides: bundled(golang(github.com/onsi/gomega)) = v1.10.1
-Provides: bundled(golang(github.com/opencontainers/go-digest)) = v1.0.0
-#Provides: bundled(golang(github.com/opencontainers/image-spec)) = v1.0.2-0.20190823105129-775207bd45b6
-#Provides: bundled(golang(github.com/opencontainers/runc)) = v1.0.0-rc91.0.20200708210054-ce54a9d4d79b
-#Provides: bundled(golang(github.com/opencontainers/runtime-spec)) = v1.0.3-0.20200817204227-f9c09b4ea1df
-Provides: bundled(golang(github.com/opencontainers/runtime-tools)) = v0.9.0
-Provides: bundled(golang(github.com/opencontainers/selinux)) = v1.6.0
-Provides: bundled(golang(github.com/opentracing/opentracing-go)) = v1.2.0
+Provides: bundled(golang(github.com/json_iterator/go)) = v1.1.12
+Provides: bundled(golang(github.com/mattn/go_isatty)) = v0.0.14
+Provides: bundled(golang(github.com/moby/term)) = v0.0.0_20210619224110_3f7ff695adc6
+Provides: bundled(golang(github.com/mrunalp/fileutils)) = v0.5.0
+Provides: bundled(golang(github.com/onsi/ginkgo)) = v1.16.5
+Provides: bundled(golang(github.com/onsi/gomega)) = v1.18.0
+Provides: bundled(golang(github.com/opencontainers/go_digest)) = v1.0.0
+Provides: bundled(golang(github.com/opencontainers/image_spec)) = v1.0.3_0.20220114050600_8b9d41f48198
+Provides: bundled(golang(github.com/opencontainers/runc)) = v1.1.0
+Provides: bundled(golang(github.com/opencontainers/runtime_spec)) = v1.0.3_0.20211214071223_8958f93039ab
+Provides: bundled(golang(github.com/opencontainers/runtime_tools)) = v0.9.1_0.20220110225228_7e2d60f1e41f
+Provides: bundled(golang(github.com/opencontainers/selinux)) = v1.10.0
 Provides: bundled(golang(github.com/pkg/errors)) = v0.9.1
-Provides: bundled(golang(github.com/pmezard/go-difflib)) = v1.0.0
-Provides: bundled(golang(github.com/rootless-containers/rootlesskit)) = v0.10.0
-Provides: bundled(golang(github.com/sirupsen/logrus)) = v1.6.0
-Provides: bundled(golang(github.com/spf13/cobra)) = v0.0.7
+Provides: bundled(golang(github.com/pmezard/go_difflib)) = v1.0.0
+Provides: bundled(golang(github.com/rootless_containers/rootlesskit)) = v0.14.6
+Provides: bundled(golang(github.com/sirupsen/logrus)) = v1.8.1
+Provides: bundled(golang(github.com/spf13/cobra)) = v1.3.0
 Provides: bundled(golang(github.com/spf13/pflag)) = v1.0.5
-Provides: bundled(golang(github.com/stretchr/testify)) = v1.6.1
-#Provides: bundled(golang(github.com/syndtr/gocapability)) = v0.0.0-20180916011248-d98352740cb2
-Provides: bundled(golang(github.com/uber/jaeger-client-go)) = v2.25.0+incompatible
-Provides: bundled(golang(github.com/uber/jaeger-lib)) = v2.2.0+incompatible
-#Provides: bundled(golang(github.com/varlink/go)) = v0.0.0-20190502142041-0f1d566d194b
-Provides: bundled(golang(github.com/vishvananda/netlink)) = v1.1.0
-Provides: bundled(golang(go.etcd.io/bbolt)) = v1.3.5
-#Provides: bundled(golang(golang.org/x/crypto)) = v0.0.0-20200622213623-75b288015ac9
-#Provides: bundled(golang(golang.org/x/net)) = v0.0.0-20200707034311-ab3426394381
-#Provides: bundled(golang(golang.org/x/sync)) = v0.0.0-20200317015054-43a5402ce75a
-#Provides: bundled(golang(golang.org/x/sys)) = v0.0.0-20200728102440-3e129f6d46b1
-Provides: bundled(golang(k8s.io/api)) = v0.18.8
-Provides: bundled(golang(k8s.io/apimachinery)) = v0.19.0
+Provides: bundled(golang(github.com/stretchr/testify)) = v1.7.0
+Provides: bundled(golang(github.com/syndtr/gocapability)) = v0.0.0_20200815063812_42c35b437635
+Provides: bundled(golang(github.com/uber/jaeger_client_go)) = v2.30.0+incompatible
+Provides: bundled(golang(github.com/ulikunitz/xz)) = v0.5.10
+Provides: bundled(golang(github.com/vbauerster/mpb/v6)) = v6.0.4
+Provides: bundled(golang(github.com/vishvananda/netlink)) = v1.1.1_0.20220115184804_dd687eb2f2d4
+Provides: bundled(golang(k8s.io/api)) = v0.22.4
+Provides: bundled(golang(k8s.io/apimachinery)) = v0.22.4
 
 %description
 %{name} (Pod Manager) is a fully featured container engine that is a simple
@@ -194,168 +186,6 @@ This package installs a script named docker that emulates the Docker CLI by
 executes %{name} commands, it also creates links between all Docker CLI man
 pages and %{name}.
 
-%if 0%{?with_devel}
-%package devel
-Summary: Library for applications looking to use Container Pods
-BuildArch: noarch
-Provides: libpod-devel = %{epoch}:%{version}-%{release}
-
-%if 0%{?with_check} && ! 0%{?with_bundled}
-BuildRequires: golang(github.com/BurntSushi/toml)
-BuildRequires: golang(github.com/containerd/cgroups)
-BuildRequires: golang(github.com/containernetworking/plugins/pkg/ns)
-BuildRequires: golang(github.com/containers/image/copy)
-BuildRequires: golang(github.com/containers/image/directory)
-BuildRequires: golang(github.com/containers/image/docker)
-BuildRequires: golang(github.com/containers/image/docker/archive)
-BuildRequires: golang(github.com/containers/image/docker/reference)
-BuildRequires: golang(github.com/containers/image/docker/tarfile)
-BuildRequires: golang(github.com/containers/image/image)
-BuildRequires: golang(github.com/containers/image/oci/archive)
-BuildRequires: golang(github.com/containers/image/pkg/strslice)
-BuildRequires: golang(github.com/containers/image/pkg/sysregistries)
-BuildRequires: golang(github.com/containers/image/signature)
-BuildRequires: golang(github.com/containers/image/storage)
-BuildRequires: golang(github.com/containers/image/tarball)
-BuildRequires: golang(github.com/containers/image/transports/alltransports)
-BuildRequires: golang(github.com/containers/image/types)
-BuildRequires: golang(github.com/containers/storage)
-BuildRequires: golang(github.com/containers/storage/pkg/archive)
-BuildRequires: golang(github.com/containers/storage/pkg/idtools)
-BuildRequires: golang(github.com/containers/storage/pkg/reexec)
-BuildRequires: golang(github.com/coreos/go-systemd/dbus)
-BuildRequires: golang(github.com/cri-o/ocicni/pkg/ocicni)
-BuildRequires: golang(github.com/docker/distribution/reference)
-BuildRequires: golang(github.com/docker/docker/daemon/caps)
-BuildRequires: golang(github.com/docker/docker/pkg/mount)
-BuildRequires: golang(github.com/docker/docker/pkg/namesgenerator)
-BuildRequires: golang(github.com/docker/docker/pkg/stringid)
-BuildRequires: golang(github.com/docker/docker/pkg/system)
-BuildRequires: golang(github.com/docker/docker/pkg/term)
-BuildRequires: golang(github.com/docker/docker/pkg/truncindex)
-BuildRequires: golang(github.com/ghodss/yaml)
-BuildRequires: golang(github.com/godbus/dbus)
-BuildRequires: golang(github.com/mattn/go-sqlite3)
-BuildRequires: golang(github.com/mrunalp/fileutils)
-BuildRequires: golang(github.com/opencontainers/go-digest)
-BuildRequires: golang(github.com/opencontainers/image-spec/specs-go/v1)
-BuildRequires: golang(github.com/opencontainers/runc/libcontainer)
-BuildRequires: golang(github.com/opencontainers/runtime-spec/specs-go)
-BuildRequires: golang(github.com/opencontainers/runtime-tools/generate)
-BuildRequires: golang(github.com/opencontainers/selinux/go-selinux)
-BuildRequires: golang(github.com/opencontainers/selinux/go-selinux/label)
-BuildRequires: golang(github.com/pkg/errors)
-BuildRequires: golang(github.com/sirupsen/logrus)
-BuildRequires: golang(github.com/ulule/deepcopier)
-BuildRequires: golang(golang.org/x/crypto/ssh/terminal)
-BuildRequires: golang(golang.org/x/sys/unix)
-BuildRequires: golang(k8s.io/apimachinery/pkg/util/wait)
-BuildRequires: golang(k8s.io/client-go/tools/remotecommand)
-BuildRequires: golang(k8s.io/kubernetes/pkg/kubelet/container)
-%endif
-
-Requires: golang(github.com/BurntSushi/toml)
-Requires: golang(github.com/containerd/cgroups)
-Requires: golang(github.com/containernetworking/plugins/pkg/ns)
-Requires: golang(github.com/containers/image/copy)
-Requires: golang(github.com/containers/image/directory)
-Requires: golang(github.com/containers/image/docker)
-Requires: golang(github.com/containers/image/docker/archive)
-Requires: golang(github.com/containers/image/docker/reference)
-Requires: golang(github.com/containers/image/docker/tarfile)
-Requires: golang(github.com/containers/image/image)
-Requires: golang(github.com/containers/image/oci/archive)
-Requires: golang(github.com/containers/image/pkg/strslice)
-Requires: golang(github.com/containers/image/pkg/sysregistries)
-Requires: golang(github.com/containers/image/signature)
-Requires: golang(github.com/containers/image/storage)
-Requires: golang(github.com/containers/image/tarball)
-Requires: golang(github.com/containers/image/transports/alltransports)
-Requires: golang(github.com/containers/image/types)
-Requires: golang(github.com/containers/storage)
-Requires: golang(github.com/containers/storage/pkg/archive)
-Requires: golang(github.com/containers/storage/pkg/idtools)
-Requires: golang(github.com/containers/storage/pkg/reexec)
-Requires: golang(github.com/coreos/go-systemd/dbus)
-Requires: golang(github.com/cri-o/ocicni/pkg/ocicni)
-Requires: golang(github.com/docker/distribution/reference)
-Requires: golang(github.com/docker/docker/daemon/caps)
-Requires: golang(github.com/docker/docker/pkg/mount)
-Requires: golang(github.com/docker/docker/pkg/namesgenerator)
-Requires: golang(github.com/docker/docker/pkg/stringid)
-Requires: golang(github.com/docker/docker/pkg/system)
-Requires: golang(github.com/docker/docker/pkg/term)
-Requires: golang(github.com/docker/docker/pkg/truncindex)
-Requires: golang(github.com/ghodss/yaml)
-Requires: golang(github.com/godbus/dbus)
-Requires: golang(github.com/mattn/go-sqlite3)
-Requires: golang(github.com/mrunalp/fileutils)
-Requires: golang(github.com/opencontainers/go-digest)
-Requires: golang(github.com/opencontainers/image-spec/specs-go/v1)
-Requires: golang(github.com/opencontainers/runc/libcontainer)
-Requires: golang(github.com/opencontainers/runtime-spec/specs-go)
-Requires: golang(github.com/opencontainers/runtime-tools/generate)
-Requires: golang(github.com/opencontainers/selinux/go-selinux)
-Requires: golang(github.com/opencontainers/selinux/go-selinux/label)
-Requires: golang(github.com/pkg/errors)
-Requires: golang(github.com/sirupsen/logrus)
-Requires: golang(github.com/ulule/deepcopier)
-Requires: golang(golang.org/x/crypto/ssh/terminal)
-Requires: golang(golang.org/x/sys/unix)
-Requires: golang(k8s.io/apimachinery/pkg/util/wait)
-Requires: golang(k8s.io/client-go/tools/remotecommand)
-Requires: golang(k8s.io/kubernetes/pkg/kubelet/container)
-
-Provides: golang(%{import_path}/cmd/%{name}/docker) = %{epoch}:%{version}-%{release}
-Provides: golang(%{import_path}/cmd/%{name}/formats) = %{epoch}:%{version}-%{release}
-Provides: golang(%{import_path}/libkpod) = %{epoch}:%{version}-%{release}
-Provides: golang(%{import_path}/%{name}) = %{epoch}:%{version}-%{release}
-Provides: golang(%{import_path}/%{name}/common) = %{epoch}:%{version}-%{release}
-Provides: golang(%{import_path}/%{name}/driver) = %{epoch}:%{version}-%{release}
-Provides: golang(%{import_path}/%{name}/layers) = %{epoch}:%{version}-%{release}
-Provides: golang(%{import_path}/pkg/annotations) = %{epoch}:%{version}-%{release}
-Provides: golang(%{import_path}/pkg/chrootuser) = %{epoch}:%{version}-%{release}
-Provides: golang(%{import_path}/pkg/registrar) = %{epoch}:%{version}-%{release}
-Provides: golang(%{import_path}/pkg/storage) = %{epoch}:%{version}-%{release}
-Provides: golang(%{import_path}/utils) = %{epoch}:%{version}-%{release}
-
-%description devel
-%{summary}
-
-This package contains library source intended for
-building other packages which use import path with
-%{import_path} prefix.
-%endif
-
-%if 0%{?with_unit_test} && 0%{?with_devel}
-%package unit-test-devel
-Summary:         Unit tests for %{name} package
-%if 0%{?with_check}
-#Here comes all BuildRequires: PACKAGE the unit tests
-#in %%check section need for running
-%endif
-
-# test subpackage tests code from devel subpackage
-Requires: %{name}-devel = %{epoch}:%{version}-%{release}
-
-%if 0%{?with_check} && ! 0%{?with_bundled}
-BuildRequires: golang(github.com/stretchr/testify/assert)
-BuildRequires: golang(github.com/urfave/cli)
-%endif
-
-Requires: golang(github.com/stretchr/testify/assert)
-Requires: golang(github.com/urfave/cli)
-
-%description unit-test-devel
-%{summary}
-%{repo} provides a library for applications looking to use the
-Container Pod concept popularized by Kubernetes.
-
-This package contains unit tests for project
-providing packages with %{import_path} prefix.
-%endif
-
-%if 0%{?fedora} || 0%{?rhel}
 %package tests
 Summary: Tests for %{name}
 
@@ -513,71 +343,7 @@ for file in `find %{buildroot}%{_mandir}/man[15] -type f | sed "s,%{buildroot},,
     echo "$file*" >> podman.file-list
 done
 
-# source code for building projects
-%if 0%{?with_devel}
-install -d -p %{buildroot}/%{gopath}/src/%{import_path}/
-
-echo "%%dir %%{gopath}/src/%%{import_path}/." >> devel.file-list
-# find all *.go but no *_test.go files and generate devel.file-list
-for file in $(find . \( -iname "*.go" -or -iname "*.s" \) \! -iname "*_test.go" | grep -v "vendor") ; do
-    dirprefix=$(dirname $file)
-    install -d -p %{buildroot}/%{gopath}/src/%{import_path}/$dirprefix
-    cp -pav $file %{buildroot}/%{gopath}/src/%{import_path}/$file
-    echo "%%{gopath}/src/%%{import_path}/$file" >> devel.file-list
-
-    while [ "$dirprefix" != "." ]; do
-        echo "%%dir %%{gopath}/src/%%{import_path}/$dirprefix" >> devel.file-list
-        dirprefix=$(dirname $dirprefix)
-    done
-done
-%endif
-
-# testing files for this project
-%if 0%{?with_unit_test} && 0%{?with_devel}
-install -d -p %{buildroot}/%{gopath}/src/%{import_path}/
-# find all *_test.go files and generate unit-test-devel.file-list
-for file in $(find . -iname "*_test.go" | grep -v "vendor") ; do
-    dirprefix=$(dirname $file)
-    install -d -p %{buildroot}/%{gopath}/src/%{import_path}/$dirprefix
-    cp -pav $file %{buildroot}/%{gopath}/src/%{import_path}/$file
-    echo "%%{gopath}/src/%%{import_path}/$file" >> unit-test-devel.file-list
-
-    while [ "$dirprefix" != "." ]; do
-        echo "%%dir %%{gopath}/src/%%{import_path}/$dirprefix" >> devel.file-list
-        dirprefix=$(dirname $dirprefix)
-    done
-done
-%endif
-
-%if 0%{?with_devel}
-sort -u -o devel.file-list devel.file-list
-%endif
-
 rm -f %{buildroot}%{_mandir}/man5/docker*.5
-
-%check
-%if 0%{?with_check} && 0%{?with_unit_test} && 0%{?with_devel}
-%if ! 0%{?with_bundled}
-export GOPATH=%{buildroot}/%{gopath}:%{gopath}
-%else
-# Since we aren't packaging up the vendor directory we need to link
-# back to it somehow. Hack it up so that we can add the vendor
-# directory from BUILD dir as a gopath to be searched when executing
-# tests from the BUILDROOT dir.
-ln -s ./ ./vendor/src # ./vendor/src -> ./vendor
-
-export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
-%endif
-
-%if ! 0%{?gotest:1}
-%global gotest go test
-%endif
-
-%gotest %{import_path}/cmd/%{name}
-%gotest %{import_path}/libkpod
-%gotest %{import_path}/libpod
-%gotest %{import_path}/pkg/registrar
-%endif
 
 install -d -p %{buildroot}/%{_datadir}/%{name}/test/system
 cp -pav test/system %{buildroot}/%{_datadir}/%{name}/test/
@@ -613,14 +379,6 @@ cp -pav test/system %{buildroot}/%{_datadir}/%{name}/test/
 %dir %{gopath}/src/%{provider}.%{provider_tld}/%{project}
 %endif
 
-%if 0%{?with_unit_test} && 0%{?with_devel}
-%files unit-test-devel -f unit-test-devel.file-list
-%license LICENSE
-%doc README.md CONTRIBUTING.md pkg/hooks/README-hooks.md install.md transfer.md
-%endif
-
-#### DO NOT REMOVE - NEEDED FOR CENTOS
-%if 0%{?fedora} || 0%{?rhel}
 %files remote
 %license LICENSE
 %{_bindir}/%{name}-remote
@@ -634,7 +392,6 @@ cp -pav test/system %{buildroot}/%{_datadir}/%{name}/test/
 %files tests
 %license LICENSE
 %{_datadir}/%{name}/test
-%endif
 
 %files plugins
 %license %{repo_plugins}-%{commit_plugins}/LICENSE
