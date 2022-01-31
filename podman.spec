@@ -50,7 +50,7 @@ Version: 4.0.0
 # N.foo if released, 0.N.foo if unreleased
 # Rawhide almost always ships unreleased builds,
 # so release tag should be of the form 0.N.foo
-Release: 0.3.rc3%{?dist}
+Release: 0.4.rc3%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0 and BSD and ISC and MIT
 URL: https://%{name}.io/
@@ -217,7 +217,6 @@ run %{name}-remote in production.
 %{name}-remote uses the version 2 API to connect to a %{name} client to
 manage pods, containers and container images. %{name}-remote supports ssh
 connections as well.
-%endif
 
 %package plugins
 Summary: Plugins for %{name}
@@ -411,6 +410,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Mon Jan 31 2022 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:4.0.0-0.4.rc3
+- fix license, conditionals and update provides
+
 * Mon Jan 31 2022 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:4.0.0-0.3.rc3
 - bump to v4.0.0-rc3
 
