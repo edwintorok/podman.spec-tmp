@@ -14,11 +14,6 @@
 # https://github.com/containers/%%{name}
 %global import_path %{provider}.%{provider_tld}/%{project}/%{repo}
 %global git0 https://%{import_path}
-# To build a random user's fork/commit, comment out above line,
-# uncomment below line and replace the placeholders and commit0 below with the right info
-#%%global git0 https://github.com/$GITHUB_USER/$GITHUB_USER_REPO
-#%%global commit0 d32e56658aec5246c3a5dc4d2156918d4f3031a7
-#%%global shortcommit0 %%(c=%%{commit0}; echo ${c:0:7})
 
 # dnsname
 %global repo_plugins dnsname
@@ -36,7 +31,7 @@
 %global commit_gvproxy 4ee84d66bd86668f011733d8873989b5862bcd07
 %global shortcommit_gvproxy %(c=%{commit_gvproxy}; echo ${c:0:7})
 
-%global built_tag v4.0.0-rc3
+%global built_tag v4.0.0-rc4
 %global built_tag_strip %(b=%{built_tag}; echo ${b:1})
 
 Name: podman
@@ -46,11 +41,7 @@ Epoch: 3
 Epoch: 0
 %endif
 Version: 4.0.0
-# RELEASE TAG SHOULD ALWAYS BEGIN WITH A NUMBER
-# N.foo if released, 0.N.foo if unreleased
-# Rawhide almost always ships unreleased builds,
-# so release tag should be of the form 0.N.foo
-Release: 0.4.rc3%{?dist}
+Release: 0.5.rc4%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0 and BSD and ISC and MIT
 URL: https://%{name}.io/
@@ -85,10 +76,8 @@ BuildRequires: systemd
 BuildRequires: systemd-devel
 Requires: conmon >= 2:2.0.30-2
 Requires: containers-common >= 4:1-46
-Requires: containernetworking-plugins >= 1.0.0-15.1
 Requires: iptables
 Requires: nftables
-Recommends: %{name}-plugins = %{epoch}:%{version}-%{release}
 Recommends: catatonit
 Suggests: qemu-user-static
 
