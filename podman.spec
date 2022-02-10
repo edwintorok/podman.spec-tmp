@@ -41,7 +41,7 @@ Epoch: 3
 Epoch: 0
 %endif
 Version: 4.0.0
-Release: 0.5.rc4%{?dist}
+Release: 0.6.rc4%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0 and BSD and ISC and MIT
 URL: https://%{name}.io/
@@ -401,6 +401,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Thu Feb 10 2022 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:4.0.0-0.6.rc4
+- shadow-utils-subid soname change
+
 * Mon Jan 31 2022 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:4.0.0-0.4.rc3
 - fix license, conditionals and update provides
 
