@@ -66,7 +66,9 @@ BuildRequires: libassuan-devel
 BuildRequires: libgpg-error-devel
 BuildRequires: libseccomp-devel
 BuildRequires: libselinux-devel
-%if 0%{?fedora} >= 35
+%if 0%{?fedora} >= 36
+BuildRequires: shadow-utils-subid-devel >= 2:4.11.1-2
+%else
 BuildRequires: shadow-utils-subid-devel
 %endif
 BuildRequires: pkgconfig
