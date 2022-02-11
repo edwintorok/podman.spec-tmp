@@ -31,7 +31,7 @@
 %global commit_gvproxy 4ee84d66bd86668f011733d8873989b5862bcd07
 %global shortcommit_gvproxy %(c=%{commit_gvproxy}; echo ${c:0:7})
 
-%global built_tag v4.0.0-rc4
+%global built_tag v4.0.0-rc5
 %global built_tag_strip %(b=%{built_tag}; echo ${b:1})
 
 Name: podman
@@ -41,7 +41,7 @@ Epoch: 3
 Epoch: 0
 %endif
 Version: 4.0.0
-Release: 0.6.rc4%{?dist}
+Release: 0.7.rc5%{?dist}
 Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0 and BSD and ISC and MIT
 URL: https://%{name}.io/
@@ -401,6 +401,9 @@ exit 0
 
 # rhcontainerbot account currently managed by lsm5
 %changelog
+* Fri Feb 11 2022 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:4.0.0-0.7.rc5
+- bump to v4.0.0-rc5
+
 * Thu Feb 10 2022 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:4.0.0-0.6.rc4
 - shadow-utils-subid soname change
 
