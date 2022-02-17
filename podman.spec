@@ -382,4 +382,8 @@ cp -pav test/system %{buildroot}/%{_datadir}/%{name}/test/
 %{_libexecdir}/%{name}/gvproxy
 
 %changelog
-%autochangelog
+#%%autochangelog
+* Thu Feb 017 2022 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:4.0.0
+- bump to v4.0.0
+- autospec misbehaves if the git logs ever used an unescaped rpm macro
+- so adding a manual changelog entry (rhbz#2051542)
