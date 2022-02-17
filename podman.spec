@@ -36,11 +36,7 @@
 %global gen_version %(b=%{built_tag_strip}; echo ${b/-/"~"})
 
 Name: podman
-%if 0%{?fedora}
 Epoch: 3
-%else
-Epoch: 0
-%endif
 Version: %{gen_version}
 Release: %autorelease
 Summary: Manage Pods, Containers and Container Images
