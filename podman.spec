@@ -47,7 +47,9 @@ Source0: %{git0}/archive/%{built_tag}.tar.gz
 Source1: %{git_plugins}/archive/%{commit_plugins}/%{repo_plugins}-%{shortcommit_plugins}.tar.gz
 Source2: %{git_gvproxy}/archive/%{commit_gvproxy}/%{repo_gvproxy}-%{shortcommit_gvproxy}.tar.gz
 Provides: %{name}-manpages = %{epoch}:%{version}-%{release}
+%if ! 0%{?centos}
 BuildRequires: btrfs-progs-devel
+%endif
 BuildRequires: gcc
 BuildRequires: golang >= 1.16.6
 BuildRequires: glib2-devel
@@ -260,10 +262,7 @@ LDFLAGS="-X %{import_path}/libpod/define.buildInfo=$(date +%s)"
 %gobuild -o bin/rootlessport %{import_path}/cmd/rootlessport
 
 # build %%{name}
-export BUILDTAGS="seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/selinux_tag.sh) $(hack/systemd_tag.sh)"
-%if 0%{?fedora} >= 35
-export BUILDTAGS+=" $(hack/libsubid_tag.sh)"
-%endif
+export BUILDTAGS="seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/selinux_tag.sh) $(hack/systemd_tag.sh) $(hack/libsubid_tag.sh)"
 
 %gobuild -o bin/%{name} %{import_path}/cmd/%{name}
 
