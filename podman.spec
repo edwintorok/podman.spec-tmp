@@ -31,7 +31,7 @@
 %global commit_gvproxy 4ee84d66bd86668f011733d8873989b5862bcd07
 %global shortcommit_gvproxy %(c=%{commit_gvproxy}; echo ${c:0:7})
 
-%global built_tag v4.0.0
+%global built_tag v4.0.1
 %global built_tag_strip %(b=%{built_tag}; echo ${b:1})
 %global gen_version %(b=%{built_tag_strip}; echo ${b/-/"~"})
 
@@ -46,7 +46,6 @@ ExclusiveArch: %{golang_arches}
 Source0: %{git0}/archive/%{built_tag}.tar.gz
 Source1: %{git_plugins}/archive/%{commit_plugins}/%{repo_plugins}-%{shortcommit_plugins}.tar.gz
 Source2: %{git_gvproxy}/archive/%{commit_gvproxy}/%{repo_gvproxy}-%{shortcommit_gvproxy}.tar.gz
-Patch0: fix-version.patch
 Provides: %{name}-manpages = %{epoch}:%{version}-%{release}
 BuildRequires: btrfs-progs-devel
 BuildRequires: gcc
@@ -306,6 +305,9 @@ PODMAN_VERSION=%{version} %{__make} PREFIX=%{buildroot}%{_prefix} ETCDIR=%{build
        install.docker \
        install.docker-docs \
        install.remote \
+%if 0%{?fedora} >= 36
+        install.modules-load
+%endif
 
 mv pkg/hooks/README.md pkg/hooks/README-hooks.md
 
@@ -348,6 +350,9 @@ cp -pav test/system %{buildroot}/%{_datadir}/%{name}/test/
 %{_unitdir}/%{name}*
 %{_userunitdir}/%{name}*
 %{_tmpfilesdir}/%{name}.conf
+%if 0%{?fedora} >= 36
+%{_modulesloaddir}/%{name}-iptables.conf
+%endif
 
 %files docker
 %{_bindir}/docker
