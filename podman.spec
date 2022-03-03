@@ -31,7 +31,7 @@
 %global commit_gvproxy 4ee84d66bd86668f011733d8873989b5862bcd07
 %global shortcommit_gvproxy %(c=%{commit_gvproxy}; echo ${c:0:7})
 
-%global built_tag v4.0.1
+%global built_tag v4.0.2
 %global built_tag_strip %(b=%{built_tag}; echo ${b:1})
 %global gen_version %(b=%{built_tag_strip}; echo ${b/-/"~"})
 
@@ -386,7 +386,7 @@ cp -pav test/system %{buildroot}/%{_datadir}/%{name}/test/
 
 %changelog
 #%%autochangelog
-* Thu Feb 017 2022 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:4.0.0
+* Thu Feb 17 2022 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:4.0.0
 - bump to v4.0.0
 - autospec misbehaves if the git logs ever used an unescaped rpm macro
-- so adding a manual changelog entry (rhbz#2051542)
+- so adding a manual changelog entry
