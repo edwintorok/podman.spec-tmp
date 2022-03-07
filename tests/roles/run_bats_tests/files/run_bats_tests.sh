@@ -27,7 +27,7 @@ exec &> >(tee -a $FULL_LOG)
 echo "Packages:"
 echo "  Kernel: $(uname -r)"
 rpm -qa |\
-    egrep 'podman|conmon|crun|runc|iptable|slirp|systemd|container-selinux' |\
+    egrep 'podman|conmon|containers-common|crun|runc|iptable|slirp|aardvark|netavark|containernetworking-plugins|systemd|container-selinux' |\
     sort |\
     sed -e 's/^/  /'
 
