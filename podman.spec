@@ -57,7 +57,9 @@ BuildRequires: glibc-devel
 BuildRequires: glibc-static
 BuildRequires: git-core
 BuildRequires: go-md2man
+%if ! 0%{?rhel} <= 8
 BuildRequires: go-rpm-macros
+%endif
 BuildRequires: gpgme-devel
 BuildRequires: libassuan-devel
 BuildRequires: libgpg-error-devel
