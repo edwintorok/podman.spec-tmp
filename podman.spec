@@ -388,7 +388,5 @@ cp -pav test/system %{buildroot}/%{_datadir}/%{name}/test/
 
 %changelog
 #%%autochangelog
-* Thu Feb 17 2022 Lokesh Mandvekar <lsm5@fedoraproject.org> - 3:4.0.0
-- bump to v4.0.0
-- autospec misbehaves if the git logs ever used an unescaped rpm macro
-- so adding a manual changelog entry
+* Thu Feb 17 2022 Lokesh Mandvekar <lsm5@fedoraproject.org>
+- placeholder changelog cause autospec doesn't like macros in git logs
