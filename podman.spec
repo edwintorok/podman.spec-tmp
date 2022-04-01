@@ -46,6 +46,7 @@ ExclusiveArch: %{golang_arches}
 Source0: %{git0}/archive/%{built_tag}.tar.gz
 Source1: %{git_plugins}/archive/%{commit_plugins}/%{repo_plugins}-%{shortcommit_plugins}.tar.gz
 Source2: %{git_gvproxy}/archive/%{commit_gvproxy}/%{repo_gvproxy}-%{shortcommit_gvproxy}.tar.gz
+Patch0: opencontainers-173.patch
 Provides: %{name}-manpages = %{epoch}:%{version}-%{release}
 %if ! 0%{?centos}
 BuildRequires: btrfs-progs-devel
